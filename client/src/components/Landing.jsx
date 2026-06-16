@@ -49,7 +49,7 @@ const Landing = () => {
     <div className="landing">
       <header className="landing-header">
         <div className="landing-header__inner">
-          <img src="/logo.webp" alt="SOAS" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
+          <img src="/images/navbar-logo.webp" alt="SOAS" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
           <div className="landing-header__right">
             <nav className="landing-header__nav">
               <a href="#about">About</a>

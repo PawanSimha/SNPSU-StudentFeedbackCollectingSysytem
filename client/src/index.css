@@ -175,7 +175,7 @@ body {
   font-size: 0.9rem;
   overflow: hidden;
   position: relative;
-  background: url('/footer-bg.webp') center/cover no-repeat;
+  background: url('/images/footer-bg.webp') center/cover no-repeat;
 }
 
 .footer::before {
@@ -310,7 +310,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: url('/bg.jpg') center/cover no-repeat fixed;
+  background: url('/images/hero-bg.webp') center/cover no-repeat fixed;
   filter: brightness(0.8);
 }
 
@@ -2529,7 +2529,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('/bg.jpg') center/cover no-repeat fixed;
+  background: url('/images/hero-bg.webp') center/cover no-repeat fixed;
 }
 
 .landing-hero__overlay {
@@ -2814,7 +2814,7 @@ body {
 .landing-stats__bg {
   position: absolute;
   inset: 0;
-  background: url('/bg.jpg') center/cover no-repeat fixed;
+  background: url('/images/hero-bg.webp') center/cover no-repeat fixed;
   opacity: 0.08;
 }
 

@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-brand-group">
-        <Link to={student.role === 'admin' ? '/admin' : '/dashboard'} className="nav-brand"><img src="/logo.webp" alt="SOAS" className="nav-logo" /></Link>
+        <Link to={student.role === 'admin' ? '/admin' : '/dashboard'} className="nav-brand"><img src="/images/navbar-logo.webp" alt="SOAS" className="nav-logo" /></Link>
         {student.role === 'admin' && <span className="nav-badge admin-badge">Admin</span>}
       </div>
       <div className="nav-links">

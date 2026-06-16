@@ -3,7 +3,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer__inner">
         <div className="footer__brand">
-          <img src="/footer-logo.png" alt="SOAS" className="footer__logo" />
+          <img src="/images/footer-logo.webp" alt="SOAS" className="footer__logo" />
           <p className="footer__desc">
             Sapthagiri NPS University offers quality education and holistic development for students across disciplines.
           </p>

@@ -52,7 +52,7 @@ const PublicFeedback = () => {
     <div className="public-feedback public-feedback--dark">
       <div className="public-feedback__card">
         <div className="public-feedback__header">
-          <img src="/footer-logo.png" alt="SOAS" className="public-feedback__logo" />
+          <img src="/images/footer-logo.webp" alt="SOAS" className="public-feedback__logo" />
           <h2>Give Anonymous Feedback</h2>
           <p>Your identity will not be revealed. Share your honest thoughts.</p>
         </div>
