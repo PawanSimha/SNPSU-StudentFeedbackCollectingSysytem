@@ -82,7 +82,8 @@ Browser                          Express API                      MongoDB
 ```
 mern-feedback-collector/
 ├── client/                          # React + Vite frontend
-│   ├── public/                      # Static assets (images, icons)
+│   ├── public/                      # Static assets
+│   │   ├── images/                  # WebP image assets (converted from PNG/JPG)
 │   ├── src/
 │   │   ├── components/              # 15 React components
 │   │   │   ├── Landing.jsx          # Public landing page
@@ -130,6 +131,8 @@ mern-feedback-collector/
 │   ├── .env                         # Environment config
 │   └── package.json
 ├── package.json                     # Root orchestration (concurrently)
+├── LICENSE.md                       # GNU General Public License v3.0
+├── PRD.md                           # Product Requirements Document
 └── README.md
 ```
 
@@ -241,4 +244,6 @@ No test framework is currently configured. Contributions to add unit/integration
 
 ## License
 
-This project is provided for educational purposes as part of the MCA curriculum at Sapthagiri NPS University. No formal license file is included.
+This project is licensed under the **GNU General Public License v3.0**. See the [LICENSE.md](./LICENSE.md) file for details.
+
+&copy; 2026 Pawan Simha R. All rights to the source code are granted under the terms of the GPLv3.

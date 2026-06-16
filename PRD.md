@@ -106,8 +106,12 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Backend Port** | 5000 (Express) | `server/server.js:28` |
 | **NoSQL Schema** | 4 collections — `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
 | **Asset Format** | All raster images converted to **WebP** (quality 85) for production | `client/public/images/*.webp` |
+| **Favicon** | Original `logo.webp` renamed to `favicon.webp` — used exclusively as browser favicon | `client/public/images/favicon.webp` |
+| **Navbar Logo** | Separate `navbar-logo.webp` asset for Navbar, Landing, and Login components | `client/public/images/navbar-logo.webp` |
 | **Auth Guard** | `ProtectedRoute` redirects unauthenticated users to `/` | `client/src/App.jsx:18-22` |
 | **CORS** | Wide-open (`cors()` with no origin restriction) | `server/server.js:17` |
+| **License** | GNU General Public License v3.0 — headers injected into all 38 source files | `LICENSE.md` |
+| **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, meta author/description/keywords | `client/index.html` |
 
 ---
 
@@ -168,6 +172,12 @@ This system solves all five pain points through JWT-authenticated feedback with 
 5. Admin reviews in Admin Anonymous panel
    → GET /api/public/feedbacks  (requires admin JWT)
 ```
+
+---
+
+## Licensing
+
+This project is distributed under the **GNU General Public License v3.0**. Every source file (`.jsx`, `.js`, `.css`, `.html`) carries the GPLv3 copyright header attributing Pawan Simha R as the copyright holder. See [LICENSE.md](./LICENSE.md) for the full legal text.
 
 ---
 
