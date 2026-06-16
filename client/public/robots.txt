@@ -1,0 +1,47 @@
+# robots.txt — SOAS Feedback Collector
+# https://snpsu-feedback-collector.vercel.app
+#
+# Live-retrieval & search crawlers — ALLOWED
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# AI training scrapers — BLOCKED
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# All other crawlers — default allow for compatibility
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://snpsu-feedback-collector.vercel.app/sitemap.xml

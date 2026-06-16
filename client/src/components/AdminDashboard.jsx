@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const AdminDashboard = () => {
   const { classGroup } = useParams();

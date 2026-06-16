@@ -1,10 +1,10 @@
-# SOAS Feedback Collector — Product Requirements Document
+# SOAS Feedback Collector: Product Requirements Document
 
 | Field | Detail |
 |---|---|
 | **Project Name** | SOAS Feedback Collector |
 | **Target Release** | Q2 2026 (Active) |
-| **Status** | v1.0 — Production Ready |
+| **Status** | v1.0: Production Ready |
 | **Author** | Pawan Simha R (MCA, SOAS, Sapthagiri NPS University) |
 | **Stack** | React 19 + Vite 8 / Express 4.21 / MongoDB 8 / Mongoose 8 |
 
@@ -12,19 +12,19 @@
 
 ## Executive Summary
 
-The SOAS Feedback Collector is a full-stack MERN application that replaces paper-based or ad-hoc course feedback at Sapthagiri NPS University's School of Sciences (SOAS). It enables MCA students to submit per-subject ratings and comments after each class session, provides a public anonymous channel for unfiltered input, and delivers aggregated analytics to administrators via a unified dashboard — all without exposing individual student identity.
+The SOAS Feedback Collector is a full-stack MERN application that replaces paper-based or ad-hoc course feedback at Sapthagiri NPS University's School of Sciences (SOAS). It enables MCA students to submit per-subject ratings and comments after each class session, provides a public anonymous channel for unfiltered input, and delivers aggregated analytics to administrators via a unified dashboard: all without exposing individual student identity.
 
 ---
 
 ## Problem Statement
 
-MCA program coordinators at Sapthagiri NPS University lacked a structured, auditable mechanism to collect course feedback. Existing approaches — scattered Google Forms or verbal collection — suffered from:
+MCA program coordinators at Sapthagiri NPS University lacked a structured, auditable mechanism to collect course feedback. Existing approaches, scattered Google Forms or verbal collection, suffered from:
 
-- **No session gating** — Students could submit feedback at any time, decoupled from actual class delivery.
-- **Zero identity verification** — Inflated or spam submissions with no way to attribute per-student participation.
-- **No public anonymity** — Students uncomfortable providing negative feedback through tracked channels had no outlet.
-- **Manual aggregation** — Faculty manually compiled CSV reports consuming 2–3 hours per review cycle.
-- **No participation tracking** — Instructors could not identify which students had/had not submitted feedback for a given subject.
+- **No session gating**: Students could submit feedback at any time, decoupled from actual class delivery.
+- **Zero identity verification**: Inflated or spam submissions with no way to attribute per-student participation.
+- **No public anonymity**: Students uncomfortable providing negative feedback through tracked channels had no outlet.
+- **Manual aggregation**: Faculty manually compiled CSV reports consuming 2-3 hours per review cycle.
+- **No participation tracking**: Instructors could not identify which students had/had not submitted feedback for a given subject.
 
 This system solves all five pain points through JWT-authenticated feedback with session allotment gating, a dual-channel model (authenticated + fully anonymous), and real-time aggregated reporting with CSV/Word export.
 
@@ -34,8 +34,8 @@ This system solves all five pain points through JWT-authenticated feedback with 
 
 | Persona | Role | Auth Level | Primary Goal | Friction |
 |---|---|---|---|---|
-| **MCA Student** | Course attendee | JWT (student) | Submit per-subject feedback when a session is open; view personal history | Needs to wait for admin to open the feedback window; limited to 50–300 character comments |
-| **Anonymous User** | External or wary student | None | Submit feedback without revealing identity | Cannot view history or track submissions; 100–300 character minimum |
+| **MCA Student** | Course attendee | JWT (student) | Submit per-subject feedback when a session is open; view personal history | Needs to wait for admin to open the feedback window; limited to 50-300 character comments |
+| **Anonymous User** | External or wary student | None | Submit feedback without revealing identity | Cannot view history or track submissions; 100-300 character minimum |
 | **Administrator** | Program coordinator / faculty | JWT (admin) | Open/close feedback windows per class; view per-subject stats; export reports; monitor anonymous submissions | Must manually toggle allotments; no auto-scheduling or email notifications |
 
 ---
@@ -54,19 +54,20 @@ This system solves all five pain points through JWT-authenticated feedback with 
 
 ## Core Features & Requirements (MoSCoW)
 
-### P0 — Must Have (Shipped)
+### P0: Must Have (Shipped)
 
 | Feature | Implementation | Evidence |
 |---|---|---|
+| **Branded 404 Page** | Custom NotFound.jsx with CSS compass illustration, brand logo, two recovery CTAs (Go Homepage + Go Back), and responsive/motion-reduced support; renders outside the main layout with no Navbar/Footer | `client/src/components/NotFound.jsx` |
 | **JWT Authentication** | Email + USN + password login; bcrypt hashing; 30-day token stored in sessionStorage | `server/routes/auth.js:9` |
 | **Allotment Gating** | Admin opens/closes feedback windows per class; students blocked when closed | `server/routes/allotment.js:35`, `Feedback.js:44-48` |
-| **Per-Subject Feedback** | Student submits rating (1–5) + comments (50–300 chars) per subject; upsert prevents duplicates | `server/routes/feedback.js:25` |
-| **Public Anonymous Feedback** | No auth required; subject + optional faculty name + comments (100–300 chars) | `server/routes/public.js:12` |
-| **Admin DB Overview** | Unified view of all collections — students, feedbacks, allotments, public feedbacks — with per-subject stats | `server/routes/admin.js:189` |
+| **Per-Subject Feedback** | Student submits rating (1-5) + comments (50-300 chars) per subject; upsert prevents duplicates | `server/routes/feedback.js:25` |
+| **Public Anonymous Feedback** | No auth required; subject + optional faculty name + comments (100-300 chars) | `server/routes/public.js:12` |
+| **Admin DB Overview** | Unified view of all collections: students, feedbacks, allotments, and public feedbacks, with per-subject stats | `server/routes/admin.js:189` |
 | **Admin Coverage Tracking** | Per-subject view of which students gave/did not give feedback within a class | `server/routes/admin.js:148` |
 | **Report Exports** | CSV (.csv) and Word (.doc) download utilities with auto-generated HTML tables | `client/src/utils/download.js` |
 
-### P1 — Should Have (Shipped)
+### P1: Should Have (Shipped)
 
 | Feature | Implementation | Evidence |
 |---|---|---|
@@ -74,9 +75,9 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Feedback History** | Paginated table of all past submissions for logged-in student | `client/src/components/MyFeedback.jsx` |
 | **Class Selection & Drill-Down** | Admin selects class → views student list → drills into individual student feedback | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
 | **Admin Anonymous View** | Search + filter + export for all public anonymous submissions | `AdminAnonymous.jsx` |
-| **Session Allocation Message** | Admin sets a custom message (15–50 chars) when opening a feedback window | `server/routes/allotment.js:42-48` |
+| **Session Allocation Message** | Admin sets a custom message (15-50 chars) when opening a feedback window | `server/routes/allotment.js:42-48` |
 
-### P2 — Could Have (Future)
+### P2: Could Have (Future)
 
 | Feature | Rationale | Suggested Approach |
 |---|---|---|
@@ -96,21 +97,22 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Password Security** | bcryptjs (salt rounds: default 10) | `server/middleware/auth.js`, `server/routes/auth.js:23` |
 | **Token Lifespan** | 30 days | `server/routes/auth.js:29` |
 | **Token Storage** | `sessionStorage` (cleared on tab close) | `client/src/context/AuthContext.jsx:14` |
-| **Authenticated Comment Length** | 50–300 characters (trimmed, inclusive) | `server/routes/feedback.js:22-23` |
-| **Anonymous Comment Length** | 100–300 characters | `server/routes/public.js:21-26` |
-| **Allotment Message Length** | 15–50 characters | `server/routes/allotment.js:43-48` |
-| **Rating Scale** | 1–5 (integer) | `server/models/Feedback.js:14-17` |
+| **Authenticated Comment Length** | 50-300 characters (trimmed, inclusive) | `server/routes/feedback.js:22-23` |
+| **Anonymous Comment Length** | 100-300 characters | `server/routes/public.js:21-26` |
+| **Allotment Message Length** | 15-50 characters | `server/routes/allotment.js:43-48` |
+| **Rating Scale** | 1-5 (integer) | `server/models/Feedback.js:14-17` |
 | **Database** | MongoDB via Mongoose 8; schema-free migrations | `server/models/*` |
-| **API Base** | `http://localhost:5000/api` | `client/src/context/AuthContext.jsx:4` |
+| **API Base** | `http://localhost:5000/api` | `client/src/config/api.js` |
 | **Frontend Port** | 5173 (Vite dev) | `client/vite.config.js` |
 | **Backend Port** | 5000 (Express) | `server/server.js:28` |
-| **NoSQL Schema** | 4 collections — `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
+| **NoSQL Schema** | 4 collections: `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
 | **Asset Format** | All raster images converted to **WebP** (quality 85) for production | `client/public/images/*.webp` |
-| **Favicon** | Original `logo.webp` renamed to `favicon.webp` — used exclusively as browser favicon | `client/public/images/favicon.webp` |
+| **Favicon** | Original `logo.webp` renamed to `favicon.webp`: used exclusively as browser favicon | `client/public/images/favicon.webp` |
 | **Navbar Logo** | Separate `navbar-logo.webp` asset for Navbar, Landing, and Login components | `client/public/images/navbar-logo.webp` |
 | **Auth Guard** | `ProtectedRoute` redirects unauthenticated users to `/` | `client/src/App.jsx:18-22` |
 | **CORS** | Wide-open (`cors()` with no origin restriction) | `server/server.js:17` |
-| **License** | GNU General Public License v3.0 — headers injected into all 38 source files | `LICENSE.md` |
+| **404 Page** | Standalone NotFound component with CSS compass illustration, brand logo, animated needle wobble, radial spotlight, two recovery CTAs, and responsive/motion-reduced support; renders outside the main layout with no Navbar/Footer | `client/src/components/NotFound.jsx` |
+| **License** | GNU General Public License v3.0: headers injected into all 44 source files | `LICENSE.md` |
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, meta author/description/keywords | `client/index.html` |
 
 ---
@@ -183,12 +185,12 @@ This project is distributed under the **GNU General Public License v3.0**. Every
 
 ## Out of Scope (Non-Goals)
 
-- **Real-time messaging / chat** — The system does not support direct messaging between students and faculty.
-- **Multi-language support** — All UI text and data entries are in English only.
-- **Mobile native app** — The frontend is a responsive web application only; no React Native or Flutter wrapper.
-- **LTI / LMS Integration** — No integration with Moodle, Canvas, or any Learning Management System.
-- **Auto-grade feedback** — No sentiment analysis or NLP on comment text.
-- **SSO / OAuth** — Authentication is email+USN+password only; no Google/Microsoft login.
-- **Photo / file uploads** — Feedback is text + rating only; no attachment support.
-- **Email verification** — Accounts are pre-seeded; no self-registration or email confirmation flow.
-- **Database migrations** — Schema evolves via Mongoose model changes; no formal migration tooling.
+- **Real-time messaging / chat**: The system does not support direct messaging between students and faculty.
+- **Multi-language support**: All UI text and data entries are in English only.
+- **Mobile native app**: The frontend is a responsive web application only; no React Native or Flutter wrapper.
+- **LTI / LMS Integration**: No integration with Moodle, Canvas, or any Learning Management System.
+- **Auto-grade feedback**: No sentiment analysis or NLP on comment text.
+- **SSO / OAuth**: Authentication is email+USN+password only; no Google/Microsoft login.
+- **Photo / file uploads**: Feedback is text + rating only; no attachment support.
+- **Email verification**: Accounts are pre-seeded; no self-registration or email confirmation flow.
+- **Database migrations**: Schema evolves via Mongoose model changes; no formal migration tooling.

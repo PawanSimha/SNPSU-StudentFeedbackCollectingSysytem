@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const classInfo = [
   { id: 'MCA, 1st Year, 2nd Sem, A sec', label: 'A Section', students: '50 students' },

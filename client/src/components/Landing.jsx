@@ -26,11 +26,11 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Who can use this platform?',
-    a: 'The platform is available for all students enrolled in the MCA programme. Faculty members and administrators have separate dashboard access to view feedback reports and manage the system.',
+    a: 'The platform is available for all students enrolled in the MCA programme. Administrators have dashboard access to manage allotments, view feedback reports, and export data.',
   },
   {
     q: 'Is my feedback anonymous?',
-    a: 'Yes, all feedback submissions are anonymous to faculty and trainers. Only the admin will be able to see your identity. Your name, USN, and email are never shared with instructors. Only the subject and your comments are recorded to ensure honest and unbiased responses.',
+    a: 'Yes, all feedback submissions are anonymous to instructors. Only the administrator can see your identity for coverage tracking. Your name, USN, and email are never shared with faculty. Only the subject, rating, and your comments are recorded to ensure honest and unbiased responses.',
   },
   {
     q: 'How do I submit feedback?',
@@ -41,8 +41,8 @@ const FAQ_ITEMS = [
     a: 'Yes, you can view all your previously submitted feedback from the "My Feedback" section. This allows you to track what you have shared across different subjects over time.',
   },
   {
-    q: 'How do faculty and admins use the data?',
-    a: 'Faculty and administrators can access aggregated feedback reports through the admin dashboard. They can view submission rates, subject-wise feedback, and export reports in Excel or Word format for analysis and accreditation purposes.',
+    q: 'How do administrators use the data?',
+    a: 'Administrators can access aggregated feedback reports through the dashboard. They can view submission rates, subject-wise feedback, and export reports in Excel or Word format for analysis and accreditation purposes.',
   },
   {
     q: 'What if I face login issues?',
@@ -66,9 +66,9 @@ const Landing = () => {
     <div className="landing">
       <header className="landing-header">
         <div className="landing-header__inner">
-          <img src="/images/navbar-logo.webp" alt="SOAS" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
+          <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
           <div className="landing-header__right">
-            <nav className="landing-header__nav">
+            <nav className="landing-header__nav" aria-label="Landing page navigation">
               <a href="#about">About</a>
               <a href="#faq">FAQ</a>
               <a href="https://snpsu.edu.in/engineering/" target="_blank" rel="noreferrer">University</a>

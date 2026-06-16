@@ -19,7 +19,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const FeedbackForm = () => {
   const navigate = useNavigate();

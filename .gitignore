@@ -4,6 +4,7 @@ dist/
 dist-ssr/
 *.log
 .DS_Store
+Thumbs.db
 .vscode/
 .idea/
 *.suo
@@ -11,3 +12,4 @@ dist-ssr/
 *.njsproj
 *.sln
 *.sw?
+server/.env

@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { downloadCsv, downloadDoc } from '../utils/download';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const TABS = [
   { key: 'dashboard', label: 'Dashboard' },

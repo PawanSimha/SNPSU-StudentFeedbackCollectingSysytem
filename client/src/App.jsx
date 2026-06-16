@@ -15,7 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Landing from './components/Landing';
 import Login from './components/Login';
@@ -29,8 +29,10 @@ import AdminAllotments from './components/AdminAllotments';
 import AdminDbOverview from './components/AdminDbOverview';
 import AdminAnonymous from './components/AdminAnonymous';
 import PublicFeedback from './components/PublicFeedback';
+import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CookieConsent from './components/CookieConsent';
 
 const ProtectedRoute = ({ children }) => {
   const { student, loading } = useAuth();
@@ -47,33 +49,42 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
-const App = () => {
-  const location = useLocation();
-  const isPublicPage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/feedback/public';
+const ProtectedLayout = () => (
+  <>
+    <Navbar />
+    <main className="container">
+      <Outlet />
+    </main>
+    <Footer />
+  </>
+);
 
-  return (
-      <AuthProvider>
-        {!isPublicPage && <Navbar />}
-        <main className="container" style={isPublicPage ? { padding: 0, maxWidth: 'none', minHeight: 'unset' } : {}}>
-          <Routes>
-            <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/feedback/public" element={<PublicFeedback />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/feedback" element={<ProtectedRoute><FeedbackForm /></ProtectedRoute>} />
-            <Route path="/my-feedback" element={<ProtectedRoute><MyFeedback /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><AdminClassSelect /></ProtectedRoute>} />
-            <Route path="/admin/allotments" element={<ProtectedRoute><AdminAllotments /></ProtectedRoute>} />
-            <Route path="/admin/database" element={<ProtectedRoute><AdminDbOverview /></ProtectedRoute>} />
-            <Route path="/admin/anonymous" element={<ProtectedRoute><AdminAnonymous /></ProtectedRoute>} />
-            <Route path="/admin/:classGroup" element={<ProtectedRoute><AdminStudents /></ProtectedRoute>} />
-            <Route path="/admin/:classGroup/student/:studentId" element={<ProtectedRoute><AdminStudentFeedback /></ProtectedRoute>} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-        {!isPublicPage && <Footer />}
-      </AuthProvider>
-  );
-};
+const App = () => (
+  <AuthProvider>
+    <Routes>
+      {/* Public pages: no navbar/footer */}
+      <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/feedback/public" element={<PublicFeedback />} />
+
+      {/* Authenticated pages: with navbar/footer */}
+      <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/feedback" element={<FeedbackForm />} />
+        <Route path="/my-feedback" element={<MyFeedback />} />
+        <Route path="/admin" element={<AdminClassSelect />} />
+        <Route path="/admin/allotments" element={<AdminAllotments />} />
+        <Route path="/admin/database" element={<AdminDbOverview />} />
+        <Route path="/admin/anonymous" element={<AdminAnonymous />} />
+        <Route path="/admin/:classGroup" element={<AdminStudents />} />
+        <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
+      </Route>
+
+      {/* 404: no navbar/footer */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+    <CookieConsent />
+  </AuthProvider>
+);
 
 export default App;

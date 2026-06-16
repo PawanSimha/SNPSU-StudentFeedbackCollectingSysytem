@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const Dashboard = () => {
   const { student } = useAuth();

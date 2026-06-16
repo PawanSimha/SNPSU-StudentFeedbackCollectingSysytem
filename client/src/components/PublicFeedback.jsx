@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 
 const PublicFeedback = () => {
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const PublicFeedback = () => {
     <div className="public-feedback public-feedback--dark">
       <div className="public-feedback__card">
         <div className="public-feedback__header">
-          <img src="/images/footer-logo.webp" alt="SOAS" className="public-feedback__logo" />
+          <img src="/images/footer-logo.webp" alt="SOAS - Sapthagiri NPS University" width="1777" height="435" className="public-feedback__logo" />
           <h2>Give Anonymous Feedback</h2>
           <p>Your identity will not be revealed. Share your honest thoughts.</p>
         </div>

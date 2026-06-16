@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../config/api';
 const MSG_MIN = 15;
 const MSG_MAX = 50;
 
@@ -103,7 +103,7 @@ const AdminAllotments = () => {
               <p className="allotment-class-name">{cls.id}</p>
 
               <div className="allotment-message-group">
-                <label>Session Message (optional, {MSG_MIN}–{MSG_MAX} chars):</label>
+                <label>Session Message (optional, {MSG_MIN}-{MSG_MAX} chars):</label>
                 <input
                   type="text"
                   className="allotment-input"

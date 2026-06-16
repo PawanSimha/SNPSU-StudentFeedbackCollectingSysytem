@@ -56,7 +56,7 @@ const Login = () => {
       <div className={`login-card ${mounted ? 'login-card--visible' : ''}`}>
         <div className="login-card__inner">
           <div className="login-card__header">
-            <img src="/images/navbar-logo.webp" alt="SOAS" className="login-card__logo" />
+            <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="login-card__logo" />
             <h1 className="login-card__title">Feedback Collector</h1>
           </div>
 

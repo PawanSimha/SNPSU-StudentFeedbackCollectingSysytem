@@ -27,9 +27,9 @@ The system supports authenticated student feedback with per-session allotments, 
 ## Key Features
 
 ### User Features
-- **Student Dashboard** -- View active feedback allotments and submit ratings/comments per subject
-- **Feedback History** -- Browse all previously submitted feedback across subjects
-- **Public Anonymous Feedback** -- Submit feedback without logging in; select subject, optionally name faculty, and write comments (100--300 chars)
+- **Student Dashboard**: View active feedback allotments and submit ratings/comments per subject
+- **Feedback History**: Browse all previously submitted feedback across subjects
+- **Public Anonymous Feedback**: Submit feedback without logging in; select subject, optionally name faculty, and write comments (100-300 chars)
 
 ### Admin Features
 - **Class Management** -- View all class groups and drill into student-level details
@@ -55,7 +55,8 @@ Browser                          Express API                      MongoDB
   ├─ Login (/login)                   ├─ /api/feedback (CRUD)
   ├─ Dashboard (/dashboard)           ├─ /api/admin (admin ops)
   ├─ Admin Panel (/admin/*)           ├─ /api/allotments (open/close)
-  └─ PublicFeedback (/feedback/pub)   └─ /api/public (anonymous)
+  ├─ PublicFeedback (/feedback/pub)   ├─ /api/public (anonymous)
+  └─ 404 (*)                          (no backend)
 ```
 
 ---
@@ -81,40 +82,65 @@ Browser                          Express API                      MongoDB
 
 ```
 mern-feedback-collector/
+├── .gitignore                       # Ignores node_modules, .env, dist, etc.
+├── context.md                       # System context cross-session continuity
+├── LICENSE.md                       # GNU General Public License v3.0
+├── package.json                     # Root orchestration (concurrently)
+├── PRD.md                           # Product Requirements Document
+├── PRIVACY.md                       # GDPR/CCPA privacy policy
+├── README.md                        # Project overview (this file)
+├── vercel.json                      # Vercel deploy config: rewrites + CSP
+│
 ├── client/                          # React + Vite frontend
-│   ├── public/                      # Static assets
-│   │   ├── images/                  # WebP image assets (converted from PNG/JPG)
-│   ├── src/
-│   │   ├── components/              # 15 React components
-│   │   │   ├── Landing.jsx          # Public landing page
-│   │   │   ├── Login.jsx            # Auth login form
-│   │   │   ├── Dashboard.jsx        # Student dashboard
-│   │   │   ├── FeedbackForm.jsx     # Student feedback submission
-│   │   │   ├── MyFeedback.jsx       # Feedback history
-│   │   │   ├── PublicFeedback.jsx   # Anonymous (no login) feedback
-│   │   │   ├── Footer.jsx           # Shared site footer
-│   │   │   ├── Navbar.jsx           # Auth-aware navigation
-│   │   │   └── admin/               # Admin components
-│   │   │       ├── AdminClassSelect.jsx
-│   │   │       ├── AdminStudents.jsx
-│   │   │       ├── AdminStudentFeedback.jsx
-│   │   │       ├── AdminAllotments.jsx
-│   │   │       ├── AdminDashboard.jsx
-│   │   │       ├── AdminDbOverview.jsx
-│   │   │       └── AdminAnonymous.jsx
-│   │   ├── context/AuthContext.jsx   # Global auth state (JWT)
-│   │   ├── utils/download.js        # CSV & Word export helpers
-│   │   ├── App.jsx                  # Route definitions
-│   │   ├── main.jsx                 # Entry point (BrowserRouter)
-│   │   └── index.css                # Global styles (~3300 lines)
-│   ├── index.html
+│   ├── .gitignore
+│   ├── eslint.config.js             # ESLint flat config
+│   ├── index.html                   # SPA shell with SEO/GEO meta
+│   ├── package.json
 │   ├── vite.config.js
-│   └── package.json
+│   ├── public/                      # Static assets
+│   │   ├── images/                  # WebP image assets (6 files)
+│   │   ├── robots.txt               # AI-aware crawler directives
+│   │   ├── sitemap.xml              # 10-URL sitemap
+│   │   └── icons.svg                # SVG icon sprite
+│   └── src/
+│       ├── main.jsx                 # Entry point (BrowserRouter)
+│       ├── App.jsx                  # Route definitions + layouts
+│       ├── index.css                # Global styles (~3680 lines)
+│       ├── config/
+│       │   └── api.js               # Centralized API base URL
+│       ├── context/
+│       │   └── AuthContext.jsx       # Global auth state (JWT)
+│       ├── utils/
+│       │   └── download.js          # CSV & Word export helpers
+│       └── components/              # 17 React components
+│           ├── admin/               # Admin sub-components (7)
+│           │   ├── AdminAllotments.jsx
+│           │   ├── AdminAnonymous.jsx
+│           │   ├── AdminClassSelect.jsx
+│           │   ├── AdminDashboard.jsx
+│           │   ├── AdminDbOverview.jsx
+│           │   ├── AdminStudentFeedback.jsx
+│           │   └── AdminStudents.jsx
+│           ├── CookieConsent.jsx    # GDPR banner with Accept/Decline
+│           ├── Dashboard.jsx        # Student dashboard
+│           ├── FeedbackForm.jsx     # Feedback submission form
+│           ├── Footer.jsx           # Shared site footer
+│           ├── Landing.jsx          # Public landing page
+│           ├── Login.jsx            # Auth login form
+│           ├── MyFeedback.jsx       # Feedback history
+│           ├── Navbar.jsx           # Auth-aware navigation
+│           ├── NotFound.jsx         # Branded 404 (compass, CTAs)
+│           └── PublicFeedback.jsx   # Anonymous (no login) feedback
+│
 ├── server/                          # Express backend
+│   ├── .env                         # Environment config (gitignored)
+│   ├── package.json
+│   ├── server.js                    # Express app entry (port 5000)
 │   ├── config/
 │   │   ├── db.js                    # MongoDB connection
-│   │   └── subjects.js              # Subject list constant
-│   ├── middleware/auth.js            # JWT protect middleware
+│   │   └── subjects.js              # 6-subject constant
+│   ├── middleware/
+│   │   └── auth.js                  # JWT protect middleware
 │   ├── models/
 │   │   ├── Student.js               # User model (student/admin)
 │   │   ├── Feedback.js              # Authenticated feedback
@@ -122,18 +148,16 @@ mern-feedback-collector/
 │   │   └── Allotment.js             # Session allotments
 │   ├── routes/
 │   │   ├── auth.js                  # POST /login, GET /me
-│   │   ├── feedback.js              # CRUD for authenticated feedback
+│   │   ├── feedback.js              # Authenticated feedback CRUD
 │   │   ├── admin.js                 # Admin analytics & overview
 │   │   ├── allotment.js             # Open/close feedback windows
 │   │   └── public.js                # Anonymous feedback endpoints
-│   ├── scripts/seed.js              # DB seeder (50+ students)
-│   ├── server.js                    # Express app entry
-│   ├── .env                         # Environment config
-│   └── package.json
-├── package.json                     # Root orchestration (concurrently)
-├── LICENSE.md                       # GNU General Public License v3.0
-├── PRD.md                           # Product Requirements Document
-└── README.md
+│   └── scripts/
+│       ├── seed.js                  # DB seeder (51 students)
+│       ├── seed-admin.js            # Admin user seeder
+│       ├── seed-b.js                # Additional student seeder
+│       ├── update-classes.js        # Bulk class reassignment
+│       └── update-roles.js          # Bulk role update
 ```
 
 ---
@@ -168,6 +192,11 @@ JWT_SECRET=your_secret_here
 PORT=5000
 ```
 
+Optionally set `client/.env` to override the API URL (defaults to `http://localhost:5000/api`):
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
 ### 3. Seed the Database
 
 Populates 51 students with password `MCAA@123` in class group `MCA, 1st Year, 2nd Sem, A sec`:
@@ -198,7 +227,7 @@ npm run dev
 | POST   | `/api/public/feedback`         | Public   | Submit anonymous feedback              |
 | GET    | `/api/public/subjects`         | Public   | List available subjects                |
 | GET    | `/api/public/feedbacks`        | JWT      | List all anonymous feedbacks (admin)   |
-| POST   | `/api/feedback`                | JWT      | Submit authenticated feedback          |
+| POST   | `/api/feedback/submit`         | JWT      | Submit authenticated feedback          |
 | GET    | `/api/admin/db-overview`       | Admin    | Full database statistics & collections |
 | GET    | `/api/admin/feedback/stats`    | Admin    | Aggregated feedback statistics         |
 | GET    | `/api/allotments`              | JWT      | List current allotments by class       |
@@ -207,9 +236,9 @@ npm run dev
 
 ## Product Roadmap
 
-- **Analytics Dashboard** -- Visual charts (submission rates, sentiment trends) using Chart.js or Recharts
-- **Email Notifications** -- Automated reminders when a feedback window opens/closes
-- **Multi-Role Expansion** -- Faculty view with per-subject aggregated reports (no individual identity)
+- **Analytics Dashboard**: Visual charts (submission rates, sentiment trends) using Chart.js or Recharts
+- **Email Notifications**: Automated reminders when a feedback window opens/closes
+- **Multi-Role Expansion**: Faculty view with per-subject aggregated reports (no individual identity)
 
 ---
 

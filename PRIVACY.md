@@ -1,0 +1,69 @@
+# Privacy Policy
+
+**Last updated:** June 2026
+
+## 1. Data Controller
+
+SOAS Feedback Collector is an open-source project maintained by Pawan Simha R (MCA, SOAS, Sapthagiri NPS University).
+
+## 2. What Data We Collect
+
+### 2.1 Information you provide
+- **Student accounts:** Name, USN (University Serial Number), email address, class group, and hashed password (bcrypt).
+- **Feedback submissions:** Subject ratings (1-5 scale), comments (50-300 characters), and optional faculty name.
+- **Public feedback:** Subject, optional faculty name, and comments (100-300 characters): no personal identity is collected for anonymous submissions.
+
+### 2.2 Information collected automatically
+- **Essential cookies:** A session cookie (`connect.sid`) is used for JWT token management. No tracking, analytics, or advertising cookies are used.
+- **Local storage:** JWT tokens are stored in `sessionStorage` (cleared on tab close). Feedback lock state and cookie consent preference are stored in `localStorage`.
+
+### 2.3 No analytics
+This application does **not** use Google Analytics, Plausible, or any third-party analytics service. No usage data is transmitted to external analytics providers.
+
+## 3. How We Use Your Data
+
+- To authenticate students and administrators.
+- To enable per-subject course feedback with session-gated allotments.
+- To display aggregated feedback statistics to administrators (individual identities are never exposed).
+- To generate CSV/Word report exports for authorized administrators.
+
+## 4. Data Sharing
+
+We do **not** sell, rent, or share personal data with third parties. Aggregated, anonymized feedback statistics may be shared with faculty for curriculum improvement.
+
+## 5. Data Retention
+
+- Student account data is retained while enrolled. Accounts may be removed upon request.
+- Feedback submissions are retained for the duration of the academic term and may be archived thereafter.
+- Anonymous public feedback cannot be linked to any individual and is retained indefinitely for audit purposes.
+
+## 6. Your Rights (GDPR / CCPA)
+
+Depending on your jurisdiction, you may have the right to:
+- **Access** personal data we hold about you.
+- **Rectify** inaccurate data.
+- **Delete** your account and associated data (contact the administrator).
+- **Object** to processing.
+- **Data portability.**
+
+To exercise these rights, contact the repository maintainer via the GitHub profile at [https://github.com/PawanSimha](https://github.com/PawanSimha).
+
+## 7. Security
+
+- Passwords are hashed using bcryptjs (salt rounds: 10).
+- JWT tokens use a 30-day expiry and are transmitted over HTTPS in production.
+- All database connections use standard MongoDB authentication.
+
+## 8. Third-Party Services
+
+- **Google Fonts:** The application loads the Inter and Playfair Display font families from Google Fonts. Google's [privacy policy](https://policies.google.com/privacy) applies to font requests.
+- **Hosting:** When deployed, the platform (Vercel / Netlify) processes requests and may retain server logs per their respective policies.
+
+## 9. Changes to This Policy
+
+This policy may be updated periodically. Continued use of the application after changes constitutes acceptance of the updated policy.
+
+## 10. Contact
+
+Project maintainer: **Pawan Simha R**  
+GitHub: [https://github.com/PawanSimha](https://github.com/PawanSimha)
