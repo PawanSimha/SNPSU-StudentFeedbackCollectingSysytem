@@ -22,35 +22,48 @@ import { API } from '../config/api';
 
 const MyFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get(`${API}/feedback/my`).then(({ data }) => setFeedbacks(data));
+    axios.get(`${API}/feedback/my`).then(({ data }) => {
+      setFeedbacks(data);
+    }).catch(() => {
+      setError('Failed to load feedback. Please try again.');
+    }).finally(() => setLoading(false));
   }, []);
 
   return (
     <div className="my-feedback">
       <h2>My Feedback</h2>
-      {feedbacks.length === 0 ? (
+      {error && <div className="alert alert-error">{error}</div>}
+      {loading ? (
+        <p className="loading-text">Loading feedback...</p>
+      ) : feedbacks.length === 0 ? (
         <p>No feedback submitted yet.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Comments</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {feedbacks.map((fb) => (
-              <tr key={fb._id}>
-                <td>{fb.subject}</td>
-                <td>{fb.comments || '-'}</td>
-                <td>{new Date(fb.createdAt).toLocaleDateString()}</td>
+        <div className="admin-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Rating</th>
+                <th>Comments</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {feedbacks.map((fb) => (
+                <tr key={fb._id}>
+                  <td>{fb.subject}</td>
+                  <td>{'★'.repeat(fb.rating || 0)}{'☆'.repeat(5 - (fb.rating || 0))}</td>
+                  <td>{fb.comments || '-'}</td>
+                  <td>{new Date(fb.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

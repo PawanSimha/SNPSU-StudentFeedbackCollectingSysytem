@@ -17,7 +17,7 @@
 */
 const SUBJECTS = [
   'DevOps',
-  'Research Methadology & IPR',
+  'Research Methodology & IPR',
   'Java and Java Frameworks',
   'Agile',
   'MERN',

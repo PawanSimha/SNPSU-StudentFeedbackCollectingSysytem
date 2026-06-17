@@ -16,8 +16,11 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-mongoose.connect('mongodb://localhost:27017/feedback-collector').then(async () => {
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/feedback-collector').then(async () => {
   const r = await mongoose.connection.db.collection('students').updateMany(
     { role: 'student', classGroup: { $exists: false } },
     { $set: { classGroup: 'MCA, 1st Year, 2nd Sem, A sec' } }
@@ -27,4 +30,4 @@ mongoose.connect('mongodb://localhost:27017/feedback-collector').then(async () =
   const count = await mongoose.connection.db.collection('students').countDocuments({ role: 'student' });
   console.log(`Total students: ${count}`);
   process.exit(0);
-});
+}).catch(err => { console.error(err); process.exit(1); });

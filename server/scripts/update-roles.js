@@ -16,8 +16,11 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-mongoose.connect('mongodb://localhost:27017/feedback-collector').then(async () => {
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/feedback-collector').then(async () => {
   const r = await mongoose.connection.db.collection('students').updateMany(
     { role: { $exists: false } },
     { $set: { role: 'student' } }
@@ -28,4 +31,4 @@ mongoose.connect('mongodb://localhost:27017/feedback-collector').then(async () =
   console.log(`Admin role: ${admin?.role}`);
 
   process.exit(0);
-});
+}).catch(err => { console.error(err); process.exit(1); });

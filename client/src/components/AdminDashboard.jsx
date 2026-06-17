@@ -34,11 +34,21 @@ const AdminDashboard = () => {
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
   useEffect(() => {
-    axios.get(`${API}/admin/feedback?${classParam}`).then(({ data }) => setFeedbacks(data));
-    axios.get(`${API}/admin/feedback/stats?${classParam}`).then(({ data }) => {
-      setStats(data);
-      setSubjects(data.subjects);
-    });
+    const param = `class=${encodeURIComponent(decodedClass)}`;
+    const fetchData = async () => {
+      try {
+        const [fbRes, statsRes] = await Promise.all([
+          axios.get(`${API}/admin/feedback?${param}`),
+          axios.get(`${API}/admin/feedback/stats?${param}`),
+        ]);
+        setFeedbacks(fbRes.data);
+        setStats(statsRes.data);
+        setSubjects(statsRes.data.subjects);
+      } catch (e) {
+        // silently handle - component renders empty state
+      }
+    };
+    fetchData();
   }, [classGroup]);
 
   const filterBySubject = async (subject) => {

@@ -27,13 +27,16 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [allotment, setAllotment] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const locked = JSON.parse(localStorage.getItem('fb_locked') || '{}');
   const lockedCount = Object.values(locked).filter(Boolean).length;
 
   useEffect(() => {
     axios.get(`${API}/allotments/status`).then(({ data }) => {
       setAllotment(data);
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => {
+      setError('Unable to check feedback session status.');
+    }).finally(() => setLoading(false));
   }, []);
 
   return (
@@ -42,6 +45,8 @@ const Dashboard = () => {
         <h2>Welcome, {student?.name}</h2>
         <p className="subtitle">{student?.usn} | {student?.email}</p>
       </div>
+
+      {error && <div className="alert alert-error">{error}</div>}
 
       {loading ? (
         <p className="loading-text">Checking feedback session...</p>

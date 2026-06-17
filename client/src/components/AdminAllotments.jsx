@@ -23,20 +23,22 @@ import { API } from '../config/api';
 const MSG_MIN = 15;
 const MSG_MAX = 50;
 
-const classList = [
-  { id: 'MCA, 1st Year, 2nd Sem, A sec', label: 'A Section' },
-  { id: 'MCA, 1st Year, 2nd Sem, B sec', label: 'B Section' },
-  { id: 'MCA, 1st Year, 2nd Sem, C sec', label: 'C Section' },
-];
+const sectionLabels = {
+  'MCA, 1st Year, 2nd Sem, A sec': 'A Section',
+  'MCA, 1st Year, 2nd Sem, B sec': 'B Section',
+  'MCA, 1st Year, 2nd Sem, C sec': 'C Section',
+};
 
 const AdminAllotments = () => {
   const navigate = useNavigate();
+  const [classList, setClassList] = useState([]);
   const [allotments, setAllotments] = useState({});
   const [messages, setMessages] = useState({});
   const [errors, setErrors] = useState({});
   const [pageError, setPageError] = useState('');
 
   useEffect(() => {
+    axios.get(`${API}/admin/classes`).then(({ data }) => setClassList(data)).catch(() => {});
     axios.get(`${API}/allotments`).then(({ data }) => {
       const map = {};
       const msgs = {};
@@ -86,21 +88,21 @@ const AdminAllotments = () => {
 
       <div className="allotment-list">
         {classList.map((cls) => {
-          const state = allotments[cls.id];
+          const state = allotments[cls];
           const isOpen = state?.isOpen || false;
-          const msg = messages[cls.id] || '';
-          const err = errors[cls.id] || '';
+          const msg = messages[cls] || '';
+          const err = errors[cls] || '';
 
           return (
-            <div key={cls.id} className={`allotment-card ${isOpen ? 'open' : 'closed'}`}>
+            <div key={cls} className={`allotment-card ${isOpen ? 'open' : 'closed'}`}>
               <div className="allotment-card-header">
                 <span className="class-badge">MCA</span>
-                <span className="class-section">{cls.label}</span>
+                <span className="class-section">{sectionLabels[cls] || cls}</span>
                 <span className={`allot-status ${isOpen ? 'open' : 'closed'}`}>
                   {isOpen ? '● Open' : '○ Closed'}
                 </span>
               </div>
-              <p className="allotment-class-name">{cls.id}</p>
+              <p className="allotment-class-name">{cls}</p>
 
               <div className="allotment-message-group">
                 <label>Session Message (optional, {MSG_MIN}-{MSG_MAX} chars):</label>
@@ -108,7 +110,7 @@ const AdminAllotments = () => {
                   type="text"
                   className="allotment-input"
                   value={msg}
-                  onChange={(e) => setMessages({ ...messages, [cls.id]: e.target.value })}
+                  onChange={(e) => setMessages({ ...messages, [cls]: e.target.value })}
                   maxLength={MSG_MAX}
                   placeholder={`e.g. Feedback open until Friday`}
                   disabled={isOpen}
@@ -124,7 +126,7 @@ const AdminAllotments = () => {
 
               <button
                 className={`btn btn-allot ${isOpen ? 'close' : 'open'}`}
-                onClick={() => handleToggle(cls.id)}
+                onClick={() => handleToggle(cls)}
               >
                 {isOpen ? 'Close Session' : 'Allot'}
               </button>

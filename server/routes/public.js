@@ -16,17 +16,24 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const PublicFeedback = require('../models/PublicFeedback');
 const { protect } = require('../middleware/auth');
 const { SUBJECTS } = require('../config/subjects');
 
 const router = express.Router();
 
+const publicLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: 'Too many submissions. Please try again later.' },
+});
+
 router.get('/subjects', (req, res) => {
   res.json(SUBJECTS);
 });
 
-router.post('/feedback', async (req, res) => {
+router.post('/feedback', publicLimiter, async (req, res) => {
   try {
     const { subject, facultyName, comments } = req.body;
     if (!subject) {

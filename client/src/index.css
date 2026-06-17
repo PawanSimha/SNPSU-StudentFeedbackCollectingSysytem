@@ -264,22 +264,26 @@ body {
 
 .footer__social {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.footer__social a {
+.footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.12);
   color: white;
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  opacity: 0.8;
-  transition: opacity var(--transition);
+  transition: background var(--transition), transform var(--transition);
 }
 
-.footer__social a:hover {
-  opacity: 1;
-  text-decoration: underline;
+.footer__social-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 .footer__bottom {
@@ -1467,6 +1471,46 @@ body {
 
 .char-counter.over {
   color: var(--danger);
+}
+
+/* Star Rating */
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0 2px;
+  color: var(--gray-300);
+  transition: color 0.15s ease, transform 0.15s ease;
+  line-height: 1;
+}
+
+.star-btn.active {
+  color: var(--accent);
+}
+
+.star-btn:hover:not(:disabled) {
+  transform: scale(1.2);
+  color: var(--accent-hover);
+}
+
+.star-btn:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.star-label {
+  font-size: 0.82rem;
+  color: var(--gray-500);
+  margin-left: 6px;
+  font-weight: 600;
 }
 
 .sf-steps {

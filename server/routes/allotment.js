@@ -56,17 +56,21 @@ router.post('/', async (req, res) => {
     if (!classGroup) {
       return res.status(400).json({ message: 'Class group is required' });
     }
-    const trimmed = (message || '').trim();
-    if (trimmed.length < 15) {
-      return res.status(400).json({ message: 'Message must be at least 15 characters' });
-    }
-    if (trimmed.length > 50) {
-      return res.status(400).json({ message: 'Message must not exceed 50 characters' });
+    let allotment = await Allotment.findOne({ classGroup });
+    const opening = allotment ? !allotment.isOpen : true;
+
+    if (opening) {
+      const trimmed = (message || '').trim();
+      if (trimmed.length < 15) {
+        return res.status(400).json({ message: 'Message must be at least 15 characters' });
+      }
+      if (trimmed.length > 50) {
+        return res.status(400).json({ message: 'Message must not exceed 50 characters' });
+      }
     }
 
-    let allotment = await Allotment.findOne({ classGroup });
     if (allotment) {
-      allotment.isOpen = !allotment.isOpen;
+      allotment.isOpen = opening;
       if (allotment.isOpen) {
         allotment.message = trimmed;
         allotment.allottedBy = req.student._id;

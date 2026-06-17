@@ -20,6 +20,8 @@
 
 The **SOAS Feedback Collector** is a full-stack MERN application that enables MCA students at Sapthagiri NPS University to submit anonymous feedback on courses and instructors after each class session. Faculty and administrators gain aggregated insights through a dedicated dashboard, driving continuous improvement in curriculum delivery.
 
+> **v1.1 updates:** Added star rating selector (1–5), rate limiting on public endpoint, Vite API proxy, class list dynamic fetch from API, improved loading/error states across all components, social media icons in footer, and various bug fixes.
+
 The system supports authenticated student feedback with per-session allotments, a public anonymous feedback channel (no login required), and comprehensive admin tools including CSV/Word report exports.
 
 ---
@@ -27,12 +29,13 @@ The system supports authenticated student feedback with per-session allotments, 
 ## Key Features
 
 ### User Features
+- **Star Rating**: Visual 1–5 star selector for per-subject ratings in the feedback form
 - **Student Dashboard**: View active feedback allotments and submit ratings/comments per subject
 - **Feedback History**: Browse all previously submitted feedback across subjects
-- **Public Anonymous Feedback**: Submit feedback without logging in; select subject, optionally name faculty, and write comments (100-300 chars)
+- **Public Anonymous Feedback**: Submit feedback without logging in; select subject, optionally name faculty, and write comments (100-300 chars) — rate-limited to 10 submissions per 15 minutes
 
 ### Admin Features
-- **Class Management** -- View all class groups and drill into student-level details
+- **Class Management** -- View all class groups (fetched dynamically from API) and drill into student-level details
 - **Allotment System** -- Open/close feedback windows for specific class groups with custom messages
 - **Database Overview** -- Unified view of all students, feedbacks (per-subject stats), allotments, and anonymous submissions
 - **Anonymous Feedbacks** -- Review, search, and filter all public submissions
@@ -67,12 +70,13 @@ Browser                          Express API                      MongoDB
 | ------------ | --------------------------------------- | --------- |
 | **Frontend** | React                                   | ^19.2.6   |
 |              | React Router (declarative routing)      | ^7.17.0   |
-|              | Vite (build tool & dev server)          | ^8.0.12   |
+|              | Vite (build tool & dev server with API proxy) | ^8.0.12   |
 |              | Axios (HTTP client)                     | ^1.18.0   |
 | **Backend**  | Node.js / Express                       | ^4.21.0   |
 |              | Mongoose (ODM)                          | ^8.6.0    |
 |              | JSON Web Token (auth)                   | ^9.0.2    |
 |              | bcryptjs (password hashing)             | ^2.4.3    |
+|              | express-rate-limit (spam prevention)     | (latest)  |
 | **Database** | MongoDB                                 | (via Mongoose) |
 | **Tooling**  | Vite ESLint plugin, concurrently        |           |
 
@@ -96,7 +100,7 @@ mern-feedback-collector/
 │   ├── eslint.config.js             # ESLint flat config
 │   ├── index.html                   # SPA shell with SEO/GEO meta
 │   ├── package.json
-│   ├── vite.config.js
+│   ├── vite.config.js             # Vite config + API proxy (/api → :5000)
 │   ├── public/                      # Static assets
 │   │   ├── images/                  # WebP image assets (6 files)
 │   │   ├── robots.txt               # AI-aware crawler directives
@@ -135,7 +139,7 @@ mern-feedback-collector/
 ├── server/                          # Express backend
 │   ├── .env                         # Environment config (gitignored)
 │   ├── package.json
-│   ├── server.js                    # Express app entry (port 5000)
+│   ├── server.js                    # Express app entry (port 5000, body limit 10kb, 404 handler)
 │   ├── config/
 │   │   ├── db.js                    # MongoDB connection
 │   │   └── subjects.js              # 6-subject constant
@@ -224,7 +228,7 @@ npm run dev
 | ------ | ------------------------------ | -------- | -------------------------------------- |
 | POST   | `/api/auth/login`              | Public   | Student/admin login (email + USN + pw) |
 | GET    | `/api/auth/me`                 | JWT      | Return current user profile            |
-| POST   | `/api/public/feedback`         | Public   | Submit anonymous feedback              |
+| POST   | `/api/public/feedback`         | Public   | Submit anonymous feedback (rate-limited: 10/15min) |
 | GET    | `/api/public/subjects`         | Public   | List available subjects                |
 | GET    | `/api/public/feedbacks`        | JWT      | List all anonymous feedbacks (admin)   |
 | POST   | `/api/feedback/submit`         | JWT      | Submit authenticated feedback          |

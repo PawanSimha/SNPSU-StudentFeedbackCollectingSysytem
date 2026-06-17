@@ -21,45 +21,53 @@ import axios from 'axios';
 
 import { API } from '../config/api';
 
-const classInfo = [
-  { id: 'MCA, 1st Year, 2nd Sem, A sec', label: 'A Section', students: '50 students' },
-  { id: 'MCA, 1st Year, 2nd Sem, B sec', label: 'B Section', students: '0 students' },
-  { id: 'MCA, 1st Year, 2nd Sem, C sec', label: 'C Section', students: '0 students' },
-];
+const sectionLabels = {
+  'MCA, 1st Year, 2nd Sem, A sec': 'A Section',
+  'MCA, 1st Year, 2nd Sem, B sec': 'B Section',
+  'MCA, 1st Year, 2nd Sem, C sec': 'C Section',
+};
 
 const AdminClassSelect = () => {
   const navigate = useNavigate();
+  const [classList, setClassList] = useState([]);
   const [counts, setCounts] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCounts = async () => {
+    const fetchData = async () => {
       try {
+        const { data: classes } = await axios.get(`${API}/admin/classes`);
+        setClassList(classes);
         const results = {};
-        for (const cls of classInfo) {
-          const { data } = await axios.get(`${API}/admin/feedback/stats?class=${encodeURIComponent(cls.id)}`);
-          results[cls.id] = data.totalStudents;
+        for (const cls of classes) {
+          const { data } = await axios.get(`${API}/admin/feedback/stats?class=${encodeURIComponent(cls)}`);
+          results[cls] = data.totalStudents;
         }
         setCounts(results);
       } catch (e) {
-        // ignore
+        setClassList([]);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchCounts();
+    fetchData();
   }, []);
+
+  if (loading) return <div className="loading">Loading classes...</div>;
 
   return (
     <div className="class-select-page">
       <h2>Select a Class</h2>
       <p className="subtitle">Choose a section to view feedback</p>
       <div className="class-grid">
-        {classInfo.map((cls) => (
-          <div key={cls.id} className="class-card" onClick={() => navigate(`/admin/${encodeURIComponent(cls.id)}`)}>
+        {classList.map((cls) => (
+          <div key={cls} className="class-card" onClick={() => navigate(`/admin/${encodeURIComponent(cls)}`)}>
             <div className="class-card-header">
               <span className="class-badge">MCA</span>
-              <span className="class-section">{cls.label}</span>
+              <span className="class-section">{sectionLabels[cls] || cls}</span>
             </div>
             <p className="class-detail">1st Year, 2nd Semester</p>
-            <p className="class-count">{counts[cls.id] !== undefined ? counts[cls.id] : '...'} Students</p>
+            <p className="class-count">{counts[cls] !== undefined ? counts[cls] : '...'} Students</p>
             <span className="btn-small">View Feedback</span>
           </div>
         ))}

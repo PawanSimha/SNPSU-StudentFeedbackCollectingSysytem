@@ -111,8 +111,8 @@ router.get('/feedback/stats', async (req, res) => {
       query.classGroup = fbFilter.classGroup;
     }
 
-    const totalStudents = await Student.countDocuments(query);
     const studentsInClass = await Student.find(query).select('_id');
+    const totalStudents = studentsInClass.length;
     const studentIds = studentsInClass.map(s => s._id);
 
     let feedbackFilter = studentIds.length

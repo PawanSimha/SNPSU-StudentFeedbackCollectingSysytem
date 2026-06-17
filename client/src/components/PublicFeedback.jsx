@@ -29,9 +29,15 @@ const PublicFeedback = () => {
   const [comments, setComments] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [subjectsLoading, setSubjectsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${API}/public/subjects`).then(({ data }) => setSubjects(data)).catch(() => {});
+    axios.get(`${API}/public/subjects`).then(({ data }) => {
+      setSubjects(data);
+    }).catch(() => {
+      setError('Unable to load subjects. Please try again later.');
+    }).finally(() => setSubjectsLoading(false));
   }, []);
 
   const charCount = comments.length;
@@ -42,11 +48,14 @@ const PublicFeedback = () => {
     if (!subject) return;
     if (charCount < 100) { setError('Feedback must be at least 100 characters'); return; }
     if (charCount > 300) { setError('Feedback must be under 300 characters'); return; }
+    setSubmitting(true);
     try {
       await axios.post(`${API}/public/feedback`, { subject, facultyName, comments });
       setSubmitted(true);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -76,13 +85,13 @@ const PublicFeedback = () => {
 
         {error && <div className="public-feedback__error">{error}</div>}
 
-        <form className="public-feedback__form" onSubmit={handleSubmit}>
-          <div className="public-feedback__field">
-            <label htmlFor="subject">Select Subject</label>
-            <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
-              <option value="">Choose a subject...</option>
-              {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
+          <form className="public-feedback__form" onSubmit={handleSubmit}>
+            <div className="public-feedback__field">
+              <label htmlFor="subject">Select Subject</label>
+              <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} required disabled={subjectsLoading}>
+                <option value="">{subjectsLoading ? 'Loading subjects...' : 'Choose a subject...'}</option>
+                {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
           </div>
 
           <div className="public-feedback__field">
@@ -104,7 +113,7 @@ const PublicFeedback = () => {
             </div>
           </div>
 
-          <button type="submit" className="public-feedback__btn" disabled={!isValidLength}>Submit Anonymously</button>
+          <button type="submit" className="public-feedback__btn" disabled={!isValidLength || submitting}>{submitting ? 'Submitting...' : 'Submit Anonymously'}</button>
         </form>
 
         <p className="public-feedback__footer">

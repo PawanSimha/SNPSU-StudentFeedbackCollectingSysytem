@@ -41,13 +41,14 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Build Tool** | Vite | ^8.0.12 | @vitejs/plugin-react ^6.0.1 |
 | **HTTP Client** | Axios | ^1.18.0 | Base instance configured per-component |
 | **Backend Runtime** | Node.js / Express | ^4.21.0 | cors ^2.8.5, dotenv ^16.4.5 |
+| **Rate Limiting** | express-rate-limit | (latest) | 10 req / 15 min on public endpoint |
 | **ODM / Database** | Mongoose / MongoDB | ^8.6.0 | 4 collections (students, feedbacks, publicfeedbacks, allotments) |
 | **Authentication** | jsonwebtoken | ^9.0.2 | 30-day expiry, sessionStorage on client |
 | **Password Hashing** | bcryptjs | ^2.4.3 | Salt rounds: 10 |
 | **Dev Orchestration** | concurrently | ^8.2.2 | Runs server + client in parallel |
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
 | **Linting** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins |
-| **CSS** | Custom properties (no framework) | - | In `index.css` (~3683 lines) |
+| **CSS** | Custom properties (no framework) | - | In `index.css` (~3846 lines) |
 | **Image Format** | WebP | quality 85 | All raster assets in `client/public/images/` |
 | **Deployment** | Vercel | - | `vercel.json` with SPA rewrites + security headers |
 | **License** | GPLv3 | - | `LICENSE.md` + headers in all 44 source files |
@@ -78,7 +79,7 @@ Browser (React SPA)          Express REST API            MongoDB
 - **Auth state:** React Context (`AuthContext`): single provider wrapping the entire app tree. Stores `student` object, `loading` flag, `login()` and `logout()` functions.
 - **Token persistence:** `sessionStorage` (cleared on tab close). Axios default header `Authorization: Bearer <token>` set on login, cleared on logout.
 - **Component-local state:** `useState` / `useEffect` per component for feedback lists, allotments, form data, etc. No global state library (Redux, Zustand, etc.).
-- **localStorage:** Used for feedback lock state (`fb_locked`) and cookie consent preference (`cookie_consent`). Never for sensitive data.
+- **localStorage:** Used for feedback lock state (`fb_locked`), feedback drafts (`fb_drafts`), per-subject ratings (`fb_ratings`), and cookie consent preference (`cookie_consent`). Never for sensitive data.
 
 ### 3.4 Authentication & Authorization
 
@@ -150,7 +151,7 @@ mern-feedback-collector/
 │
 ├── client/                      React 19 + Vite 8 SPA (frontend)
 │   ├── package.json              Dependencies: react, react-router-dom, axios, vite
-│   ├── vite.config.js            Simple: only @vitejs/plugin-react
+│   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000)
 │   ├── index.html                SPA shell with SEO/GEO meta, JSON-LD, preloads, canonical URL
 │   ├── public/
 │   │   ├── images/               All WebP assets (favicon, navbar-logo, footer-logo, hero-bg, etc.)
@@ -168,13 +169,13 @@ mern-feedback-collector/
 │       │   ├── Landing.jsx       Public landing page with FAQ accordion
 │       │   ├── Login.jsx         Email + USN + password form
 │       │   ├── Dashboard.jsx     Student home: session status, start-feedback button
-│       │   ├── FeedbackForm.jsx  Per-subject rating (1-5) + comments (50-300 chars)
-│       │   ├── MyFeedback.jsx    Paginated history table for authenticated student
+│   │   ├── FeedbackForm.jsx  Per-subject star rating (1-5) + comments (50-300 chars), lock/unlock, draft storage
+│   │   ├── MyFeedback.jsx    Feedback history table with star ratings, loading & error states
 │       │   ├── PublicFeedback.jsx Anonymous form: no auth required
 │       │   ├── NotFound.jsx      Branded 404: CSS compass, two CTAs, no nav/footer
 │       │   ├── CookieConsent.jsx GDPR banner with Accept/Decline, localStorage persistence
 │       │   ├── Navbar.jsx        Auth-aware navigation with conditional links
-│       │   ├── Footer.jsx        Shared footer with social links and copyright
+│   │   ├── Footer.jsx        Shared footer with social media icon buttons (SVG), quick links, and copyright
 │       │   └── admin/            7 admin sub-components
 │       │       ├── AdminClassSelect.jsx
 │       │       ├── AdminStudents.jsx
@@ -189,7 +190,7 @@ mern-feedback-collector/
 │
 ├── server/                      Express 4.21 REST API (backend)
 │   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv
-│   ├── server.js                 App entry: cors(), express.json(), 5 route mounts, health endpoint
+│   ├── server.js                 App entry: cors(), express.json({ limit: '10kb' }), 5 route mounts, health endpoint, 404 catch-all
 │   ├── .env                      MONGO_URI, JWT_SECRET, PORT (not committed to git)
 │   ├── config/
 │   │   ├── db.js                 Mongoose connection with MONGO_URI env fallback
@@ -254,7 +255,7 @@ mern-feedback-collector/
 |---|---|---|
 | **Hardcoding API URLs** | `'http://localhost:5000/api'` scattered across 13 files made migration impossible | Import from `config/api.js`; use `VITE_API_URL` env var for production |
 | **Bypassing auth middleware** | Any route that should be protected must use the `protect` middleware | Apply `protect` at the router level or on individual routes |
-| **Hardcoded class groups in UI** | Admin routes define `CLASSES` array: frontend must fetch from `/api/admin/classes` | Use the API endpoint, not a magic constant |
+| ~~Hardcoded class groups in UI~~ | ~~Admin routes define `CLASSES` array: frontend must fetch from `/api/admin/classes`~~ | **FIXED:** `AdminClassSelect.jsx` and `AdminAllotments.jsx` now fetch from `/api/admin/classes` |
 | **Client-side secrets** | JWT secrets, DB passwords, or API keys in client code | All secrets stay in `server/.env`; client only gets public-facing config via Vite env vars |
 | **Raw CSS fallbacks** | New components should use CSS custom properties from `:root`, not ad-hoc hex values | `color: var(--primary)` not `color: #1a237e` (except in the variable definition itself) |
 | **Pixels for typography** | `px` values break when users change browser default font size | `rem` for fonts, `rem` or `%` for spacing |
@@ -290,6 +291,16 @@ mern-feedback-collector/
 | **API URL centralization** | `config/api.js` with `VITE_API_URL` env var; all 13 files updated to import | Current (uncommitted) |
 | **Vercel deployment config** | `vercel.json` with SPA rewrites and strict security headers | Current (uncommitted) |
 | **CSP update** | `connect-src` points to production domain instead of `localhost:5000` | Current (uncommitted) |
+| **Star rating UI fix** | Added 1–5 star selector to FeedbackForm, removed hardcoded `rating: 3` | Current (uncommitted) |
+| **Rate limiting implemented** | `express-rate-limit` (10 req/15min) on `POST /api/public/feedback` | Current (uncommitted) |
+| **Class list API fetch** | `AdminClassSelect.jsx` and `AdminAllotments.jsx` now fetch from `/api/admin/classes` | Current (uncommitted) |
+| **Allotment close bug fix** | Server no longer validates message length when closing an allotment | Current (uncommitted) |
+| **Vite API proxy** | Dev server proxies `/api` → `localhost:5000` | Current (uncommitted) |
+| **Request body limit** | `express.json({ limit: '10kb' })` prevents memory exhaustion | Current (uncommitted) |
+| **API 404 handler** | Catch-all returns JSON for unknown API routes | Current (uncommitted) |
+| **Scripts env fix** | `update-classes.js` & `update-roles.js` use `process.env.MONGO_URI` with fallback | Current (uncommitted) |
+| **Typo fix** | "Research Methadology" → "Research Methodology" | Current (uncommitted) |
+| **UX improvements** | Loading states, error handling, rating column in MyFeedback, social icons in Footer, accessibility (`aria-label`) across components | Current (uncommitted) |
 
 ### `[/]` In-Progress Workloads
 
@@ -303,7 +314,6 @@ mern-feedback-collector/
 | **Vercel deployment** | Import repo, set `VITE_API_URL` if backend is deployed separately, verify domain | Vercel dashboard → Import Git Repo → deploy |
 | **Backend deployment** | Express API needs its own host (Railway, Render, or Vercel serverless) | Separate deployment with `MONGO_URI` and `JWT_SECRET` env vars |
 | **Unit / integration tests** | Zero test coverage currently | Vitest (client) + Jest + Supertest (server) |
-| **Rate limiting on public endpoint** | Prevent spam submissions to `/api/public/feedback` | `express-rate-limit` package |
 | **Analytics dashboard** | Visual charts for submission trends, average ratings | Chart.js or Recharts |
 
 ### Environment References

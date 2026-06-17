@@ -72,10 +72,14 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | Feature | Implementation | Evidence |
 |---|---|---|
 | **Student Dashboard** | Welcome view with active session status and start-feedback button | `client/src/components/Dashboard.jsx` |
-| **Feedback History** | Paginated table of all past submissions for logged-in student | `client/src/components/MyFeedback.jsx` |
-| **Class Selection & Drill-Down** | Admin selects class → views student list → drills into individual student feedback | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
+| **Feedback History** | Feedback table with star rating column, loading/error states for authenticated student | `client/src/components/MyFeedback.jsx` |
+| **Star Rating Selector** | Visual 1–5 star UI in feedback form, stored per-subject in localStorage | `client/src/components/FeedbackForm.jsx` |
+| **Class Selection & Drill-Down** | Admin selects class (fetched dynamically from API) → views student list → drills into individual student feedback | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
 | **Admin Anonymous View** | Search + filter + export for all public anonymous submissions | `AdminAnonymous.jsx` |
-| **Session Allocation Message** | Admin sets a custom message (15-50 chars) when opening a feedback window | `server/routes/allotment.js:42-48` |
+| **Session Allocation Message** | Admin sets a custom message (15-50 chars) when opening a feedback window; opening-only validation | `server/routes/allotment.js:52-70` |
+| **Rate Limiting** | 10 requests per 15 minutes on public anonymous endpoint | `server/routes/public.js:25-30` |
+| **API Proxy** | Vite dev server proxies `/api` calls to backend on port 5000 | `client/vite.config.js` |
+| **Social Icons in Footer** | SVG icon buttons for YouTube, Instagram, Facebook, LinkedIn, WhatsApp | `client/src/components/Footer.jsx` |
 
 ### P2: Could Have (Future)
 
@@ -85,7 +89,6 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Email Notifications** | Alert students when a feedback window opens / closes | Nodemailer + cron-based or webhook-driven trigger |
 | **Faculty Role** | Separate read-only view for faculty to see aggregated class stats without exposing student identity | New `role: 'faculty'` in Student model; filtered query layer |
 | **Auto-Scheduled Allotments** | Admins pre-configure feedback windows on a calendar | Extend Allotment model with `startDate`, `endDate`; background scheduler |
-| **Rate Limiting** | Prevent spam on public anonymous endpoint | `express-rate-limit` on `/api/public/feedback` |
 | **Unit / Integration Tests** | Currently zero test coverage | Vitest (client) + Jest / Supertest (server) |
 
 ---
@@ -100,17 +103,19 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Authenticated Comment Length** | 50-300 characters (trimmed, inclusive) | `server/routes/feedback.js:22-23` |
 | **Anonymous Comment Length** | 100-300 characters | `server/routes/public.js:21-26` |
 | **Allotment Message Length** | 15-50 characters | `server/routes/allotment.js:43-48` |
-| **Rating Scale** | 1-5 (integer) | `server/models/Feedback.js:14-17` |
+| **Rating Scale** | 1-5 (integer) with visual star selector | `client/src/components/FeedbackForm.jsx` |
+| **Rate Limiting** | 10 requests per 15 min window on public feedback | `server/routes/public.js:25-30` |
+| **Request Body Limit** | 10kb (JSON payload) | `server/server.js:35` |
 | **Database** | MongoDB via Mongoose 8; schema-free migrations | `server/models/*` |
-| **API Base** | `http://localhost:5000/api` | `client/src/config/api.js` |
-| **Frontend Port** | 5173 (Vite dev) | `client/vite.config.js` |
+| **API Base** | `http://localhost:5000/api` (proxied in dev via Vite) | `client/src/config/api.js`, `client/vite.config.js` |
+| **Frontend Port** | 5173 (Vite dev with API proxy to :5000) | `client/vite.config.js` |
 | **Backend Port** | 5000 (Express) | `server/server.js:28` |
 | **NoSQL Schema** | 4 collections: `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
 | **Asset Format** | All raster images converted to **WebP** (quality 85) for production | `client/public/images/*.webp` |
 | **Favicon** | Original `logo.webp` renamed to `favicon.webp`: used exclusively as browser favicon | `client/public/images/favicon.webp` |
 | **Navbar Logo** | Separate `navbar-logo.webp` asset for Navbar, Landing, and Login components | `client/public/images/navbar-logo.webp` |
 | **Auth Guard** | `ProtectedRoute` redirects unauthenticated users to `/` | `client/src/App.jsx:18-22` |
-| **CORS** | Wide-open (`cors()` with no origin restriction) | `server/server.js:17` |
+| **CORS** | Wide-open (`cors()` with no origin restriction) | `server/server.js:34` |
 | **404 Page** | Standalone NotFound component with CSS compass illustration, brand logo, animated needle wobble, radial spotlight, two recovery CTAs, and responsive/motion-reduced support; renders outside the main layout with no Navbar/Footer | `client/src/components/NotFound.jsx` |
 | **License** | GNU General Public License v3.0: headers injected into all 44 source files | `LICENSE.md` |
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, meta author/description/keywords | `client/index.html` |

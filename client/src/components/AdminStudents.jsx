@@ -196,6 +196,7 @@ const AdminStudents = () => {
             placeholder="Search by name or USN..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search students by name or USN"
           />
           <div className="student-grid">
             {filtered.length === 0 ? (
