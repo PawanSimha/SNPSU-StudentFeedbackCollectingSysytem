@@ -29,7 +29,7 @@ npm run lint      # ESLint
 ## Asset Notes
 
 - All raster images stored as **WebP** (quality 85) in `public/images/`
-- Favicon: `favicon.webp` | Navbar logo: `navbar-logo.webp` | Footer: `footer-logo.webp`
+- Favicon: `favicon.ico` | Navbar logo: `navbar-logo.webp` | Footer: `footer-logo.webp`
 - Root `vercel.json` for deployment security headers
 
 ## Tech

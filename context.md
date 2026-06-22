@@ -154,7 +154,7 @@ mern-feedback-collector/
 │   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000)
 │   ├── index.html                SPA shell with SEO/GEO meta, JSON-LD, preloads, canonical URL
 │   ├── public/
-│   │   ├── images/               All WebP assets (favicon, navbar-logo, footer-logo, hero-bg, etc.)
+│   │   ├── images/               WebP + ICO assets (navbar-logo, footer-logo, hero-bg, footer-bg, favicon.ico)
 │   │   ├── robots.txt            AI-aware crawler directives (search allowed, training scrapers blocked)
 │   │   ├── sitemap.xml           10-URL sitemap anchored to production domain
 │   │   └── icons.svg             SVG icon sprite (unused in current UI)

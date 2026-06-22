@@ -102,7 +102,7 @@ mern-feedback-collector/
 │   ├── package.json
 │   ├── vite.config.js             # Vite config + API proxy (/api → :5000)
 │   ├── public/                      # Static assets
-│   │   ├── images/                  # WebP image assets (6 files)
+│   │   ├── images/                  # Image assets (4 WebP + 1 ICO = 5 files)
 │   │   ├── robots.txt               # AI-aware crawler directives
 │   │   ├── sitemap.xml              # 10-URL sitemap
 │   │   └── icons.svg                # SVG icon sprite

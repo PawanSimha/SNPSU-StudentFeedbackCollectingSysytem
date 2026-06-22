@@ -111,8 +111,8 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Frontend Port** | 5173 (Vite dev with API proxy to :5000) | `client/vite.config.js` |
 | **Backend Port** | 5000 (Express) | `server/server.js:28` |
 | **NoSQL Schema** | 4 collections: `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
-| **Asset Format** | All raster images converted to **WebP** (quality 85) for production | `client/public/images/*.webp` |
-| **Favicon** | Original `logo.webp` renamed to `favicon.webp`: used exclusively as browser favicon | `client/public/images/favicon.webp` |
+| **Asset Format** | Raster images as **WebP** (quality 85); favicon as **ICO** | `client/public/images/*.webp` + `favicon.ico` |
+| **Favicon** | `favicon.ico`: standard browser favicon format | `client/public/images/favicon.ico` |
 | **Navbar Logo** | Separate `navbar-logo.webp` asset for Navbar, Landing, and Login components | `client/public/images/navbar-logo.webp` |
 | **Auth Guard** | `ProtectedRoute` redirects unauthenticated users to `/` | `client/src/App.jsx:18-22` |
 | **CORS** | Wide-open (`cors()` with no origin restriction) | `server/server.js:34` |
