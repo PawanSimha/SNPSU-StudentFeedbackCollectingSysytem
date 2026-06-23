@@ -58,6 +58,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('student');
+    localStorage.removeItem('fb_locked');
+    localStorage.removeItem('fb_drafts');
+    localStorage.removeItem('fb_ratings');
     delete axios.defaults.headers.common['Authorization'];
     setStudent(null);
   };

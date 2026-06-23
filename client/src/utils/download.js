@@ -35,9 +35,12 @@ export const downloadCsv = (rows, filename) => {
   URL.revokeObjectURL(url);
 };
 
+const escapeHtml = (s) =>
+  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
 export const downloadDoc = (title, headers, rows, filename) => {
   const trs = rows.map(r =>
-    `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`
+    `<tr>${r.map(c => `<td>${escapeHtml(c)}</td>`).join('')}</tr>`
   ).join('');
 
   const html = `<!DOCTYPE html>

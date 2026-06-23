@@ -20,6 +20,8 @@
 
 The **SOAS Feedback Collector** is a full-stack MERN application that enables MCA students at Sapthagiri NPS University to submit anonymous feedback on courses and instructors after each class session. Faculty and administrators gain aggregated insights through a dedicated dashboard, driving continuous improvement in curriculum delivery.
 
+> **v1.2 updates:** Added MongoDB indexes, `.lean()` query optimization, PM2 clustering (multi-core), Helmet security headers, gzip compression, and production process management. System now handles 200-300 concurrent students on a standard 4-core server.
+
 > **v1.1 updates:** Added star rating selector (1–5), rate limiting on public endpoint, Vite API proxy, class list dynamic fetch from API, improved loading/error states across all components, social media icons in footer, and various bug fixes.
 
 The system supports authenticated student feedback with per-session allotments, a public anonymous feedback channel (no login required), and comprehensive admin tools including CSV/Word report exports.
@@ -58,7 +60,7 @@ Browser                          Express API                      MongoDB
   ├─ Login (/login)                   ├─ /api/feedback (CRUD)
   ├─ Dashboard (/dashboard)           ├─ /api/admin (admin ops)
   ├─ Admin Panel (/admin/*)           ├─ /api/allotments (open/close)
-  ├─ PublicFeedback (/feedback/pub)   ├─ /api/public (anonymous)
+  ├─ PublicFeedback (/feedback/public)   ├─ /api/public (anonymous)
   └─ 404 (*)                          (no backend)
 ```
 
@@ -77,6 +79,9 @@ Browser                          Express API                      MongoDB
 |              | JSON Web Token (auth)                   | ^9.0.2    |
 |              | bcryptjs (password hashing)             | ^2.4.3    |
 |              | express-rate-limit (spam prevention)     | (latest)  |
+|              | Helmet (security headers)               | ^8.2.0    |
+|              | compression (gzip)                       | ^1.8.1    |
+| **Process**  | PM2 (cluster mode, multi-core)          | ^7.0.1    |
 | **Database** | MongoDB                                 | (via Mongoose) |
 | **Tooling**  | Vite ESLint plugin, concurrently        |           |
 
@@ -86,7 +91,7 @@ Browser                          Express API                      MongoDB
 
 ```
 mern-feedback-collector/
-├── .gitignore                       # Ignores node_modules, .env, dist, etc.
+├── .gitignore                       # Ignores node_modules, .env, dist, server/logs/, editor dirs
 ├── context.md                       # System context cross-session continuity
 ├── LICENSE.md                       # GNU General Public License v3.0
 ├── package.json                     # Root orchestration (concurrently)
@@ -104,19 +109,18 @@ mern-feedback-collector/
 │   ├── public/                      # Static assets
 │   │   ├── images/                  # Image assets (4 WebP + 1 ICO = 5 files)
 │   │   ├── robots.txt               # AI-aware crawler directives
-│   │   ├── sitemap.xml              # 10-URL sitemap
-│   │   └── icons.svg                # SVG icon sprite
+│   │   └── sitemap.xml              # 3-URL sitemap
 │   └── src/
 │       ├── main.jsx                 # Entry point (BrowserRouter)
 │       ├── App.jsx                  # Route definitions + layouts
-│       ├── index.css                # Global styles (~3680 lines)
+│       ├── index.css                # Global styles (~3850 lines)
 │       ├── config/
 │       │   └── api.js               # Centralized API base URL
 │       ├── context/
 │       │   └── AuthContext.jsx       # Global auth state (JWT)
 │       ├── utils/
 │       │   └── download.js          # CSV & Word export helpers
-│       └── components/              # 17 React components
+│       └── components/              # 18 React components
 │           ├── admin/               # Admin sub-components (7)
 │           │   ├── AdminAllotments.jsx
 │           │   ├── AdminAnonymous.jsx
@@ -133,13 +137,16 @@ mern-feedback-collector/
 │           ├── Login.jsx            # Auth login form
 │           ├── MyFeedback.jsx       # Feedback history
 │           ├── Navbar.jsx           # Auth-aware navigation
+│           ├── ErrorBoundary.jsx    # Global error boundary with reload CTA
 │           ├── NotFound.jsx         # Branded 404 (compass, CTAs)
 │           └── PublicFeedback.jsx   # Anonymous (no login) feedback
 │
 ├── server/                          # Express backend
 │   ├── .env                         # Environment config (gitignored)
+│   ├── .env.example                 # Environment variable template (documented)
 │   ├── package.json
-│   ├── server.js                    # Express app entry (port 5000, body limit 10kb, 404 handler)
+│   ├── ecosystem.config.js          # PM2 cluster config (multi-core production)
+│   ├── server.js                    # Express app entry (helmet, compression, cors, 10kb body limit, 404 handler)
 │   ├── config/
 │   │   ├── db.js                    # MongoDB connection
 │   │   └── subjects.js              # 6-subject constant
@@ -188,7 +195,7 @@ cd client && npm install && cd ..
 
 ### 2. Configure Environment
 
-Edit `server/.env` (provided; modify as needed):
+Edit `server/.env` (use `server/.env.example` as a template; modify as needed):
 
 ```env
 MONGO_URI=mongodb://localhost:27017/feedback-collector
@@ -209,6 +216,13 @@ Populates 51 students with password `MCAA@123` in class group `MCA, 1st Year, 2n
 npm run seed
 ```
 
+(Optional) Seed additional sections and admin account:
+
+```bash
+npm run seed-b       # 50 B section students, password "MCAB@123"
+npm run seed-admin   # Admin account: admin@gmail.com / iamadmin
+```
+
 ### 4. Run the Application
 
 Starts both backend (port 5000) and frontend (port 5173) concurrently:
@@ -220,21 +234,52 @@ npm run dev
 - **Frontend:** http://localhost:5173
 - **Backend API:** http://localhost:5000/api/health
 
+### 5. Production Deployment
+
+Uses **PM2 cluster mode** — spawns one worker per CPU core (auto-detected). Each worker is an independent Express instance behind the same port.
+
+```bash
+# Start with PM2 (cluster mode, all cores)
+cd server && npm run prod
+
+# Monitor running instances
+npm run prod:logs
+
+# Stop all workers
+npm run prod:stop
+```
+
+For frontend production build:
+
+```bash
+cd client && npm run build
+# Output: client/dist/ (deploy to Vercel or any static host)
+```
+
 ---
 
 ## API Overview
 
-| Method | Endpoint                       | Auth     | Description                            |
-| ------ | ------------------------------ | -------- | -------------------------------------- |
-| POST   | `/api/auth/login`              | Public   | Student/admin login (email + USN + pw) |
-| GET    | `/api/auth/me`                 | JWT      | Return current user profile            |
-| POST   | `/api/public/feedback`         | Public   | Submit anonymous feedback (rate-limited: 10/15min) |
-| GET    | `/api/public/subjects`         | Public   | List available subjects                |
-| GET    | `/api/public/feedbacks`        | JWT      | List all anonymous feedbacks (admin)   |
-| POST   | `/api/feedback/submit`         | JWT      | Submit authenticated feedback          |
-| GET    | `/api/admin/db-overview`       | Admin    | Full database statistics & collections |
-| GET    | `/api/admin/feedback/stats`    | Admin    | Aggregated feedback statistics         |
-| GET    | `/api/allotments`              | JWT      | List current allotments by class       |
+| Method | Endpoint                                            | Auth     | Description                                     |
+| ------ | --------------------------------------------------- | -------- | ----------------------------------------------- |
+| POST   | `/api/auth/login`                                   | Public   | Student/admin login (email + USN + pw)          |
+| GET    | `/api/auth/me`                                      | JWT      | Return current user profile                     |
+| GET    | `/api/feedback/subjects`                            | JWT      | List subjects for feedback form                 |
+| GET    | `/api/feedback/my`                                  | JWT      | Current user's feedback history                 |
+| POST   | `/api/feedback/submit`                              | JWT      | Submit authenticated feedback                   |
+| GET    | `/api/allotments/status`                            | JWT      | Check if feedback session is open for user      |
+| GET    | `/api/allotments`                                   | Admin    | List all allotments by class                    |
+| POST   | `/api/allotments`                                   | Admin    | Toggle allotment open/close                     |
+| GET    | `/api/admin/classes`                                | Admin    | List all class groups                           |
+| GET    | `/api/admin/students`                               | Admin    | List students (optional `?class=` filter)       |
+| GET    | `/api/admin/feedback`                               | Admin    | All feedbacks (optional `?class=`/`?student=`)  |
+| GET    | `/api/admin/feedback/stats`                         | Admin    | Aggregated feedback statistics                  |
+| GET    | `/api/admin/feedback/subject/:subject`              | Admin    | Feedbacks for a specific subject                |
+| GET    | `/api/admin/feedback/subject/:subject/coverage`     | Admin    | Per-subject coverage (gave/not-given students)  |
+| GET    | `/api/admin/db-overview`                            | Admin    | Full database statistics & collections          |
+| POST   | `/api/public/feedback`                              | Public   | Submit anonymous feedback (rate-limited: 10/15min) |
+| GET    | `/api/public/subjects`                              | Public   | List available subjects                         |
+| GET    | `/api/public/feedbacks`                             | Admin    | List all anonymous feedbacks                    |
 
 ---
 
@@ -263,7 +308,7 @@ cd client && npm run build
 
 ### Testing
 
-No test framework is currently configured. Contributions to add unit/integration tests (Vitest or Jest) are welcome.
+Test dependencies (Jest + Supertest) are installed; no test cases have been written yet. See the Testing section for setup details.
 
 ### Contributing
 

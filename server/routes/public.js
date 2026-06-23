@@ -24,8 +24,8 @@ const { SUBJECTS } = require('../config/subjects');
 const router = express.Router();
 
 const publicLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '15') * 60 * 1000,
+  max: parseInt(process.env.RATE_LIMIT_MAX || '10'),
   message: { message: 'Too many submissions. Please try again later.' },
 });
 
@@ -42,7 +42,13 @@ router.post('/feedback', publicLimiter, async (req, res) => {
     if (!SUBJECTS.includes(subject)) {
       return res.status(400).json({ message: 'Invalid subject' });
     }
-    if (!comments || comments.length < 100) {
+    if (facultyName && facultyName.length > 100) {
+      return res.status(400).json({ message: 'Faculty name must not exceed 100 characters' });
+    }
+    if (!comments) {
+      return res.status(400).json({ message: 'Comments are required' });
+    }
+    if (comments.length < 100) {
       return res.status(400).json({ message: 'Feedback must be at least 100 characters' });
     }
     if (comments.length > 300) {
@@ -51,7 +57,7 @@ router.post('/feedback', publicLimiter, async (req, res) => {
     const feedback = await PublicFeedback.create({ subject, facultyName: facultyName || '', comments });
     res.status(201).json({ message: 'Feedback submitted successfully', feedback });
   } catch (error) {
-    console.error(error);
+    console.error('Public feedback submit error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -61,7 +67,7 @@ router.get('/feedbacks', protect, async (req, res) => {
     const feedbacks = await PublicFeedback.find().sort({ createdAt: -1 }).lean();
     res.json(feedbacks);
   } catch (error) {
-    console.error(error);
+    console.error('Public feedback fetch error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });

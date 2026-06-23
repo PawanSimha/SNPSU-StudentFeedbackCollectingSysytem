@@ -29,22 +29,24 @@ const seedAdmin = async () => {
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/feedback-collector');
     console.log('Connected to MongoDB');
 
-    const existing = await Student.findOne({ email: 'admin@gmail.com' });
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'iamadmin';
+    const existing = await Student.findOne({ email: adminEmail });
     if (existing) {
       console.log('Admin already exists, updating...');
       const salt = await bcrypt.genSalt(10);
-      existing.password = await bcrypt.hash('iamadmin', salt);
+      existing.password = await bcrypt.hash(adminPassword, salt);
       existing.role = 'admin';
-      existing.usn = '1234567890';
+      existing.usn = process.env.ADMIN_USN || '1234567890';
       await existing.save();
       console.log('Admin updated');
     } else {
       const salt = await bcrypt.genSalt(10);
       await Student.create({
-        name: 'Pawan Simha',
-        email: 'admin@gmail.com',
-        usn: '1234567890',
-        password: await bcrypt.hash('iamadmin', salt),
+        name: process.env.ADMIN_NAME || 'Pawan Simha',
+        email: adminEmail,
+        usn: process.env.ADMIN_USN || '1234567890',
+        password: await bcrypt.hash(adminPassword, salt),
         role: 'admin',
       });
       console.log('Admin created');

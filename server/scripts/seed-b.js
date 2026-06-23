@@ -96,7 +96,7 @@ const seed = async () => {
     }));
 
     await Student.insertMany(studentsWithPassword);
-    console.log(`Inserted ${students.length} B section students with password "MCAB@123"`);
+    console.log(`Inserted ${students.length} B section students with default password`);
 
     await mongoose.disconnect();
     console.log('Done');

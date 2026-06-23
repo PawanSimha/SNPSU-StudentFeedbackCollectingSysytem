@@ -18,12 +18,19 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const Student = require('../models/Student');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/login', async (req, res) => {
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: parseInt(process.env.LOGIN_RATE_LIMIT_MAX || '5'),
+  message: { message: 'Too many login attempts. Please try again later.' },
+});
+
+router.post('/login', loginLimiter, async (req, res) => {
   try {
     const { email, usn, password } = req.body;
 
@@ -43,7 +50,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '30d' });
 
     res.json({
       _id: student._id,
@@ -54,7 +61,7 @@ router.post('/login', async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error(error);
+    console.error('Login error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -38,11 +38,12 @@ const FeedbackForm = () => {
 
   useEffect(() => {
     axios.get(`${API}/feedback/subjects`).then(({ data }) => setSubjects(data));
-    const saved = JSON.parse(localStorage.getItem('fb_locked') || '{}');
+    let saved, savedFb, savedRatings;
+    try { saved = JSON.parse(localStorage.getItem('fb_locked') || '{}'); } catch { saved = {}; }
     setLocked(saved);
-    const savedFb = JSON.parse(localStorage.getItem('fb_drafts') || '{}');
+    try { savedFb = JSON.parse(localStorage.getItem('fb_drafts') || '{}'); } catch { savedFb = {}; }
     setFeedbacks(savedFb);
-    const savedRatings = JSON.parse(localStorage.getItem('fb_ratings') || '{}');
+    try { savedRatings = JSON.parse(localStorage.getItem('fb_ratings') || '{}'); } catch { savedRatings = {}; }
     setRatings(savedRatings);
   }, []);
 

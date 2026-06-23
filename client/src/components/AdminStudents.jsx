@@ -34,12 +34,19 @@ const AdminStudents = () => {
   const [coverage, setCoverage] = useState(null);
   const [subjectFeedback, setSubjectFeedback] = useState([]);
   const [activeTab, setActiveTab] = useState('given');
+  const [loading, setLoading] = useState(true);
 
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
   useEffect(() => {
-    axios.get(`${API}/admin/students?${classParam}`).then(({ data }) => setStudents(data));
-    axios.get(`${API}/feedback/subjects`).then(({ data }) => setSubjects(data));
+    setLoading(true);
+    Promise.all([
+      axios.get(`${API}/admin/students?${classParam}`),
+      axios.get(`${API}/feedback/subjects`),
+    ]).then(([studentsRes, subjectsRes]) => {
+      setStudents(studentsRes.data);
+      setSubjects(subjectsRes.data);
+    }).catch(() => {}).finally(() => setLoading(false));
   }, [classGroup]);
 
   const showSubjectFeedback = async (subject) => {
@@ -110,7 +117,9 @@ const AdminStudents = () => {
         </div>
       </div>
 
-      {selectedSubject ? (
+      {loading ? (
+        <p className="loading-text">Loading students...</p>
+      ) : selectedSubject ? (
         <div className="subject-feedback-view">
           <h3>Feedback on <span className="highlight">{selectedSubject}</span></h3>
 

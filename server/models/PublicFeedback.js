@@ -32,4 +32,6 @@ const publicFeedbackSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+publicFeedbackSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('PublicFeedback', publicFeedbackSchema);

@@ -39,4 +39,8 @@ const feedbackSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+feedbackSchema.index({ student: 1, subject: 1 }, { unique: true });
+feedbackSchema.index({ subject: 1 });
+feedbackSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Feedback', feedbackSchema);

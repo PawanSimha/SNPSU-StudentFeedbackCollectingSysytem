@@ -29,7 +29,7 @@ router.get('/subjects', protect, (req, res) => {
 
 router.get('/my', protect, async (req, res) => {
   try {
-    const feedbacks = await Feedback.find({ student: req.student._id }).sort({ createdAt: -1 });
+    const feedbacks = await Feedback.find({ student: req.student._id }).sort({ createdAt: -1 }).lean();
     res.json(feedbacks);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -47,7 +47,15 @@ router.post('/submit', protect, async (req, res) => {
       return res.status(400).json({ message: 'Subject and rating are required' });
     }
 
-    if (comments) {
+    if (!SUBJECTS.includes(subject)) {
+      return res.status(400).json({ message: 'Invalid subject' });
+    }
+
+    if (typeof rating !== 'number' || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be a number between 1 and 5' });
+    }
+
+    if (typeof comments === 'string' && comments.trim()) {
       const trimmed = comments.trim();
       if (trimmed.length < MIN_LEN) {
         return res.status(400).json({ message: `Feedback must be at least ${MIN_LEN} characters` });
@@ -81,6 +89,7 @@ router.post('/submit', protect, async (req, res) => {
 
     res.status(201).json(feedback);
   } catch (error) {
+    console.error('Feedback submit error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });

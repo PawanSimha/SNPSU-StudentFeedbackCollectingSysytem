@@ -6,7 +6,9 @@
     "server": "cd server && node server.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "seed": "cd server && node scripts/seed.js"
+    "seed": "cd server && node scripts/seed.js",
+    "seed-b": "cd server && node scripts/seed-b.js",
+    "seed-admin": "cd server && node scripts/seed-admin.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

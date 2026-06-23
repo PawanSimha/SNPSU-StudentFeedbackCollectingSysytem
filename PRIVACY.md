@@ -4,7 +4,7 @@
 
 ## 1. Data Controller
 
-SOAS Feedback Collector is an open-source project maintained by Pawan Simha R (MCA, SOAS, Sapthagiri NPS University).
+SOAS Feedback Collector is an open-source project operated under the authority of Sapthagiri NPS University, Bengaluru, Karnataka, India. The application is maintained by Pawan Simha R (MCA, SOAS) as part of an academic project.
 
 ## 2. What Data We Collect
 
@@ -14,7 +14,7 @@ SOAS Feedback Collector is an open-source project maintained by Pawan Simha R (M
 - **Public feedback:** Subject, optional faculty name, and comments (100-300 characters): no personal identity is collected for anonymous submissions.
 
 ### 2.2 Information collected automatically
-- **Essential cookies:** A session cookie (`connect.sid`) is used for JWT token management. No tracking, analytics, or advertising cookies are used.
+- **No cookies:** This application does not use HTTP cookies. JWT tokens are managed exclusively via client-side `sessionStorage` (cleared on tab close). No tracking, analytics, or advertising cookies are used.
 - **Local storage:** JWT tokens are stored in `sessionStorage` (cleared on tab close). Feedback lock state and cookie consent preference are stored in `localStorage`.
 
 ### 2.3 No analytics
@@ -35,7 +35,7 @@ We do **not** sell, rent, or share personal data with third parties. Aggregated,
 
 - Student account data is retained while enrolled. Accounts may be removed upon request.
 - Feedback submissions are retained for the duration of the academic term and may be archived thereafter.
-- Anonymous public feedback cannot be linked to any individual and is retained indefinitely for audit purposes.
+- Anonymous public feedback cannot be linked to any individual and is retained for the duration of the academic term for audit purposes, after which it is anonymized or deleted.
 
 ## 6. Your Rights (GDPR / CCPA)
 
@@ -46,7 +46,11 @@ Depending on your jurisdiction, you may have the right to:
 - **Object** to processing.
 - **Data portability.**
 
-To exercise these rights, contact the repository maintainer via the GitHub profile at [https://github.com/PawanSimha](https://github.com/PawanSimha).
+To exercise these rights, contact:  
+**Sapthagiri NPS University**  
+#14/5, Chamasandra, Bidarahalli Hobli,  
+Bengaluru, Karnataka 560049, India  
+or the project maintainer via the GitHub profile at [https://github.com/PawanSimha](https://github.com/PawanSimha).
 
 ## 7. Security
 
@@ -57,7 +61,7 @@ To exercise these rights, contact the repository maintainer via the GitHub profi
 ## 8. Third-Party Services
 
 - **Google Fonts:** The application loads the Inter and Playfair Display font families from Google Fonts. Google's [privacy policy](https://policies.google.com/privacy) applies to font requests.
-- **Hosting:** When deployed, the platform (Vercel / Netlify) processes requests and may retain server logs per their respective policies.
+- **Hosting:** When deployed, the platform (Vercel) processes requests and may retain server logs per their respective policies.
 
 ## 9. Changes to This Policy
 

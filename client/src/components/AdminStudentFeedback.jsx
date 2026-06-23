@@ -30,16 +30,18 @@ const AdminStudentFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`${API}/admin/feedback?${classParam}&student=${studentId}`).then(({ data }) => {
       setFeedbacks(data);
       const unique = [...new Set(data.map(f => f.subject))];
       setSubjects(unique);
       if (data.length > 0) setStudent(data[0].student);
-    });
+    }).catch(() => {}).finally(() => setLoading(false));
   }, [classGroup, studentId]);
 
   const filterBySubject = async (subject) => {
@@ -59,7 +61,9 @@ const AdminStudentFeedback = () => {
         <button className="btn btn-back" onClick={() => navigate(`/admin/${encodeURIComponent(decodedClass)}`)}>← All Students</button>
       </div>
 
-      {student && (
+      {loading ? (
+        <p className="loading-text">Loading feedback...</p>
+      ) : student && (
         <div className="student-profile">
           <div className="student-avatar large">{student.name.charAt(0)}</div>
           <div className="profile-details">
@@ -93,6 +97,7 @@ const AdminStudentFeedback = () => {
             <div key={fb._id} className="feedback-card">
               <div className="feedback-card-header">
                 <h4>{fb.subject}</h4>
+                <span className="stars-cell">{'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}</span>
                 <span className="feedback-date">{new Date(fb.createdAt).toLocaleDateString()}</span>
               </div>
               {fb.comments && <p className="feedback-comments">{fb.comments}</p>}

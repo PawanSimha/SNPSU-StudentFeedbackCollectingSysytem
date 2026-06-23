@@ -17,6 +17,8 @@
 */
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
@@ -31,7 +33,14 @@ const publicRoutes = require('./routes/public');
 
 const app = express();
 
-app.use(cors());
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set');
+  process.exit(1);
+}
+
+app.use(helmet());
+app.use(compression());
+app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
 app.use(express.json({ limit: '10kb' }));
 
 app.use('/api/auth', authRoutes);

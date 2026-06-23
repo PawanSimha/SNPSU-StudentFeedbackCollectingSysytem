@@ -51,7 +51,8 @@ router.get('/students', async (req, res) => {
       : {};
     const students = await Student.find({ role: 'student', ...classFilter })
       .select('name email usn classGroup')
-      .sort({ name: 1 });
+      .sort({ name: 1 })
+      .lean();
     res.json(students);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -93,11 +94,12 @@ router.get('/feedback', async (req, res) => {
 
     const feedbacks = await Feedback.find(query)
       .populate('student', 'name email usn classGroup')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     res.json(feedbacks);
   } catch (error) {
-    console.error(error);
+    console.error('Admin feedback error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -111,7 +113,7 @@ router.get('/feedback/stats', async (req, res) => {
       query.classGroup = fbFilter.classGroup;
     }
 
-    const studentsInClass = await Student.find(query).select('_id');
+    const studentsInClass = await Student.find(query).select('_id').lean();
     const totalStudents = studentsInClass.length;
     const studentIds = studentsInClass.map(s => s._id);
 
@@ -154,7 +156,8 @@ router.get('/feedback/subject/:subject', async (req, res) => {
 
     const feedbacks = await Feedback.find(query)
       .populate('student', 'name email usn classGroup')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     res.json(feedbacks);
   } catch (error) {
@@ -170,11 +173,12 @@ router.get('/feedback/subject/:subject/coverage', async (req, res) => {
     }
 
     const subject = req.params.subject;
-    const studentsInClass = await Student.find({ role: 'student', classGroup }).select('name email usn');
+    const studentsInClass = await Student.find({ role: 'student', classGroup }).select('name email usn').lean();
     const totalStudents = studentsInClass.length;
 
     const feedbacks = await Feedback.find({ subject })
-      .populate('student', 'name email usn classGroup');
+      .populate('student', 'name email usn classGroup')
+      .lean();
 
     const gaveStudentIds = new Set(
       feedbacks.filter(f => f.student?.classGroup === classGroup).map(f => f.student._id.toString())
@@ -198,7 +202,7 @@ router.get('/feedback/subject/:subject/coverage', async (req, res) => {
       notGivenStudents,
     });
   } catch (error) {
-    console.error(error);
+    console.error('Admin coverage error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -241,7 +245,7 @@ router.get('/db-overview', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error('Admin db-overview error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 });

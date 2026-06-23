@@ -36,8 +36,10 @@ const AdminAllotments = () => {
   const [messages, setMessages] = useState({});
   const [errors, setErrors] = useState({});
   const [pageError, setPageError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`${API}/admin/classes`).then(({ data }) => setClassList(data)).catch(() => {});
     axios.get(`${API}/allotments`).then(({ data }) => {
       const map = {};
@@ -48,7 +50,7 @@ const AdminAllotments = () => {
       });
       setAllotments(map);
       setMessages(msgs);
-    }).catch(() => setPageError('Failed to load allotments'));
+    }).catch(() => setPageError('Failed to load allotments')).finally(() => setLoading(false));
   }, []);
 
   const handleToggle = async (classGroup) => {
@@ -86,6 +88,9 @@ const AdminAllotments = () => {
 
       {pageError && <div className="alert alert-error">{pageError}</div>}
 
+      {loading ? (
+        <p className="loading-text">Loading allotments...</p>
+      ) : (
       <div className="allotment-list">
         {classList.map((cls) => {
           const state = allotments[cls];
@@ -134,6 +139,7 @@ const AdminAllotments = () => {
           );
         })}
       </div>
+      )}
     </div>
   );
 };

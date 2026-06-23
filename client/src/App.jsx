@@ -23,6 +23,7 @@ import Dashboard from './components/Dashboard';
 import FeedbackForm from './components/FeedbackForm';
 import MyFeedback from './components/MyFeedback';
 import AdminClassSelect from './components/AdminClassSelect';
+import AdminDashboard from './components/AdminDashboard';
 import AdminStudents from './components/AdminStudents';
 import AdminStudentFeedback from './components/AdminStudentFeedback';
 import AdminAllotments from './components/AdminAllotments';
@@ -33,6 +34,7 @@ import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const ProtectedRoute = ({ children }) => {
   const { student, loading } = useAuth();
@@ -61,29 +63,32 @@ const ProtectedLayout = () => (
 
 const App = () => (
   <AuthProvider>
-    <Routes>
-      {/* Public pages: no navbar/footer */}
-      <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/feedback/public" element={<PublicFeedback />} />
+    <ErrorBoundary>
+      <Routes>
+        {/* Public pages: no navbar/footer */}
+        <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/feedback/public" element={<PublicFeedback />} />
 
-      {/* Authenticated pages: with navbar/footer */}
-      <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/feedback" element={<FeedbackForm />} />
-        <Route path="/my-feedback" element={<MyFeedback />} />
+        {/* Authenticated pages: with navbar/footer */}
+        <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/feedback" element={<FeedbackForm />} />
+          <Route path="/my-feedback" element={<MyFeedback />} />
         <Route path="/admin" element={<AdminClassSelect />} />
+        <Route path="/admin/:classGroup/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/allotments" element={<AdminAllotments />} />
-        <Route path="/admin/database" element={<AdminDbOverview />} />
-        <Route path="/admin/anonymous" element={<AdminAnonymous />} />
-        <Route path="/admin/:classGroup" element={<AdminStudents />} />
-        <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
-      </Route>
+          <Route path="/admin/database" element={<AdminDbOverview />} />
+          <Route path="/admin/anonymous" element={<AdminAnonymous />} />
+          <Route path="/admin/:classGroup" element={<AdminStudents />} />
+          <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
+        </Route>
 
-      {/* 404: no navbar/footer */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-    <CookieConsent />
+        {/* 404: no navbar/footer */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <CookieConsent />
+    </ErrorBoundary>
   </AuthProvider>
 );
 

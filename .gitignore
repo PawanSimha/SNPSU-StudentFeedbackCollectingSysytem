@@ -13,3 +13,4 @@ Thumbs.db
 *.sln
 *.sw?
 server/.env
+server/logs/

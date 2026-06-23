@@ -28,7 +28,8 @@ const Dashboard = () => {
   const [allotment, setAllotment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const locked = JSON.parse(localStorage.getItem('fb_locked') || '{}');
+  let locked;
+  try { locked = JSON.parse(localStorage.getItem('fb_locked') || '{}'); } catch { locked = {}; }
   const lockedCount = Object.values(locked).filter(Boolean).length;
 
   useEffect(() => {

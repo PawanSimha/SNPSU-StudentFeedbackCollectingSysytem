@@ -32,7 +32,7 @@ router.get('/status', async (req, res) => {
     if (!classGroup) {
       return res.json({ open: false });
     }
-    const allotment = await Allotment.findOne({ classGroup, isOpen: true });
+    const allotment = await Allotment.findOne({ classGroup, isOpen: true }).lean();
     res.json({ open: !!allotment, message: allotment?.message || '' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -42,7 +42,7 @@ router.get('/status', async (req, res) => {
 router.get('/', async (req, res) => {
   if (req.student.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
   try {
-    const allotments = await Allotment.find();
+    const allotments = await Allotment.find().lean();
     res.json(allotments);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -58,9 +58,10 @@ router.post('/', async (req, res) => {
     }
     let allotment = await Allotment.findOne({ classGroup });
     const opening = allotment ? !allotment.isOpen : true;
+    let trimmed;
 
     if (opening) {
-      const trimmed = (message || '').trim();
+      trimmed = (message || '').trim();
       if (trimmed.length < 15) {
         return res.status(400).json({ message: 'Message must be at least 15 characters' });
       }

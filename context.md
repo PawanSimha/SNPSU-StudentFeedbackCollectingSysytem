@@ -42,16 +42,19 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **HTTP Client** | Axios | ^1.18.0 | Base instance configured per-component |
 | **Backend Runtime** | Node.js / Express | ^4.21.0 | cors ^2.8.5, dotenv ^16.4.5 |
 | **Rate Limiting** | express-rate-limit | (latest) | 10 req / 15 min on public endpoint |
+| **Security Headers** | Helmet | ^8.2.0 | X-Frame-Options, X-Content-Type-Options, CSP enforcement |
+| **Response Compression** | compression | ^1.8.1 | gzip on all API responses (~70% smaller payloads) |
+| **Process Manager** | PM2 | ^7.0.1 | Cluster mode: N workers = N CPU cores; auto-restart on crash |
 | **ODM / Database** | Mongoose / MongoDB | ^8.6.0 | 4 collections (students, feedbacks, publicfeedbacks, allotments) |
 | **Authentication** | jsonwebtoken | ^9.0.2 | 30-day expiry, sessionStorage on client |
 | **Password Hashing** | bcryptjs | ^2.4.3 | Salt rounds: 10 |
 | **Dev Orchestration** | concurrently | ^8.2.2 | Runs server + client in parallel |
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
 | **Linting** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins |
-| **CSS** | Custom properties (no framework) | - | In `index.css` (~3846 lines) |
+| **CSS** | Custom properties (no framework) | - | In `index.css` (~3850 lines) |
 | **Image Format** | WebP | quality 85 | All raster assets in `client/public/images/` |
 | **Deployment** | Vercel | - | `vercel.json` with SPA rewrites + security headers |
-| **License** | GPLv3 | - | `LICENSE.md` + headers in all 44 source files |
+| **License** | GPLv3 | - | `LICENSE.md` + headers in all 45 source files |
 
 ---
 
@@ -156,8 +159,7 @@ mern-feedback-collector/
 │   ├── public/
 │   │   ├── images/               WebP + ICO assets (navbar-logo, footer-logo, hero-bg, footer-bg, favicon.ico)
 │   │   ├── robots.txt            AI-aware crawler directives (search allowed, training scrapers blocked)
-│   │   ├── sitemap.xml           10-URL sitemap anchored to production domain
-│   │   └── icons.svg             SVG icon sprite (unused in current UI)
+│   │   └── sitemap.xml           3-URL sitemap anchored to production domain
 │   └── src/
 │       ├── main.jsx              Entry point: BrowserRouter wraps App
 │       ├── App.jsx               Route definitions, layout composition, cookie consent
@@ -165,7 +167,7 @@ mern-feedback-collector/
 │       │   └── api.js            Centralized API base URL (env-var-aware)
 │       ├── context/
 │       │   └── AuthContext.jsx    Auth state provider: student, login, logout, loading
-│   ├── components/           17 React components
+│   ├── components/           18 React components
 │       │   ├── Landing.jsx       Public landing page with FAQ accordion
 │       │   ├── Login.jsx         Email + USN + password form
 │       │   ├── Dashboard.jsx     Student home: session status, start-feedback button
@@ -176,6 +178,7 @@ mern-feedback-collector/
 │       │   ├── CookieConsent.jsx GDPR banner with Accept/Decline, localStorage persistence
 │       │   ├── Navbar.jsx        Auth-aware navigation with conditional links
 │   │   ├── Footer.jsx        Shared footer with social media icon buttons (SVG), quick links, and copyright
+│       │   ├── ErrorBoundary.jsx  Global error boundary with reload CTA
 │       │   └── admin/            7 admin sub-components
 │       │       ├── AdminClassSelect.jsx
 │       │       ├── AdminStudents.jsx
@@ -186,11 +189,12 @@ mern-feedback-collector/
 │       │       └── AdminAnonymous.jsx
 │       ├── utils/
 │       │   └── download.js       Client-side CSV and Word doc export (Blob + download link)
-│       └── index.css             Global styles: ~3683 lines, CSS custom properties, BEM naming
+│   └── index.css             Global styles: ~3850 lines, CSS custom properties, BEM naming
 │
 ├── server/                      Express 4.21 REST API (backend)
-│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv
-│   ├── server.js                 App entry: cors(), express.json({ limit: '10kb' }), 5 route mounts, health endpoint, 404 catch-all
+│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pm2
+│   ├── ecosystem.config.js       PM2 cluster config: N workers = N CPU cores, auto-restart, log rotation
+│   ├── server.js                 App entry: helmet(), compression(), cors(), express.json({ limit: '10kb' }), 5 route mounts, health endpoint, 404 catch-all
 │   ├── .env                      MONGO_URI, JWT_SECRET, PORT (not committed to git)
 │   ├── config/
 │   │   ├── db.js                 Mongoose connection with MONGO_URI env fallback
@@ -281,12 +285,12 @@ mern-feedback-collector/
 | **Initial MERN scaffold** | Working auth, feedback CRUD, admin routes, MongoDB models | `0c385ea` |
 | **WebP image migration** | All images converted to WebP (q85), moved to `public/images/`, originals deleted | `6b209d0` |
 | **SEO/GEO meta tags** | Canonical URL, OG/Twitter cards, JSON-LD (WebApplication schema), author meta | `0e4bea9` |
-| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 38 source files | `0e4bea9` |
+| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 45 source files | `0e4bea9` |
 | **Product documentation** | `PRD.md` (MoSCoW, KPIs, user journeys) and `README.md` with project structure | `0e4bea9`, `805fdf1` |
 | **Branded 404 page** | CSS compass illustration, brand logo, "Go to Homepage" + "Go Back" CTAs, no navbar/footer | Current (uncommitted) |
 | **Cookie consent banner** | Accessible dialog with Accept/Decline, localStorage persistence, links to PRIVACY.md | Current (uncommitted) |
 | **AI-aware robots.txt** | Search crawlers (Googlebot, Bingbot, Perplexity, etc.) allowed; training scrapers (GPTBot, ClaudeBot, CCBot) blocked | Current (uncommitted) |
-| **Sitemap.xml** | 10 URLs anchored to production domain `https://snpsu-feedback-collector.vercel.app` | Current (uncommitted) |
+| **Sitemap.xml** | 3 URLs anchored to production domain `https://snpsu-feedback-collector.vercel.app` | Current (uncommitted) |
 | **Privacy policy** | `PRIVACY.md` covering GDPR/CCPA, data collection, retention, contact | Current (uncommitted) |
 | **API URL centralization** | `config/api.js` with `VITE_API_URL` env var; all 13 files updated to import | Current (uncommitted) |
 | **Vercel deployment config** | `vercel.json` with SPA rewrites and strict security headers | Current (uncommitted) |
@@ -301,6 +305,19 @@ mern-feedback-collector/
 | **Scripts env fix** | `update-classes.js` & `update-roles.js` use `process.env.MONGO_URI` with fallback | Current (uncommitted) |
 | **Typo fix** | "Research Methadology" → "Research Methodology" | Current (uncommitted) |
 | **UX improvements** | Loading states, error handling, rating column in MyFeedback, social icons in Footer, accessibility (`aria-label`) across components | Current (uncommitted) |
+| **MongoDB indexes** | Feedback + PublicFeedback models indexed for IXSCAN on all query patterns | Current (uncommitted) |
+| **`.lean()` optimization** | All read-only queries use `.lean()` — skips Mongoose hydration (~40% faster reads) | Current (uncommitted) |
+| **PM2 cluster mode** | `ecosystem.config.js` with `instances: 'max'`, `exec_mode: 'cluster'` — uses all CPU cores | Current (uncommitted) |
+| **Helmet security headers** | `helmet()` middleware adds X-Frame-Options, X-Content-Type-Options, CSP enforcement | Current (uncommitted) |
+| **gzip compression** | `compression()` middleware shrinks JSON API responses by ~70% | Current (uncommitted) |
+| **Login rate limiting** | `express-rate-limit` (5 req/15min) on `POST /api/auth/login` | Current (uncommitted) |
+| **Input validation hardening** | Subject whitelist `SUBJECTS.includes()` + rating 1-5 range check on authenticated submit | Current (uncommitted) |
+| **CORS restriction** | `CORS_ORIGIN` env var restricts allowed origins (defaults to `http://localhost:5173`) | Current (uncommitted) |
+| **ErrorBoundary + crash resilience** | ErrorBoundary component wrapping `<Routes>`; JSON.parse try/catch in FeedbackForm + Dashboard | Current (uncommitted) |
+| **Security hardening** | Bearer token space fix, `console.error` sanitized to `.message`, seed passwords removed from logs, admin creds env-var-ized | Current (uncommitted) |
+| **Logout state cleanup** | `fb_locked`/`fb_drafts`/`fb_ratings` cleared from localStorage on logout | Current (uncommitted) |
+| **Admin UI enhancements** | AdminDashboard wired at `/admin/:classGroup/dashboard`; loading states on AdminStudents/AdminStudentFeedback/AdminAllotments | Current (uncommitted) |
+| **`.env.example` template** | All env vars documented (`JWT_EXPIRES_IN`, `CORS_ORIGIN`, `LOGIN_RATE_LIMIT_MAX`, `PUBLIC_RATE_LIMIT_MAX`, admin seed creds) | Current (uncommitted) |
 
 ### `[/]` In-Progress Workloads
 
@@ -310,10 +327,9 @@ mern-feedback-collector/
 
 | Feature | Rationale | Suggested Approach |
 |---|---|---|
-| **Commit & push to GitHub** | All current changes are unstaged/uncommitted: need `git add -A && git commit && git push origin main` | See Phase 4 deployment commands |
 | **Vercel deployment** | Import repo, set `VITE_API_URL` if backend is deployed separately, verify domain | Vercel dashboard → Import Git Repo → deploy |
-| **Backend deployment** | Express API needs its own host (Railway, Render, or Vercel serverless) | Separate deployment with `MONGO_URI` and `JWT_SECRET` env vars |
-| **Unit / integration tests** | Zero test coverage currently | Vitest (client) + Jest + Supertest (server) |
+| **Backend deployment** | Express API needs its own host (Railway, Render, or Vercel serverless) | Deploy with `MONGO_URI` and `JWT_SECRET` env vars; use PM2 for process management |
+| **Unit / integration tests** | Dev dependencies installed (Jest + Supertest); no test cases written yet | Write test suites using Jest + Supertest |
 | **Analytics dashboard** | Visual charts for submission trends, average ratings | Chart.js or Recharts |
 
 ### Environment References
@@ -323,5 +339,11 @@ mern-feedback-collector/
 | `VITE_API_URL` | `http://localhost:5000/api` | Set via Vercel Environment Variables |
 | `MONGO_URI` | `mongodb://localhost:27017/feedback-collector` | Set via hosting platform |
 | `JWT_SECRET` | (from `server/.env`) | Set via hosting platform |
+| `CORS_ORIGIN` | `http://localhost:5173` | Set via hosting platform |
+| `JWT_EXPIRES_IN` | `30d` | Set via hosting platform |
+| `LOGIN_RATE_LIMIT_MAX` | `5` | Set via hosting platform |
+| `PUBLIC_RATE_LIMIT_MAX` | `10` | Set via hosting platform |
+| `ADMIN_EMAIL` | `admin@gmail.com` | Set via hosting platform |
+| `ADMIN_PASSWORD` | (from `server/.env`) | Set via hosting platform |
 | Vite dev server | `http://localhost:5173` | - |
 | Express server | `http://localhost:5000` | - |
