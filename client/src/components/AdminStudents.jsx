@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/AdminStudents.css';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -44,7 +45,7 @@ const AdminStudents = () => {
       axios.get(`${API}/admin/students?${classParam}`),
       axios.get(`${API}/feedback/subjects`),
     ]).then(([studentsRes, subjectsRes]) => {
-      setStudents(studentsRes.data);
+      setStudents(studentsRes.data.data);
       setSubjects(subjectsRes.data);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [classGroup]);
@@ -55,7 +56,7 @@ const AdminStudents = () => {
     const { data } = await axios.get(`${API}/admin/feedback/subject/${encodeURIComponent(subject)}/coverage?${classParam}`);
     setCoverage(data);
     const fbRes = await axios.get(`${API}/admin/feedback/subject/${encodeURIComponent(subject)}?${classParam}`);
-    setSubjectFeedback(fbRes.data);
+    setSubjectFeedback(fbRes.data.data);
   };
 
   const showStudents = () => {

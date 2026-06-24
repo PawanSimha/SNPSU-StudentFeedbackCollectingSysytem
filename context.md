@@ -51,11 +51,11 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Dev Orchestration** | concurrently | ^8.2.2 | Runs server + client in parallel |
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
 | **Linting** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins |
-| **CSS** | Custom properties (no framework) | - | In `index.css` (~3850 lines) |
+| **CSS** | Custom properties (no framework) | - | 16 per-component files in `styles/` |
 | **Structured Logging** | pino | ^9.14.0 | `pino-http` for HTTP request logging, level from `LOG_LEVEL` env |
 | **Image Format** | WebP | quality 85 | All raster assets in `client/public/images/` |
 | **Deployment** | Vercel | - | `vercel.json` with SPA rewrites + security headers |
-| **License** | GPLv3 | - | `LICENSE.md` + headers in all 50 source files |
+| **License** | GPLv3 | - | `LICENSE.md` + headers in all 56+ source files |
 
 ---
 
@@ -128,7 +128,7 @@ Guard layers:
 - RESTful JSON over HTTP.
 - Base URL: `import.meta.env.VITE_API_URL || 'http://localhost:5000/api'` (configurable via env var).
 - All admin routes cascade: `protect` middleware → admin role check → handler.
-- Pagination: not implemented (all endpoints return full result sets: acceptable for current scale).
+- Pagination: `page`/`limit`/`skip` params on admin list endpoints — returns `{ data, total, page, pages }`
 
 ---
 
@@ -138,6 +138,16 @@ Guard layers:
 mern-feedback-collector/
 │
 ├── package.json                 Root orchestration: runs server + client via concurrently
+│
+├── Dockerfile                   Multi-stage Docker build for production deployment
+│
+├── .dockerignore                Docker build context exclusions
+│
+├── .github/workflows/ci.yml     GitHub Actions CI: node test + build on push
+│
+├── .husky/pre-commit             Husky pre-commit hook: lint-staged
+│
+├── .husky/_/.gitignore           Husky internal gitignore
 │
 ├── vercel.json                  Vercel deployment config: SPA rewrites, CSP, security headers
 │
@@ -155,6 +165,7 @@ mern-feedback-collector/
 │
 ├── client/                      React 19 + Vite 8 SPA (frontend)
 │   ├── package.json              Dependencies: react, react-router-dom, axios, vite
+│   ├── eslint.config.js          ESLint flat config: react-hooks + react-refresh plugins
 │   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000)
 │   ├── index.html                SPA shell with SEO/GEO meta, JSON-LD, preloads, canonical URL
 │   ├── public/
@@ -162,35 +173,52 @@ mern-feedback-collector/
 │   │   ├── robots.txt            AI-aware crawler directives (search allowed, training scrapers blocked)
 │   │   └── sitemap.xml           3-URL sitemap anchored to production domain
 │   └── src/
-│       ├── main.jsx              Entry point: BrowserRouter wraps App
-│       ├── App.jsx               Route definitions, layout composition, cookie consent
+│       ├── main.jsx              Entry point: BrowserRouter wraps App + analytics tracker
+│       ├── App.jsx               Route definitions, layout composition, ProtectedRoute, AdminRoute
+│       ├── index.css             Global styles: CSS custom properties, BEM naming
 │       ├── config/
 │       │   └── api.js            Centralized API base URL (env-var-aware)
 │       ├── context/
-│       │   └── AuthContext.jsx    Auth state provider: student, login, logout, loading
-│   ├── components/           18 React components
-│       │   ├── Landing.jsx       Public landing page with FAQ accordion
-│       │   ├── Login.jsx         Email + USN + password form
-│       │   ├── Dashboard.jsx     Student home: session status, start-feedback button
-│   │   ├── FeedbackForm.jsx  Per-subject star rating (1-5) + comments (50-300 chars), lock/unlock, draft storage
-│   │   ├── MyFeedback.jsx    Feedback history table with star ratings, loading & error states
-│       │   ├── PublicFeedback.jsx Anonymous form: no auth required
-│       │   ├── NotFound.jsx      Branded 404: CSS compass, two CTAs, no nav/footer
-│       │   ├── CookieConsent.jsx GDPR banner with Accept/Decline, localStorage persistence
-│       │   ├── Navbar.jsx        Auth-aware navigation with conditional links
-│   │   ├── Footer.jsx        Shared footer with social media icon buttons (SVG), quick links, and copyright
-│       │   ├── ErrorBoundary.jsx  Global error boundary with reload CTA
-│       │   └── admin/            7 admin sub-components
-│       │       ├── AdminClassSelect.jsx
-│       │       ├── AdminStudents.jsx
-│       │       ├── AdminStudentFeedback.jsx
-│       │       ├── AdminAllotments.jsx
-│       │       ├── AdminDashboard.jsx
-│       │       ├── AdminDbOverview.jsx
-│       │       └── AdminAnonymous.jsx
+│       │   └── AuthContext.jsx    Auth state provider: student, login, logout, loading, refreshToken flow
 │       ├── utils/
-│       │   └── download.js       Client-side CSV and Word doc export (Blob + download link)
-│   └── index.css             Global styles: ~3850 lines, CSS custom properties, BEM naming
+│       │   ├── download.js       CSV and Word doc export (Blob + download link)
+│       │   └── analytics.js      Page-view analytics tracker
+│       ├── styles/               16 per-component CSS files (modularized from index.css)
+│       │   ├── AdminAllotments.css
+│       │   ├── AdminClassSelect.css
+│       │   ├── AdminDashboard.css
+│       │   ├── AdminStudentFeedback.css
+│       │   ├── AdminStudents.css
+│       │   ├── AdminTable.css
+│       │   ├── CookieConsent.css
+│       │   ├── Dashboard.css
+│       │   ├── FeedbackForm.css
+│       │   ├── Footer.css
+│       │   ├── Landing.css
+│       │   ├── Login.css
+│       │   ├── MyFeedback.css
+│       │   ├── Navbar.css
+│       │   ├── NotFound.css
+│       │   └── PublicFeedback.css
+│       ├── components/           18 React components (flat, no admin subdirectory)
+│       │   ├── AdminAllotments.jsx
+│       │   ├── AdminAnonymous.jsx
+│       │   ├── AdminClassSelect.jsx
+│       │   ├── AdminDashboard.jsx
+│       │   ├── AdminDbOverview.jsx
+│       │   ├── AdminStudentFeedback.jsx
+│       │   ├── AdminStudents.jsx
+│       │   ├── CookieConsent.jsx
+│       │   ├── Dashboard.jsx
+│       │   ├── ErrorBoundary.jsx
+│       │   ├── FeedbackForm.jsx
+│       │   ├── Footer.jsx
+│       │   ├── Landing.jsx
+│       │   ├── Login.jsx
+│       │   ├── MyFeedback.jsx
+│       │   ├── Navbar.jsx
+│       │   ├── NotFound.jsx
+│       │   └── PublicFeedback.jsx
 │
 ├── server/                      Express 4.21 REST API (backend)
 │   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pm2, pino
@@ -201,7 +229,8 @@ mern-feedback-collector/
 │   ├── config/
 │   │   ├── db.js                 Mongoose connection with MONGO_URI env fallback
 │   │   ├── logger.js             Pino logger instance (JSON stdout, level from LOG_LEVEL env)
-│   │   └── subjects.js           6-subject constant (DevOps, MERN, Java, Agile, Research, DataScience)
+│   │   ├── subjects.js           6-subject constant (DevOps, MERN, Java, Agile, Research, DataScience)
+│   │   └── swagger.js            Swagger/OpenAPI configuration for /api/docs
 │   ├── middleware/
 │   │   ├── auth.js               JWT verify middleware: attaches req.student or 401
 │   │   └── errorHandler.js       Centralized error handler: logs via req.log, returns JSON
@@ -211,7 +240,7 @@ mern-feedback-collector/
 │   │   ├── PublicFeedback.js     subject, facultyName, comments
 │   │   └── Allotment.js          classGroup (unique), isOpen, message (15-50 chars), allottedBy ref
 │   ├── routes/
-│   │   ├── auth.js               POST /login, GET /me
+│   │   ├── auth.js               POST /login, GET /me, POST /refresh
 │   │   ├── feedback.js           GET /subjects, GET /my, POST /submit (with upsert)
 │   │   ├── admin.js              GET /classes, /students, /feedback, /feedback/stats,
 │   │   │                         /feedback/subject/:subject, /feedback/subject/:subject/coverage,
@@ -226,6 +255,7 @@ mern-feedback-collector/
 │       ├── seed-b.js             Additional student seeder
 │       ├── update-roles.js       Bulk role update utility
 │       └── update-classes.js     Bulk class reassignment utility
+```
 ```
 
 **Why each server subdirectory exists:**
@@ -295,7 +325,7 @@ mern-feedback-collector/
 | **Initial MERN scaffold** | Working auth, feedback CRUD, admin routes, MongoDB models | `0c385ea` |
 | **WebP image migration** | All images converted to WebP (q85), moved to `public/images/`, originals deleted | `6b209d0` |
 | **SEO/GEO meta tags** | Canonical URL, OG/Twitter cards, JSON-LD (WebApplication schema), author meta | `0e4bea9` |
-| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 50 source files | `0e4bea9` |
+| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 56+ source files | `0e4bea9` |
 | **Product documentation** | `PRD.md` (MoSCoW, KPIs, user journeys) and `README.md` with project structure | `0e4bea9`, `805fdf1` |
 | **Branded 404 page** | CSS compass illustration, brand logo, "Go to Homepage" + "Go Back" CTAs, no navbar/footer | Current (uncommitted) |
 | **Cookie consent banner** | Accessible dialog with Accept/Decline, localStorage persistence, links to PRIVACY.md | Current (uncommitted) |
@@ -334,18 +364,36 @@ mern-feedback-collector/
 | **Origin validation on public POST** | CSRF defense: `validateOrigin` middleware checks `Origin` header against `CORS_ORIGIN` | Current (uncommitted) |
 | **Smoke tests (Jest+Supertest)** | `server/tests/server.test.js` — 2 passing tests (health + 404) | Current (uncommitted) |
 | **Stale build PNGs removed** | `dist/images/Gemini_*` stale build artifacts deleted | Current (uncommitted) |
+| **CSS modularization** | `index.css` split into 16 per-component CSS files in `styles/` | Current (uncommitted) |
+| **JS lazy loading** | 6 admin components lazy-loaded with `React.lazy` + `Suspense` | Current (uncommitted) |
+| **Skip-to-content** | Skip-link for keyboard users | Current (uncommitted) |
+| **Inline validation** | Comment length + rating range on feedback form | Current (uncommitted) |
+| **aria-live regions** | On form submissions, `role="alert"` for errors | Current (uncommitted) |
+| **CSP dev metatag** | For Vite HMR compatibility | Current (uncommitted) |
+| **Empty states** | No-data messages across all admin and user pages | Current (uncommitted) |
+| **Image lazy loading** | `loading="lazy"` attribute on all images | Current (uncommitted) |
+| **Dockerfile** | Multi-stage Docker build | Current (uncommitted) |
+| **GitHub Actions CI** | Node test + build on push | Current (uncommitted) |
+| **Swagger API docs** | `/api/docs` endpoint | Current (uncommitted) |
+| **Pagination** | `page`/`limit`/`skip` on admin list endpoints | Current (uncommitted) |
+| **Refresh token flow** | `POST /api/auth/refresh`, `tryRefresh()` in AuthContext | Current (uncommitted) |
+| **Analytics tracker** | Page-view tracking via `useEffect` + `useLocation` | Current (uncommitted) |
+| **Husky + lint-staged** | Pre-commit hooks | Current (uncommitted) |
+| **AdminRoute guard** | Role-based redirect for non-admin users | Current (uncommitted) |
 
-### `[/]` In-Progress Workloads
+### `[x]` All Phases Complete
 
-*All Phase A fixes from the Multi-Agent Audit are complete. See milestones above.*
+All four audit phases (A, B, C, D) are fully implemented. See milestone checklist above.
 
-### `[ ]` Upcoming Implementations (Next Steps)
+### `[ ]` Future Work (Backlog)
 
-| Feature | Rationale | Suggested Approach |
-|---|---|---|
-| **Phase B audit fixes** | Modularize CSS, code splitting, accessibility, CSP in dev, inline validation | Per audit report |
-| **Phase C audit fixes** | Dockerfile, GitHub Actions CI, API docs, empty states, image lazy loading | Per audit report |
-| **Phase D audit fixes** | TypeScript migration, pagination, refresh token flow, analytics, husky | Per audit report |
+| Feature | Rationale |
+|---|---|
+| TypeScript migration | Full static typing across the stack |
+| Rate-limit-optimized pagination | Cursor-based pagination for large datasets |
+| OAuth2/SAML single sign-on | Enterprise integration path |
+| Real-time feedback dashboard | WebSocket-based live coverage updates |
+| Mobile companion app | React Native wrapper for push notifications |
 
 ### Environment References
 

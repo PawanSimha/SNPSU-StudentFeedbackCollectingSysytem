@@ -1,0 +1,159 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.admin-allotments {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.admin-allotments h2 {
+  color: var(--primary);
+  font-size: 1.3rem;
+}
+
+.allotment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.allotment-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  border-left: 5px solid var(--gray-300);
+  transition: box-shadow var(--transition);
+}
+
+.allotment-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.allotment-card.open {
+  border-left-color: var(--success);
+}
+
+.allotment-card.closed {
+  border-left-color: var(--gray-300);
+}
+
+.allotment-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.allotment-class-name {
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+}
+
+.allot-status {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.allot-status.open {
+  color: var(--success);
+}
+
+.allot-status.closed {
+  color: var(--gray-400);
+}
+
+.allotment-message-group {
+  margin-bottom: 16px;
+}
+
+.allotment-message-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+
+.allotment-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  box-sizing: border-box;
+}
+
+.allotment-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+}
+
+.allotment-input:disabled {
+  background: var(--gray-50);
+  border-color: #c8e6c9;
+}
+
+.char-hint {
+  display: block;
+  text-align: right;
+  font-size: 0.72rem;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.char-hint.under {
+  color: var(--accent-hover);
+}
+
+.char-hint.ok {
+  color: var(--success);
+}
+
+.btn-allot {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+
+.btn-allot.open {
+  background: var(--success);
+  color: white;
+}
+
+.btn-allot.open:hover {
+  background: #1b5e20;
+}
+
+.btn-allot.close {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-allot.close:hover {
+  background: #b71c1c;
+}

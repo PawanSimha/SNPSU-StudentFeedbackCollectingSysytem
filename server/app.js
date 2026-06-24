@@ -27,15 +27,31 @@ const feedbackRoutes = require('./routes/feedback');
 const adminRoutes = require('./routes/admin');
 const allotmentRoutes = require('./routes/allotment');
 const publicRoutes = require('./routes/public');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'", process.env.CORS_ORIGIN || 'http://localhost:5173'],
+      frameAncestors: ["'none'"],
+    },
+  },
+}));
 app.use(compression());
 app.use(pinoHttp({ logger }));
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
 app.use(express.json({ limit: '10kb' }));
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customCss: '.swagger-ui .topbar { display: none }', customSiteTitle: 'SOAS Feedback API Docs' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/feedback', feedbackRoutes);

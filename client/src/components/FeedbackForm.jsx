@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/FeedbackForm.css';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -29,6 +30,8 @@ const FeedbackForm = () => {
   const [ratings, setRatings] = useState({});
   const [locked, setLocked] = useState({});
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [showPopup, setShowPopup] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const textareaRef = useRef(null);
@@ -55,6 +58,34 @@ const FeedbackForm = () => {
   const charCount = currentText.length;
   const textValid = charCount >= MIN_LEN && charCount <= MAX_LEN && currentRating > 0;
   const isLocked = !!locked[currentSubject];
+
+  const validateField = (field, value, ratingVal) => {
+    if (field === 'rating' && !ratingVal) return 'Please select a rating';
+    if (field === 'rating') return '';
+    const len = value ? value.trim().length : 0;
+    if (len === 0) return 'Feedback is required';
+    if (len < MIN_LEN) return `Feedback must be at least ${MIN_LEN} characters (${len}/${MIN_LEN})`;
+    if (len > MAX_LEN) return `Feedback must not exceed ${MAX_LEN} characters (${len}/${MAX_LEN})`;
+    return '';
+  };
+
+  const handleCommentBlur = () => {
+    const key = currentSubject;
+    setTouched({ ...touched, comments: true });
+    const err = validateField('comments', currentText, currentRating);
+    setFieldErrors({ ...fieldErrors, [key + '_comments']: err });
+  };
+
+  const handleRatingTouch = () => {
+    setTouched({ ...touched, rating: true });
+    const key = currentSubject;
+    if (!currentRating) {
+      setFieldErrors({ ...fieldErrors, [key + '_rating']: 'Please select a rating' });
+    } else {
+      const { [key + '_rating']: _, ...rest } = fieldErrors;
+      setFieldErrors(rest);
+    }
+  };
 
   const updateDrafts = (updated) => {
     setFeedbacks(updated);
@@ -197,13 +228,13 @@ const FeedbackForm = () => {
 
         <div className="form-group">
           <label>Rating:</label>
-          <div className="star-rating">
+          <div className="star-rating" onBlur={handleRatingTouch} tabIndex={-1}>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
                 className={`star-btn ${star <= currentRating ? 'active' : ''}`}
-                onClick={() => handleRating(star)}
+                onClick={() => { handleRating(star); handleRatingTouch(); }}
                 disabled={isLocked}
                 aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
               >
@@ -212,6 +243,9 @@ const FeedbackForm = () => {
             ))}
             <span className="star-label">{currentRating > 0 ? `${currentRating}/5` : 'Select rating'}</span>
           </div>
+          {touched.rating && fieldErrors[currentSubject + '_rating'] && (
+            <p className="field-error" role="alert">{fieldErrors[currentSubject + '_rating']}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -219,15 +253,21 @@ const FeedbackForm = () => {
           <textarea
             ref={textareaRef}
             value={currentText}
-            onChange={handleTextChange}
+            onChange={(e) => { handleTextChange(e); if (touched.comments) handleCommentBlur(); }}
+            onBlur={handleCommentBlur}
             disabled={isLocked}
             rows={5}
             maxLength={MAX_LEN}
             placeholder={`Write your feedback (min ${MIN_LEN} chars)...`}
+            aria-invalid={!!fieldErrors[currentSubject + '_comments']}
+            aria-describedby={fieldErrors[currentSubject + '_comments'] ? 'comments-error' : undefined}
           />
           <div className={`char-counter ${charCount > 0 && charCount < MIN_LEN ? 'under' : charCount > MAX_LEN ? 'over' : 'ok'}`}>
             {charCount}/{MAX_LEN} {charCount < MIN_LEN ? `(min ${MIN_LEN})` : ''}
           </div>
+          {touched.comments && fieldErrors[currentSubject + '_comments'] && (
+            <p className="field-error" id="comments-error" role="alert">{fieldErrors[currentSubject + '_comments']}</p>
+          )}
         </div>
 
         <div className="sf-nav-actions">

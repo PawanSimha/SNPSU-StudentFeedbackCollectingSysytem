@@ -12,5 +12,7 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+.vercel
 server/.env
 server/logs/
+coverage/

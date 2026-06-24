@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/AdminDashboard.css';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -41,7 +42,7 @@ const AdminDashboard = () => {
           axios.get(`${API}/admin/feedback?${param}`),
           axios.get(`${API}/admin/feedback/stats?${param}`),
         ]);
-        setFeedbacks(fbRes.data);
+        setFeedbacks(fbRes.data.data);
         setStats(statsRes.data);
         setSubjects(statsRes.data.subjects);
       } catch (e) {
@@ -55,10 +56,10 @@ const AdminDashboard = () => {
     setSelectedSubject(subject);
     if (subject === 'all') {
       const { data } = await axios.get(`${API}/admin/feedback?${classParam}`);
-      setFeedbacks(data);
+      setFeedbacks(data.data);
     } else {
       const { data } = await axios.get(`${API}/admin/feedback/subject/${encodeURIComponent(subject)}?${classParam}`);
-      setFeedbacks(data);
+      setFeedbacks(data.data);
     }
   };
 

@@ -1,0 +1,74 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* Dashboard */
+.dashboard {
+  padding: 20px 0;
+}
+
+.dashboard-welcome {
+  text-align: center;
+  padding: 50px 20px 30px;
+}
+
+.dashboard-welcome h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 6px;
+}
+
+.dashboard-welcome .subtitle {
+  color: var(--gray-500);
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+
+.locked-info {
+  color: var(--success);
+  font-size: 0.88rem;
+  margin-bottom: 28px;
+  font-weight: 600;
+}
+
+.btn-start-feedback {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 14px 44px;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-start-feedback:hover {
+  background: var(--primary-light);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+
+/* Locked badge on Dashboard */
+.btn-small.locked {
+  background: var(--success);
+  color: white;
+}
+

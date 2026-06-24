@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/Landing.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
@@ -66,7 +67,7 @@ const Landing = () => {
     <div className="landing">
       <header className="landing-header">
         <div className="landing-header__inner">
-          <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
+          <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
           <div className="landing-header__right">
             <nav className="landing-header__nav" aria-label="Landing page navigation">
               <a href="#about">About</a>

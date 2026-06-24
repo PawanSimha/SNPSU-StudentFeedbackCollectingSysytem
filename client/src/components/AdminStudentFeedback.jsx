@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/AdminStudentFeedback.css';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -36,11 +37,12 @@ const AdminStudentFeedback = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API}/admin/feedback?${classParam}&student=${studentId}`).then(({ data }) => {
-      setFeedbacks(data);
-      const unique = [...new Set(data.map(f => f.subject))];
+    axios.get(`${API}/admin/feedback?${classParam}&student=${studentId}`).then(({ data: wrapper }) => {
+      const feedbacks = wrapper.data || [];
+      setFeedbacks(feedbacks);
+      const unique = [...new Set(feedbacks.map(f => f.subject))];
       setSubjects(unique);
-      if (data.length > 0) setStudent(data[0].student);
+      if (feedbacks.length > 0) setStudent(feedbacks[0].student);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [classGroup, studentId]);
 
@@ -48,10 +50,10 @@ const AdminStudentFeedback = () => {
     setSelectedSubject(subject);
     if (subject === 'all') {
       const { data } = await axios.get(`${API}/admin/feedback?${classParam}&student=${studentId}`);
-      setFeedbacks(data);
+      setFeedbacks(data.data);
     } else {
       const { data } = await axios.get(`${API}/admin/feedback/subject/${encodeURIComponent(subject)}?${classParam}&student=${studentId}`);
-      setFeedbacks(data);
+      setFeedbacks(data.data);
     }
   };
 

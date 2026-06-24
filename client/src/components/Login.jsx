@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/Login.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -24,13 +25,33 @@ const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', usn: '', password: '' });
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [touched, setTouched] = useState({});
 
   useEffect(() => { setMounted(true); }, []);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const validate = (name, value) => {
+    if (!value) return `${name === 'usn' ? 'USN' : name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+    if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) return 'Invalid email format';
+    if (name === 'usn' && value.length < 5) return 'USN is too short';
+    if (name === 'password' && value.length < 4) return 'Password must be at least 4 characters';
+    return '';
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    if (touched[name]) setErrors({ ...errors, [name]: validate(name, value) });
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched({ ...touched, [name]: true });
+    setErrors({ ...errors, [name]: validate(name, value) });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,13 +77,13 @@ const Login = () => {
       <div className={`login-card ${mounted ? 'login-card--visible' : ''}`}>
         <div className="login-card__inner">
           <div className="login-card__header">
-            <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="login-card__logo" />
+            <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="login-card__logo" />
             <h1 className="login-card__title">Feedback Collector</h1>
           </div>
 
           {error && <div className="login-card__error">{error}</div>}
 
-          <form className="login-card__form" onSubmit={handleSubmit}>
+          <form className="login-card__form" onSubmit={handleSubmit} noValidate>
             <div className="login-card__field">
               <label htmlFor="email">Email</label>
               <div className="login-card__input-wrap">
@@ -70,8 +91,9 @@ const Login = () => {
                   <path d="M2 4L8 8.5L14 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor" strokeWidth="1.5"/>
                 </svg>
-                <input id="email" type="email" name="email" value={form.email} onChange={handleChange} required placeholder="Student@gmail.com" />
+                <input id="email" type="email" name="email" value={form.email} onChange={handleChange} onBlur={handleBlur} required placeholder="Student@gmail.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} />
               </div>
+              {errors.email && <p className="field-error" id="email-error" role="alert">{errors.email}</p>}
             </div>
 
             <div className="login-card__field">
@@ -81,8 +103,9 @@ const Login = () => {
                   <circle cx="8" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
                   <path d="M2 14.5C2 11.5 4.5 9 8 9C11.5 9 14 11.5 14 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
-                <input id="usn" type="text" name="usn" value={form.usn} onChange={handleChange} required placeholder="25SUPMCAGL000" />
+                <input id="usn" type="text" name="usn" value={form.usn} onChange={handleChange} onBlur={handleBlur} required placeholder="25SUPMCAGL000" aria-invalid={!!errors.usn} aria-describedby={errors.usn ? 'usn-error' : undefined} />
               </div>
+              {errors.usn && <p className="field-error" id="usn-error" role="alert">{errors.usn}</p>}
             </div>
 
             <div className="login-card__field">
@@ -93,7 +116,7 @@ const Login = () => {
                   <path d="M5 6.5V4.5C5 3 6 2 8 2C10 2 11 3 11 4.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                   <circle cx="8" cy="10.5" r="1" fill="currentColor"/>
                 </svg>
-                <input id="password" type={showPassword ? 'text' : 'password'} name="password" value={form.password} onChange={handleChange} required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+                <input id="password" type={showPassword ? 'text' : 'password'} name="password" value={form.password} onChange={handleChange} onBlur={handleBlur} required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : undefined} />
                 <button type="button" className="login-card__eye" onClick={() => setShowPassword((p) => !p)} tabIndex={-1} aria-label={showPassword ? 'Hide password' : 'Show password'}>
                   {showPassword ? (
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -109,6 +132,7 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {errors.password && <p className="field-error" id="password-error" role="alert">{errors.password}</p>}
             </div>
 
             <button type="submit" className="login-card__submit" disabled={submitting}>

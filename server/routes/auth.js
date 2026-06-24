@@ -51,6 +51,7 @@ router.post('/login', loginLimiter, async (req, res, next) => {
     }
 
     const token = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '30d' });
+    const refreshToken = jwt.sign({ id: student._id, type: 'refresh' }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       _id: student._id,
@@ -59,13 +60,33 @@ router.post('/login', loginLimiter, async (req, res, next) => {
       usn: student.usn,
       role: student.role,
       token,
+      refreshToken,
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get('/me', protect, async (req, res) => {
+router.post('/refresh', async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ message: 'Refresh token required' });
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    if (decoded.type !== 'refresh') return res.status(403).json({ message: 'Invalid token type' });
+
+    const student = await Student.findById(decoded.id).select('-password').lean();
+    if (!student) return res.status(401).json({ message: 'User not found' });
+
+    const newToken = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '30d' });
+    res.json({ token: newToken });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') return res.status(401).json({ message: 'Refresh token expired' });
+    next(error);
+  }
+});
+
+router.get('/me', protect, async (req, res, next) => {
   res.json(req.student);
 });
 

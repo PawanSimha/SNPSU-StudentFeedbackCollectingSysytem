@@ -9,9 +9,16 @@
     "seed": "cd server && node scripts/seed.js",
     "seed-b": "cd server && node scripts/seed-b.js",
     "seed-admin": "cd server && node scripts/seed-admin.js",
-    "test": "cd server && npx jest --forceExit --detectOpenHandles tests/"
+    "test": "cd server && npx jest --forceExit --detectOpenHandles tests/",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": ["eslint --fix", "prettier --write"],
+    "*.css": ["prettier --write"]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2"
   }
 }

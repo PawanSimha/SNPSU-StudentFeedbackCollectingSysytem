@@ -15,36 +15,48 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Landing from './components/Landing';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import FeedbackForm from './components/FeedbackForm';
-import MyFeedback from './components/MyFeedback';
-import AdminClassSelect from './components/AdminClassSelect';
-import AdminDashboard from './components/AdminDashboard';
-import AdminStudents from './components/AdminStudents';
-import AdminStudentFeedback from './components/AdminStudentFeedback';
-import AdminAllotments from './components/AdminAllotments';
-import AdminDbOverview from './components/AdminDbOverview';
-import AdminAnonymous from './components/AdminAnonymous';
-import PublicFeedback from './components/PublicFeedback';
-import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
 
+const Landing = lazy(() => import('./components/Landing'));
+const Login = lazy(() => import('./components/Login'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const FeedbackForm = lazy(() => import('./components/FeedbackForm'));
+const MyFeedback = lazy(() => import('./components/MyFeedback'));
+const AdminClassSelect = lazy(() => import('./components/AdminClassSelect'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const AdminStudents = lazy(() => import('./components/AdminStudents'));
+const AdminStudentFeedback = lazy(() => import('./components/AdminStudentFeedback'));
+const AdminAllotments = lazy(() => import('./components/AdminAllotments'));
+const AdminDbOverview = lazy(() => import('./components/AdminDbOverview'));
+const AdminAnonymous = lazy(() => import('./components/AdminAnonymous'));
+const PublicFeedback = lazy(() => import('./components/PublicFeedback'));
+const NotFound = lazy(() => import('./components/NotFound'));
+
+const Loading = () => <div className="loading">Loading...</div>;
+
 const ProtectedRoute = ({ children }) => {
   const { student, loading } = useAuth();
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <Loading />;
   return student ? children : <Navigate to="/" />;
+};
+
+const AdminRoute = () => {
+  const { student, loading } = useAuth();
+  if (loading) return <Loading />;
+  if (!student) return <Navigate to="/" />;
+  if (student.role !== 'admin') return <Navigate to="/dashboard" />;
+  return <Outlet />;
 };
 
 const PublicRoute = ({ children }) => {
   const { student, loading } = useAuth();
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <Loading />;
   if (student) {
     return student.role === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />;
   }
@@ -54,8 +66,10 @@ const PublicRoute = ({ children }) => {
 const ProtectedLayout = () => (
   <>
     <Navbar />
-    <main className="container">
-      <Outlet />
+    <main className="container" id="main-content">
+      <Suspense fallback={<Loading />}>
+        <Outlet />
+      </Suspense>
     </main>
     <Footer />
   </>
@@ -64,29 +78,34 @@ const ProtectedLayout = () => (
 const App = () => (
   <AuthProvider>
     <ErrorBoundary>
-      <Routes>
-        {/* Public pages: no navbar/footer */}
-        <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/feedback/public" element={<PublicFeedback />} />
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          {/* Public pages: no navbar/footer */}
+          <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/feedback/public" element={<PublicFeedback />} />
 
-        {/* Authenticated pages: with navbar/footer */}
-        <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/feedback" element={<FeedbackForm />} />
-          <Route path="/my-feedback" element={<MyFeedback />} />
-        <Route path="/admin" element={<AdminClassSelect />} />
-        <Route path="/admin/:classGroup/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/allotments" element={<AdminAllotments />} />
-          <Route path="/admin/database" element={<AdminDbOverview />} />
-          <Route path="/admin/anonymous" element={<AdminAnonymous />} />
-          <Route path="/admin/:classGroup" element={<AdminStudents />} />
-          <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
-        </Route>
+          {/* Authenticated pages: with navbar/footer */}
+          <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/feedback" element={<FeedbackForm />} />
+            <Route path="/my-feedback" element={<MyFeedback />} />
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<AdminClassSelect />} />
+              <Route path="/admin/:classGroup/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/allotments" element={<AdminAllotments />} />
+              <Route path="/admin/database" element={<AdminDbOverview />} />
+              <Route path="/admin/anonymous" element={<AdminAnonymous />} />
+              <Route path="/admin/:classGroup" element={<AdminStudents />} />
+              <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
+            </Route>
+          </Route>
 
-        {/* 404: no navbar/footer */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          {/* 404: no navbar/footer */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
       <CookieConsent />
     </ErrorBoundary>
   </AuthProvider>

@@ -1,0 +1,263 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* ── Public Feedback Page ── */
+.public-feedback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f2f5, #e8eaf6);
+  padding: 24px;
+}
+
+.public-feedback__card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 36px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+}
+
+.public-feedback__header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.public-feedback__logo {
+  height: 36px;
+  width: auto;
+  margin-bottom: 12px;
+}
+
+.public-feedback__header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 6px;
+}
+
+.public-feedback__header p {
+  font-size: 0.88rem;
+  color: #777;
+  margin: 0;
+}
+
+.public-feedback__error {
+  background: var(--danger-light);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.public-feedback__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.public-feedback__field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.public-feedback__field select,
+.public-feedback__field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+
+.public-feedback__field select:focus,
+.public-feedback__field textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.public-feedback__field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.public-feedback__field input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+
+.public-feedback__field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.public-feedback__optional {
+  font-weight: 400;
+  color: #aaa;
+  font-size: 0.78rem;
+}
+
+.public-feedback__required {
+  color: var(--danger);
+}
+
+.public-feedback__charcount {
+  text-align: right;
+  font-size: 0.78rem;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.public-feedback__charcount--warn {
+  color: var(--danger);
+}
+
+.public-feedback__btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  font-family: inherit;
+}
+
+.public-feedback__btn:hover {
+  background: #283593;
+  transform: scale(1.02);
+}
+
+.public-feedback__footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.public-feedback__link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.public-feedback__link:hover {
+  text-decoration: underline;
+}
+
+.public-feedback__success {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.public-feedback__success svg {
+  margin-bottom: 16px;
+}
+
+.public-feedback__success h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--success);
+  margin: 0 0 8px;
+}
+
+.public-feedback__success p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 24px;
+}
+
+/* ── Public Feedback Dark Mode ── */
+.public-feedback--dark {
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+}
+
+.public-feedback--dark .public-feedback__card {
+  background: #252525;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.public-feedback--dark .public-feedback__header h2 {
+  color: #f0f0f0;
+}
+
+.public-feedback--dark .public-feedback__header p {
+  color: #999;
+}
+
+.public-feedback--dark .public-feedback__field label {
+  color: #bbb;
+}
+
+.public-feedback--dark .public-feedback__field select,
+.public-feedback--dark .public-feedback__field textarea,
+.public-feedback--dark .public-feedback__field input[type="text"] {
+  background: #333;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+.public-feedback--dark .public-feedback__field select:focus,
+.public-feedback--dark .public-feedback__field textarea:focus,
+.public-feedback--dark .public-feedback__field input[type="text"]:focus {
+  border-color: #666;
+}
+
+.public-feedback--dark .public-feedback__optional {
+  color: #777;
+}
+
+.public-feedback--dark .public-feedback__charcount {
+  color: #777;
+}
+
+.public-feedback--dark .public-feedback__charcount--warn {
+  color: #ef5350;
+}
+
+.public-feedback--dark .public-feedback__link {
+  color: #aaa;
+}
+
+.public-feedback--dark .public-feedback__success p {
+  color: #bbb;
+}
+
+.public-feedback--dark .public-feedback__error {
+  background: rgba(198, 40, 40, 0.15);
+  color: #ef5350;
+}
+

@@ -15,12 +15,26 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 import { API } from '../config/api';
 
 const AuthContext = createContext(null);
+
+const tryRefresh = async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  if (!refreshToken) return false;
+  try {
+    const { data } = await axios.post(`${API}/auth/refresh`, { refreshToken });
+    sessionStorage.setItem('token', data.token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+    return true;
+  } catch {
+    localStorage.removeItem('refreshToken');
+    return false;
+  }
+};
 
 export const AuthProvider = ({ children }) => {
   const [student, setStudent] = useState(null);
@@ -28,7 +42,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
-      const token = sessionStorage.getItem('token');
+      let token = sessionStorage.getItem('token');
+      if (!token) {
+        const refreshed = await tryRefresh();
+        if (refreshed) token = sessionStorage.getItem('token');
+      }
       if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         try {
@@ -50,20 +68,22 @@ export const AuthProvider = ({ children }) => {
     const { data } = await axios.post(`${API}/auth/login`, { email, usn, password });
     sessionStorage.setItem('token', data.token);
     sessionStorage.setItem('student', JSON.stringify(data));
+    if (data.refreshToken) localStorage.setItem('refreshToken', data.refreshToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
     setStudent(data);
     return data;
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('student');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('fb_locked');
     localStorage.removeItem('fb_drafts');
     localStorage.removeItem('fb_ratings');
     delete axios.defaults.headers.common['Authorization'];
     setStudent(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ student, login, logout, loading }}>

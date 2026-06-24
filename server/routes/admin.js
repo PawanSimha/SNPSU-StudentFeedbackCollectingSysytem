@@ -49,11 +49,21 @@ router.get('/students', async (req, res, next) => {
     const classFilter = req.query.class && req.query.class !== 'all'
       ? { classGroup: req.query.class }
       : {};
-    const students = await Student.find({ role: 'student', ...classFilter })
-      .select('name email usn classGroup')
-      .sort({ name: 1 })
-      .lean();
-    res.json(students);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
+    const skip = (page - 1) * limit;
+    
+    const [students, total] = await Promise.all([
+      Student.find({ role: 'student', ...classFilter })
+        .select('name email usn classGroup')
+        .sort({ name: 1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Student.countDocuments({ role: 'student', ...classFilter }),
+    ]);
+    
+    res.json({ data: students, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
     next(error);
   }
@@ -80,24 +90,31 @@ const buildFeedbackFilter = (req) => {
 router.get('/feedback', async (req, res, next) => {
   try {
     const fbFilter = buildFeedbackFilter(req);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
+    const skip = (page - 1) * limit;
 
     let query = {};
     if (fbFilter.classGroup) {
-      const students = await Student.find({ role: 'student', classGroup: fbFilter.classGroup }).select('_id');
+      const students = await Student.find({ role: 'student', classGroup: fbFilter.classGroup }).select('_id').lean();
       const ids = students.map(s => s._id);
       query = ids.length ? { student: { $in: ids } } : { _id: null };
     }
-
     if (fbFilter.student) {
       query = { ...query, student: fbFilter.student };
     }
 
-    const feedbacks = await Feedback.find(query)
-      .populate('student', 'name email usn classGroup')
-      .sort({ createdAt: -1 })
-      .lean();
+    const [feedbacks, total] = await Promise.all([
+      Feedback.find(query)
+        .populate('student', 'name email usn classGroup')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Feedback.countDocuments(query),
+    ]);
 
-    res.json(feedbacks);
+    res.json({ data: feedbacks, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
     next(error);
   }
@@ -141,10 +158,13 @@ router.get('/feedback/stats', async (req, res, next) => {
 router.get('/feedback/subject/:subject', async (req, res, next) => {
   try {
     const fbFilter = buildFeedbackFilter(req);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
+    const skip = (page - 1) * limit;
 
     let query = { subject: fbFilter.subject };
     if (fbFilter.classGroup) {
-      const students = await Student.find({ role: 'student', classGroup: fbFilter.classGroup }).select('_id');
+      const students = await Student.find({ role: 'student', classGroup: fbFilter.classGroup }).select('_id').lean();
       const ids = students.map(s => s._id);
       query.student = ids.length ? { $in: ids } : null;
     }
@@ -153,12 +173,17 @@ router.get('/feedback/subject/:subject', async (req, res, next) => {
       query.student = fbFilter.student;
     }
 
-    const feedbacks = await Feedback.find(query)
-      .populate('student', 'name email usn classGroup')
-      .sort({ createdAt: -1 })
-      .lean();
+    const [feedbacks, total] = await Promise.all([
+      Feedback.find(query)
+        .populate('student', 'name email usn classGroup')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Feedback.countDocuments(query),
+    ]);
 
-    res.json(feedbacks);
+    res.json({ data: feedbacks, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
     next(error);
   }

@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -32,7 +33,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-brand-group">
-        <Link to={student.role === 'admin' ? '/admin' : '/dashboard'} className="nav-brand"><img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="nav-logo" /></Link>
+        <Link to={student.role === 'admin' ? '/admin' : '/dashboard'} className="nav-brand"><img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="nav-logo" /></Link>
         {student.role === 'admin' && <span className="nav-badge admin-badge">Admin</span>}
       </div>
       <div className="nav-links">

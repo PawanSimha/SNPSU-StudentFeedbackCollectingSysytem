@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+import '../styles/PublicFeedback.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -78,7 +79,7 @@ const PublicFeedback = () => {
     <div className="public-feedback public-feedback--dark">
       <div className="public-feedback__card">
         <div className="public-feedback__header">
-          <img src="/images/footer-logo.webp" alt="SOAS - Sapthagiri NPS University" width="1777" height="435" className="public-feedback__logo" />
+          <img src="/images/footer-logo.webp" alt="SOAS - Sapthagiri NPS University" width="1777" height="435" loading="lazy" className="public-feedback__logo" />
           <h2>Give Anonymous Feedback</h2>
           <p>Your identity will not be revealed. Share your honest thoughts.</p>
         </div>
