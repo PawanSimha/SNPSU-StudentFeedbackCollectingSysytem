@@ -23,7 +23,7 @@ const router = express.Router();
 
 router.use(protect);
 
-router.get('/status', async (req, res) => {
+router.get('/status', async (req, res, next) => {
   try {
     if (req.student.role === 'admin') {
       return res.json({ open: false });
@@ -35,21 +35,21 @@ router.get('/status', async (req, res) => {
     const allotment = await Allotment.findOne({ classGroup, isOpen: true }).lean();
     res.json({ open: !!allotment, message: allotment?.message || '' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   if (req.student.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
   try {
     const allotments = await Allotment.find().lean();
     res.json(allotments);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   if (req.student.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
   try {
     const { classGroup, message } = req.body;
@@ -89,7 +89,7 @@ router.post('/', async (req, res) => {
     await allotment.save();
     res.json(allotment);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 

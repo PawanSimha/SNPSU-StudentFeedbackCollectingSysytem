@@ -20,6 +20,8 @@
 
 The **SOAS Feedback Collector** is a full-stack MERN application that enables MCA students at Sapthagiri NPS University to submit anonymous feedback on courses and instructors after each class session. Faculty and administrators gain aggregated insights through a dedicated dashboard, driving continuous improvement in curriculum delivery.
 
+> **v1.3 updates:** Migrated from `console.log`/`console.error` to structured pino logging with `pino-http` middleware; refactored `server.js` into `app.js` (Express factory) + `server.js` (entry point) for testability; added centralized `errorHandler.js` middleware — all routes now delegate errors via `next(error)`; added Origin header validation on `POST /api/public/feedback` for CSRF defense; added smoke tests (`server/tests/server.test.js`) with 2 passing tests.
+
 > **v1.2 updates:** Added MongoDB indexes, `.lean()` query optimization, PM2 clustering (multi-core), Helmet security headers, gzip compression, and production process management. System now handles 200-300 concurrent students on a standard 4-core server.
 
 > **v1.1 updates:** Added star rating selector (1–5), rate limiting on public endpoint, Vite API proxy, class list dynamic fetch from API, improved loading/error states across all components, social media icons in footer, and various bug fixes.
@@ -51,7 +53,7 @@ The system supports authenticated student feedback with per-session allotments, 
 ```
 Browser                          Express API                      MongoDB
 ┌─────────┐     HTTP/JSON        ┌──────────────┐    Mongoose     ┌──────────┐
-│  React   │ ──────────────────> │   server.js   │ ─────────────> │ feedback- │
+│   React   │ ──────────────────> │    app.js     │ ─────────────> │ feedback- │
 │  19 +    │ <────────────────── │  (Port 5000)  │ <───────────── │ collector │
 │  Vite 8  │     JWT tokens      └──────────────┘                 └──────────┘
 └─────────┘                           │
@@ -146,12 +148,15 @@ mern-feedback-collector/
 │   ├── .env.example                 # Environment variable template (documented)
 │   ├── package.json
 │   ├── ecosystem.config.js          # PM2 cluster config (multi-core production)
-│   ├── server.js                    # Express app entry (helmet, compression, cors, 10kb body limit, 404 handler)
+│   ├── app.js                       # Express app factory (helmet, compression, pino-http, cors, 10kb body limit, 404 handler, errorHandler)
+│   ├── server.js                    # App entry: dotenv, connectDB, JWT check, app.listen
 │   ├── config/
 │   │   ├── db.js                    # MongoDB connection
+│   │   ├── logger.js                # Pino logger instance (structured JSON, level from LOG_LEVEL env)
 │   │   └── subjects.js              # 6-subject constant
 │   ├── middleware/
-│   │   └── auth.js                  # JWT protect middleware
+│   │   ├── auth.js                  # JWT protect middleware
+│   │   └── errorHandler.js          # Centralized error handler (logs via req.log, returns JSON)
 │   ├── models/
 │   │   ├── Student.js               # User model (student/admin)
 │   │   ├── Feedback.js              # Authenticated feedback
@@ -163,6 +168,8 @@ mern-feedback-collector/
 │   │   ├── admin.js                 # Admin analytics & overview
 │   │   ├── allotment.js             # Open/close feedback windows
 │   │   └── public.js                # Anonymous feedback endpoints
+│   ├── tests/
+│   │   └── server.test.js           # Smoke tests (health + 404, Jest+Supertest)
 │   └── scripts/
 │       ├── seed.js                  # DB seeder (51 students)
 │       ├── seed-admin.js            # Admin user seeder
@@ -308,7 +315,11 @@ cd client && npm run build
 
 ### Testing
 
-Test dependencies (Jest + Supertest) are installed; no test cases have been written yet. See the Testing section for setup details.
+Smoke tests (health endpoint + 404 handler) are in `server/tests/server.test.js`. Run with:
+
+```bash
+npm test
+```
 
 ### Contributing
 

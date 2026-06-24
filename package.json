@@ -8,7 +8,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "seed": "cd server && node scripts/seed.js",
     "seed-b": "cd server && node scripts/seed-b.js",
-    "seed-admin": "cd server && node scripts/seed-admin.js"
+    "seed-admin": "cd server && node scripts/seed-admin.js",
+    "test": "cd server && npx jest --forceExit --detectOpenHandles tests/"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

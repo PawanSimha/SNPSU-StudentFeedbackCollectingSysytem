@@ -52,9 +52,10 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
 | **Linting** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins |
 | **CSS** | Custom properties (no framework) | - | In `index.css` (~3850 lines) |
+| **Structured Logging** | pino | ^9.14.0 | `pino-http` for HTTP request logging, level from `LOG_LEVEL` env |
 | **Image Format** | WebP | quality 85 | All raster assets in `client/public/images/` |
 | **Deployment** | Vercel | - | `vercel.json` with SPA rewrites + security headers |
-| **License** | GPLv3 | - | `LICENSE.md` + headers in all 45 source files |
+| **License** | GPLv3 | - | `LICENSE.md` + headers in all 50 source files |
 
 ---
 
@@ -192,15 +193,18 @@ mern-feedback-collector/
 │   └── index.css             Global styles: ~3850 lines, CSS custom properties, BEM naming
 │
 ├── server/                      Express 4.21 REST API (backend)
-│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pm2
+│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pm2, pino
 │   ├── ecosystem.config.js       PM2 cluster config: N workers = N CPU cores, auto-restart, log rotation
-│   ├── server.js                 App entry: helmet(), compression(), cors(), express.json({ limit: '10kb' }), 5 route mounts, health endpoint, 404 catch-all
+│   ├── server.js                 App entry: dotenv, connectDB, JWT check, app.listen
+│   ├── app.js                    Express app factory: helmet, compression, pino-http, cors, 5 route mounts, health, 404 catch-all, errorHandler
 │   ├── .env                      MONGO_URI, JWT_SECRET, PORT (not committed to git)
 │   ├── config/
 │   │   ├── db.js                 Mongoose connection with MONGO_URI env fallback
+│   │   ├── logger.js             Pino logger instance (JSON stdout, level from LOG_LEVEL env)
 │   │   └── subjects.js           6-subject constant (DevOps, MERN, Java, Agile, Research, DataScience)
 │   ├── middleware/
-│   │   └── auth.js               JWT verify middleware: attaches req.student or 401
+│   │   ├── auth.js               JWT verify middleware: attaches req.student or 401
+│   │   └── errorHandler.js       Centralized error handler: logs via req.log, returns JSON
 │   ├── models/
 │   │   ├── Student.js            name, email, usn (unique), password, role, classGroup
 │   │   ├── Feedback.js           student ref, subject, rating (1-5), comments
@@ -213,7 +217,9 @@ mern-feedback-collector/
 │   │   │                         /feedback/subject/:subject, /feedback/subject/:subject/coverage,
 │   │   │                         /db-overview
 │   │   ├── allotment.js          GET /status, GET /, POST / (toggle open/close)
-│   │   └── public.js             GET /subjects, POST /feedback, GET /feedbacks (admin-protected)
+│   │   └── public.js             GET /subjects, POST /feedback (Origin-validated, rate-limited), GET /feedbacks (admin-protected)
+│   ├── tests/
+│   │   └── server.test.js        Smoke tests: health endpoint, 404 handler (Jest+Supertest)
 │   └── scripts/
 │       ├── seed.js               51 students for "MCA, 1st Year, 2nd Sem, A sec", pw: "MCAA@123"
 │       ├── seed-admin.js         Admin user seeder
@@ -223,10 +229,11 @@ mern-feedback-collector/
 ```
 
 **Why each server subdirectory exists:**
-- `config/`: Centralizes DB connection logic and static subject data so routes don't hardcode either.
-- `middleware/`: Auth guard extracted to its own module so all protected routes share the same JWT verification without duplication.
+- `config/`: Centralizes DB connection logic, logger, and static subject data so routes don't hardcode any of them.
+- `middleware/`: Auth guard (JWT verify) and centralized error handler extracted so all routes share consistent behavior.
 - `models/`: Mongoose schemas define the 4-collection shape; no migrations needed (schema-free MongoDB).
-- `routes/`: Controllers organized by domain (auth, feedback, admin, allotment, public) mirroring the `/api/*` mount points in `server.js`.
+- `routes/`: Controllers organized by domain (auth, feedback, admin, allotment, public) mirroring the `/api/*` mount points in `app.js`.
+- `tests/`: Jest+Supertest smoke tests that import the app (without starting a server) for CI-ready validation.
 - `scripts/`: Standalone Node.js scripts for seeding and maintenance; not part of the running app.
 
 ---
@@ -266,6 +273,9 @@ mern-feedback-collector/
 | **Typos in classGroup** | `classGroup` is stored inconsistently across seed data: must match exactly for allotment queries | Centralized constant: `'MCA, 1st Year, 2nd Sem, A sec'` (and B, C variants) |
 | **Synchronous file writes** | Client-side export uses Blob URLs: no server-side file generation | Download utils in `client/src/utils/download.js` with `URL.createObjectURL` |
 | **Mixing auth flows** | Login requires email AND usn AND password: model must remain consistent | Auth route validates all three fields with 400 on missing |
+| **`console.log/error` in routes** | No structured logging = unsearchable, unleveled output in production | Use `config/logger.js` (pino) with structured levels and JSON output |
+| **Bare `res.status(500).json` in catch** | Inconsistent error format, no logging context, unmaintainable | Throw or `next(error)` — caught by `errorHandler.js` middleware |
+| **Server entry + app in same file** | Tests can't import app without starting a server (port conflicts) | Split: `app.js` exports app, `server.js` only calls `.listen()` |
 
 ### 5.3 Security Constraints
 
@@ -285,7 +295,7 @@ mern-feedback-collector/
 | **Initial MERN scaffold** | Working auth, feedback CRUD, admin routes, MongoDB models | `0c385ea` |
 | **WebP image migration** | All images converted to WebP (q85), moved to `public/images/`, originals deleted | `6b209d0` |
 | **SEO/GEO meta tags** | Canonical URL, OG/Twitter cards, JSON-LD (WebApplication schema), author meta | `0e4bea9` |
-| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 45 source files | `0e4bea9` |
+| **GPLv3 licensing** | Full GPLv3 text in `LICENSE.md`, copyright headers in all 50 source files | `0e4bea9` |
 | **Product documentation** | `PRD.md` (MoSCoW, KPIs, user journeys) and `README.md` with project structure | `0e4bea9`, `805fdf1` |
 | **Branded 404 page** | CSS compass illustration, brand logo, "Go to Homepage" + "Go Back" CTAs, no navbar/footer | Current (uncommitted) |
 | **Cookie consent banner** | Accessible dialog with Accept/Decline, localStorage persistence, links to PRIVACY.md | Current (uncommitted) |
@@ -318,19 +328,24 @@ mern-feedback-collector/
 | **Logout state cleanup** | `fb_locked`/`fb_drafts`/`fb_ratings` cleared from localStorage on logout | Current (uncommitted) |
 | **Admin UI enhancements** | AdminDashboard wired at `/admin/:classGroup/dashboard`; loading states on AdminStudents/AdminStudentFeedback/AdminAllotments | Current (uncommitted) |
 | **`.env.example` template** | All env vars documented (`JWT_EXPIRES_IN`, `CORS_ORIGIN`, `LOGIN_RATE_LIMIT_MAX`, `PUBLIC_RATE_LIMIT_MAX`, admin seed creds) | Current (uncommitted) |
+| **Centralized error handler** | `errorHandler.js` middleware replacing repetitive try/catch `res.status(500).json` | Current (uncommitted) |
+| **Structured logging (pino)** | `config/logger.js` + `pino-http` replacing `console.log`/`console.error` everywhere | Current (uncommitted) |
+| **App/Server split (testability)** | `app.js` exports Express app, `server.js` only starts it — enables Supertest import | Current (uncommitted) |
+| **Origin validation on public POST** | CSRF defense: `validateOrigin` middleware checks `Origin` header against `CORS_ORIGIN` | Current (uncommitted) |
+| **Smoke tests (Jest+Supertest)** | `server/tests/server.test.js` — 2 passing tests (health + 404) | Current (uncommitted) |
+| **Stale build PNGs removed** | `dist/images/Gemini_*` stale build artifacts deleted | Current (uncommitted) |
 
 ### `[/]` In-Progress Workloads
 
-*All tasks from the previous session are completed. See milestones above.*
+*All Phase A fixes from the Multi-Agent Audit are complete. See milestones above.*
 
 ### `[ ]` Upcoming Implementations (Next Steps)
 
 | Feature | Rationale | Suggested Approach |
 |---|---|---|
-| **Vercel deployment** | Import repo, set `VITE_API_URL` if backend is deployed separately, verify domain | Vercel dashboard → Import Git Repo → deploy |
-| **Backend deployment** | Express API needs its own host (Railway, Render, or Vercel serverless) | Deploy with `MONGO_URI` and `JWT_SECRET` env vars; use PM2 for process management |
-| **Unit / integration tests** | Dev dependencies installed (Jest + Supertest); no test cases written yet | Write test suites using Jest + Supertest |
-| **Analytics dashboard** | Visual charts for submission trends, average ratings | Chart.js or Recharts |
+| **Phase B audit fixes** | Modularize CSS, code splitting, accessibility, CSP in dev, inline validation | Per audit report |
+| **Phase C audit fixes** | Dockerfile, GitHub Actions CI, API docs, empty states, image lazy loading | Per audit report |
+| **Phase D audit fixes** | TypeScript migration, pagination, refresh token flow, analytics, husky | Per audit report |
 
 ### Environment References
 

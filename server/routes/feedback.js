@@ -27,19 +27,19 @@ router.get('/subjects', protect, (req, res) => {
   res.json(SUBJECTS);
 });
 
-router.get('/my', protect, async (req, res) => {
+router.get('/my', protect, async (req, res, next) => {
   try {
     const feedbacks = await Feedback.find({ student: req.student._id }).sort({ createdAt: -1 }).lean();
     res.json(feedbacks);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
 const MIN_LEN = 50;
 const MAX_LEN = 300;
 
-router.post('/submit', protect, async (req, res) => {
+router.post('/submit', protect, async (req, res, next) => {
   try {
     const { subject, rating, comments } = req.body;
 
@@ -89,8 +89,7 @@ router.post('/submit', protect, async (req, res) => {
 
     res.status(201).json(feedback);
   } catch (error) {
-    console.error('Feedback submit error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 

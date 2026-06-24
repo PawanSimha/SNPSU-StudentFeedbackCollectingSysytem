@@ -4,7 +4,7 @@
 |---|---|
 | **Project Name** | SOAS Feedback Collector |
 | **Target Release** | Q2 2026 (Active) |
-| **Status** | v1.2: Production Ready |
+| **Status** | v1.3: Production Ready |
 | **Author** | Pawan Simha R (MCA, SOAS, Sapthagiri NPS University) |
 | **Stack** | React 19 + Vite 8 / Express 4.21 / MongoDB 8 / Mongoose 8 |
 
@@ -89,7 +89,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Email Notifications** | Alert students when a feedback window opens / closes | Nodemailer + cron-based or webhook-driven trigger |
 | **Faculty Role** | Separate read-only view for faculty to see aggregated class stats without exposing student identity | New `role: 'faculty'` in Student model; filtered query layer |
 | **Auto-Scheduled Allotments** | Admins pre-configure feedback windows on a calendar | Extend Allotment model with `startDate`, `endDate`; background scheduler |
-| **Unit / Integration Tests** | Test dependencies (Jest + Supertest) installed; no test cases written yet | Jest + Supertest (server) |
+| **Integration Tests** | Jest + Supertest smoke tests (health + 404) in `server/tests/server.test.js`; run with `npm test` | Expand coverage with route-level tests |
 
 ---
 
@@ -106,28 +106,28 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Rating Scale** | 1-5 (integer) with visual star selector | `client/src/components/FeedbackForm.jsx` |
 | **Subject Whitelist** | Authenticated feedback subject validated against `SUBJECTS` constant (6 subjects) | `server/routes/feedback.js` |
 | **Rate Limiting** | Public: 10 req/15min; Login: 5 req/15min | `server/routes/public.js`, `server/routes/auth.js` |
-| **Request Body Limit** | 10kb (JSON payload) | `server/server.js:39` |
-| **Security Headers** | Helmet 8 adds X-Frame-Options, X-Content-Type-Options, CSP | `server/server.js:36` |
-| **Response Compression** | compression 1.8 gzip on all API responses (~70% smaller) | `server/server.js:37` |
+| **Request Body Limit** | 10kb (JSON payload) | `server/app.js:21` |
+| **Security Headers** | Helmet 8 adds X-Frame-Options, X-Content-Type-Options, CSP | `server/app.js:17` |
+| **Response Compression** | compression 1.8 gzip on all API responses (~70% smaller) | `server/app.js:18` |
 | **Process Manager** | PM2 cluster mode: N workers = N CPU cores; auto-restart | `server/ecosystem.config.js` |
 | **Database Indexes** | Compound + single-field indexes on Feedback & PublicFeedback | `server/models/Feedback.js:42-44`, `server/models/PublicFeedback.js:35` |
 | **Query Optimization** | `.lean()` on all read-only queries (skips Mongoose hydration) | `server/routes/*.js` (10 queries) |
 | **Database** | MongoDB via Mongoose 8; schema-free migrations | `server/models/*` |
 | **API Base** | `http://localhost:5000/api` (proxied in dev via Vite) | `client/src/config/api.js`, `client/vite.config.js` |
 | **Frontend Port** | 5173 (Vite dev with API proxy to :5000) | `client/vite.config.js` |
-| **Backend Port** | 5000 (Express) | `server/server.js:28` |
+| **Backend Port** | 5000 (Express) | `server/server.js:15` |
 | **NoSQL Schema** | 4 collections: `students`, `feedbacks`, `publicfeedbacks`, `allotments` | `server/models/*` |
 | **Asset Format** | Raster images as **WebP** (quality 85); favicon as **ICO** | `client/public/images/*.webp` + `favicon.ico` |
 | **Favicon** | `favicon.ico`: standard browser favicon format | `client/public/images/favicon.ico` |
 | **Navbar Logo** | Separate `navbar-logo.webp` asset for Navbar, Landing, and Login components | `client/public/images/navbar-logo.webp` |
 | **Auth Guard** | `ProtectedRoute` redirects unauthenticated users to `/` | `client/src/App.jsx:18-22` |
-| **CORS** | Restricted via `CORS_ORIGIN` env var (defaults to `http://localhost:5173`) | `server/server.js` |
+| **CORS** | Restricted via `CORS_ORIGIN` env var (defaults to `http://localhost:5173`) | `server/app.js:20` |
 | **404 Page** | Standalone NotFound component with CSS compass illustration, brand logo, animated needle wobble, radial spotlight, two recovery CTAs, and responsive/motion-reduced support; renders outside the main layout with no Navbar/Footer | `client/src/components/NotFound.jsx` |
-| **License** | GNU General Public License v3.0: headers injected into all 45 source files | `LICENSE.md` |
+| **License** | GNU General Public License v3.0: headers injected into all 50 source files | `LICENSE.md` |
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, meta author/description/keywords | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>` with getDerivedStateFromError + reload CTA | `client/src/components/ErrorBoundary.jsx` |
 | **Logout Cleanup** | Clears `fb_locked`, `fb_drafts`, `fb_ratings` from localStorage on logout | `client/src/context/AuthContext.jsx` |
-| **JWT Startup Validation** | Server exits with `process.exit(1)` if `JWT_SECRET` is missing | `server/server.js` |
+| **JWT Startup Validation** | Server exits with `process.exit(1)` if `JWT_SECRET` is missing | `server/server.js:9` |
 
 ---
 

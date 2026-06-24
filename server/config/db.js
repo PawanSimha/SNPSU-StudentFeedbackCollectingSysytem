@@ -16,13 +16,14 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const mongoose = require('mongoose');
+const logger = require('./logger');
 
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/feedback-collector');
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    logger.fatal({ err: error }, 'MongoDB connection failed');
     process.exit(1);
   }
 };

@@ -44,7 +44,7 @@ router.get('/classes', (req, res) => {
   res.json(CLASSES);
 });
 
-router.get('/students', async (req, res) => {
+router.get('/students', async (req, res, next) => {
   try {
     const classFilter = req.query.class && req.query.class !== 'all'
       ? { classGroup: req.query.class }
@@ -55,7 +55,7 @@ router.get('/students', async (req, res) => {
       .lean();
     res.json(students);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
@@ -77,7 +77,7 @@ const buildFeedbackFilter = (req) => {
   return filter;
 };
 
-router.get('/feedback', async (req, res) => {
+router.get('/feedback', async (req, res, next) => {
   try {
     const fbFilter = buildFeedbackFilter(req);
 
@@ -99,12 +99,11 @@ router.get('/feedback', async (req, res) => {
 
     res.json(feedbacks);
   } catch (error) {
-    console.error('Admin feedback error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/feedback/stats', async (req, res) => {
+router.get('/feedback/stats', async (req, res, next) => {
   try {
     const fbFilter = buildFeedbackFilter(req);
 
@@ -135,11 +134,11 @@ router.get('/feedback/stats', async (req, res) => {
       subjects: subjects.length ? subjects : SUBJECTS,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/feedback/subject/:subject', async (req, res) => {
+router.get('/feedback/subject/:subject', async (req, res, next) => {
   try {
     const fbFilter = buildFeedbackFilter(req);
 
@@ -161,11 +160,11 @@ router.get('/feedback/subject/:subject', async (req, res) => {
 
     res.json(feedbacks);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/feedback/subject/:subject/coverage', async (req, res) => {
+router.get('/feedback/subject/:subject/coverage', async (req, res, next) => {
   try {
     const classGroup = req.query.class;
     if (!classGroup) {
@@ -202,12 +201,11 @@ router.get('/feedback/subject/:subject/coverage', async (req, res) => {
       notGivenStudents,
     });
   } catch (error) {
-    console.error('Admin coverage error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/db-overview', async (req, res) => {
+router.get('/db-overview', async (req, res, next) => {
   try {
     const students = await Student.find().select('-password').sort({ classGroup: 1, name: 1 }).lean();
     const feedbacks = await Feedback.find().populate('student', 'name usn email classGroup').sort({ createdAt: -1 }).lean();
@@ -245,8 +243,7 @@ router.get('/db-overview', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Admin db-overview error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 

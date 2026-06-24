@@ -33,7 +33,16 @@ router.get('/subjects', (req, res) => {
   res.json(SUBJECTS);
 });
 
-router.post('/feedback', publicLimiter, async (req, res) => {
+const validateOrigin = (req, res, next) => {
+  const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+  const origin = req.headers.origin;
+  if (origin && origin !== allowedOrigin) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
+  next();
+};
+
+router.post('/feedback', validateOrigin, publicLimiter, async (req, res, next) => {
   try {
     const { subject, facultyName, comments } = req.body;
     if (!subject) {
@@ -57,18 +66,16 @@ router.post('/feedback', publicLimiter, async (req, res) => {
     const feedback = await PublicFeedback.create({ subject, facultyName: facultyName || '', comments });
     res.status(201).json({ message: 'Feedback submitted successfully', feedback });
   } catch (error) {
-    console.error('Public feedback submit error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
-router.get('/feedbacks', protect, async (req, res) => {
+router.get('/feedbacks', protect, async (req, res, next) => {
   try {
     const feedbacks = await PublicFeedback.find().sort({ createdAt: -1 }).lean();
     res.json(feedbacks);
   } catch (error) {
-    console.error('Public feedback fetch error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
