@@ -248,6 +248,12 @@ body {
   opacity: 0.85;
 }
 
+.footer__section nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .footer__link {
   color: white;
   text-decoration: none;

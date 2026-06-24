@@ -39,7 +39,7 @@ const Footer = () => {
           <nav aria-label="Quick links">
             <Link to="/dashboard" className="footer__link">Dashboard</Link>
             <Link to="/my-feedback" className="footer__link">My Feedback</Link>
-            <a href="https://snpsu.edu.in/engineering/" target="_blank" rel="noreferrer" className="footer__link">University Website</a>
+            <a href="https://snpsu.edu.in/" target="_blank" rel="noreferrer" className="footer__link">University Website</a>
           </nav>
         </div>
 
