@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import '../styles/Login.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -28,10 +28,8 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [mounted] = useState(() => true);
   const [touched, setTouched] = useState({});
-
-  useEffect(() => { setMounted(true); }, []);
 
   const validate = (name, value) => {
     if (!value) return `${name === 'usn' ? 'USN' : name.charAt(0).toUpperCase() + name.slice(1)} is required`;

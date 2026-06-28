@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
 

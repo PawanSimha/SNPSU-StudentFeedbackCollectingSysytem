@@ -45,12 +45,12 @@ const AdminDashboard = () => {
         setFeedbacks(fbRes.data.data);
         setStats(statsRes.data);
         setSubjects(statsRes.data.subjects);
-      } catch (e) {
+      } catch {
         // silently handle - component renders empty state
       }
     };
     fetchData();
-  }, [classGroup]);
+  }, [classGroup, decodedClass]);
 
   const filterBySubject = async (subject) => {
     setSelectedSubject(subject);

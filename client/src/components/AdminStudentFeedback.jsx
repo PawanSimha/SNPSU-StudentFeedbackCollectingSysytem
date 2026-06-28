@@ -36,7 +36,6 @@ const AdminStudentFeedback = () => {
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
   useEffect(() => {
-    setLoading(true);
     axios.get(`${API}/admin/feedback?${classParam}&student=${studentId}`).then(({ data: wrapper }) => {
       const feedbacks = wrapper.data || [];
       setFeedbacks(feedbacks);
@@ -44,7 +43,7 @@ const AdminStudentFeedback = () => {
       setSubjects(unique);
       if (feedbacks.length > 0) setStudent(feedbacks[0].student);
     }).catch(() => {}).finally(() => setLoading(false));
-  }, [classGroup, studentId]);
+  }, [classGroup, studentId, classParam]);
 
   const filterBySubject = async (subject) => {
     setSelectedSubject(subject);

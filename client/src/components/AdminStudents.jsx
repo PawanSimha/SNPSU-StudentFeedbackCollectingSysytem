@@ -40,7 +40,6 @@ const AdminStudents = () => {
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
   useEffect(() => {
-    setLoading(true);
     Promise.all([
       axios.get(`${API}/admin/students?${classParam}`),
       axios.get(`${API}/feedback/subjects`),
@@ -48,7 +47,7 @@ const AdminStudents = () => {
       setStudents(studentsRes.data.data);
       setSubjects(subjectsRes.data);
     }).catch(() => {}).finally(() => setLoading(false));
-  }, [classGroup]);
+  }, [classGroup, classParam]);
 
   const showSubjectFeedback = async (subject) => {
     setSelectedSubject(subject);

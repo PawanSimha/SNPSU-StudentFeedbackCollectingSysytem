@@ -43,18 +43,18 @@ const AdminDbOverview = () => {
   }, []);
 
   const collections = data?.collections;
-  const allStudents = collections?.students?.all || [];
-  const allFeedbacks = collections?.feedbacks?.all || [];
 
   const filteredStudents = useMemo(() => {
+    const allStudents = collections?.students?.all || [];
     if (!search) return allStudents;
     const q = search.toLowerCase();
     return allStudents.filter(s =>
       s.name.toLowerCase().includes(q) || s.usn.toLowerCase().includes(q) || s.email.toLowerCase().includes(q)
     );
-  }, [search, allStudents]);
+  }, [search, collections?.students?.all]);
 
   const filteredFeedbacks = useMemo(() => {
+    const allFeedbacks = collections?.feedbacks?.all || [];
     if (!search) return allFeedbacks;
     const q = search.toLowerCase();
     return allFeedbacks.filter(f =>
@@ -63,7 +63,7 @@ const AdminDbOverview = () => {
       (f.student?.usn?.toLowerCase().includes(q)) ||
       (f.comments?.toLowerCase().includes(q))
     );
-  }, [search, allFeedbacks]);
+  }, [search, collections?.feedbacks?.all]);
 
   if (error) return <div className="admin-db"><div className="alert alert-error">{error}</div></div>;
   if (!data) return <div className="loading">Loading database overview...</div>;

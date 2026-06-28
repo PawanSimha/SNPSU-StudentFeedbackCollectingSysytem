@@ -17,7 +17,6 @@
 */
 import '../styles/AdminAllotments.css';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { API } from '../config/api';
@@ -31,7 +30,6 @@ const sectionLabels = {
 };
 
 const AdminAllotments = () => {
-  const navigate = useNavigate();
   const [classList, setClassList] = useState([]);
   const [allotments, setAllotments] = useState({});
   const [messages, setMessages] = useState({});
@@ -40,7 +38,6 @@ const AdminAllotments = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     axios.get(`${API}/admin/classes`).then(({ data }) => setClassList(data)).catch(() => {});
     axios.get(`${API}/allotments`).then(({ data }) => {
       const map = {};

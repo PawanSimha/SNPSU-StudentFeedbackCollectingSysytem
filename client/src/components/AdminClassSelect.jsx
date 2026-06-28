@@ -45,7 +45,7 @@ const AdminClassSelect = () => {
           results[cls] = data.totalStudents;
         }
         setCounts(results);
-      } catch (e) {
+      } catch {
         setClassList([]);
       } finally {
         setLoading(false);

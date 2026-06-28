@@ -15,24 +15,12 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { StrictMode, useRef, useEffect } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, useLocation } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import { trackPageView } from './utils/analytics'
-
-const AnalyticsTracker = () => {
-  const location = useLocation();
-  const prev = useRef(location.pathname);
-  useEffect(() => {
-    if (prev.current !== location.pathname) {
-      trackPageView(location.pathname);
-      prev.current = location.pathname;
-    }
-  }, [location.pathname]);
-  return null;
-};
+import AnalyticsTracker from './components/AnalyticsTracker.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -26,9 +26,15 @@ const FeedbackForm = () => {
   const navigate = useNavigate();
   const [subjects, setSubjects] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [feedbacks, setFeedbacks] = useState({});
-  const [ratings, setRatings] = useState({});
-  const [locked, setLocked] = useState({});
+  const [locked, setLocked] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fb_locked') || '{}'); } catch { return {}; }
+  });
+  const [feedbacks, setFeedbacks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fb_drafts') || '{}'); } catch { return {}; }
+  });
+  const [ratings, setRatings] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fb_ratings') || '{}'); } catch { return {}; }
+  });
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -41,13 +47,6 @@ const FeedbackForm = () => {
 
   useEffect(() => {
     axios.get(`${API}/feedback/subjects`).then(({ data }) => setSubjects(data));
-    let saved, savedFb, savedRatings;
-    try { saved = JSON.parse(localStorage.getItem('fb_locked') || '{}'); } catch { saved = {}; }
-    setLocked(saved);
-    try { savedFb = JSON.parse(localStorage.getItem('fb_drafts') || '{}'); } catch { savedFb = {}; }
-    setFeedbacks(savedFb);
-    try { savedRatings = JSON.parse(localStorage.getItem('fb_ratings') || '{}'); } catch { savedRatings = {}; }
-    setRatings(savedRatings);
   }, []);
 
   const currentSubject = subjects[currentIndex];
@@ -82,8 +81,11 @@ const FeedbackForm = () => {
     if (!currentRating) {
       setFieldErrors({ ...fieldErrors, [key + '_rating']: 'Please select a rating' });
     } else {
-      const { [key + '_rating']: _, ...rest } = fieldErrors;
-      setFieldErrors(rest);
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next[key + '_rating'];
+        return next;
+      });
     }
   };
 
