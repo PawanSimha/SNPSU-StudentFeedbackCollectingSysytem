@@ -173,7 +173,7 @@ mern-feedback-collector/
 │   │   ├── robots.txt            AI-aware crawler directives (search allowed, training scrapers blocked)
 │   │   └── sitemap.xml           3-URL sitemap anchored to production domain
 │   └── src/
-│       ├── main.jsx              Entry point: BrowserRouter wraps App + analytics tracker
+│       ├── main.jsx              Entry point: BrowserRouter wraps App
 │       ├── App.jsx               Route definitions, layout composition, ProtectedRoute, AdminRoute
 │       ├── index.css             Global styles: CSS custom properties, BEM naming
 │       ├── config/
@@ -200,7 +200,7 @@ mern-feedback-collector/
 │       │   ├── Navbar.css
 │       │   ├── NotFound.css
 │       │   └── PublicFeedback.css
-│       ├── components/           18 React components (flat, no admin subdirectory)
+│       ├── components/           19 React components (flat, no admin subdirectory)
 │       │   ├── AdminAllotments.jsx
 │       │   ├── AdminAnonymous.jsx
 │       │   ├── AdminClassSelect.jsx
@@ -208,6 +208,7 @@ mern-feedback-collector/
 │       │   ├── AdminDbOverview.jsx
 │       │   ├── AdminStudentFeedback.jsx
 │       │   ├── AdminStudents.jsx
+│       │   ├── AnalyticsTracker.jsx
 │       │   ├── CookieConsent.jsx
 │       │   ├── Dashboard.jsx
 │       │   ├── ErrorBoundary.jsx
@@ -377,7 +378,7 @@ mern-feedback-collector/
 | **Swagger API docs** | `/api/docs` endpoint | Current (uncommitted) |
 | **Pagination** | `page`/`limit`/`skip` on admin list endpoints | Current (uncommitted) |
 | **Refresh token flow** | `POST /api/auth/refresh`, `tryRefresh()` in AuthContext | Current (uncommitted) |
-| **Analytics tracker** | Page-view tracking via `useEffect` + `useLocation` | Current (uncommitted) |
+| **Analytics tracker** | Page-view tracking via dedicated `AnalyticsTracker` component | `f831e99` |
 | **Husky + lint-staged** | Pre-commit hooks | Current (uncommitted) |
 | **AdminRoute guard** | Role-based redirect for non-admin users | Current (uncommitted) |
 

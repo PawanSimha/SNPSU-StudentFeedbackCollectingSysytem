@@ -173,7 +173,7 @@ mern-feedback-collector/
 │       ├── utils/
 │       │   ├── analytics.js          # Page-view analytics tracker
 │       │   └── download.js           # CSV & Word export helpers
-│       └── components/               # 18 React components
+│       └── components/               # 19 React components
 │           ├── AdminAllotments.jsx
 │           ├── AdminAnonymous.jsx
 │           ├── AdminClassSelect.jsx
@@ -181,6 +181,7 @@ mern-feedback-collector/
 │           ├── AdminDbOverview.jsx
 │           ├── AdminStudentFeedback.jsx
 │           ├── AdminStudents.jsx
+│           ├── AnalyticsTracker.jsx  # Page-view analytics (useLocation-based)
 │           ├── AdminRoute.jsx        # Admin route guard (redirects non-admin)
 │           ├── CookieConsent.jsx     # GDPR banner with Accept/Decline
 │           ├── Dashboard.jsx         # Student dashboard
