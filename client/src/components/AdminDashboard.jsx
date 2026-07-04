@@ -94,14 +94,13 @@ const AdminDashboard = () => {
               <th>USN</th>
               <th>Email</th>
               <th>Subject</th>
-              <th>Rating</th>
               <th>Comments</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
             {feedbacks.length === 0 ? (
-              <tr><td colSpan="8" className="no-data">No feedback found for this class</td></tr>
+              <tr><td colSpan="7" className="no-data">No feedback found for this class</td></tr>
             ) : (
               feedbacks.map((fb, i) => (
                 <tr key={fb._id}>
@@ -110,7 +109,6 @@ const AdminDashboard = () => {
                   <td>{fb.student?.usn || 'N/A'}</td>
                   <td>{fb.student?.email || 'N/A'}</td>
                   <td>{fb.subject}</td>
-                  <td className="stars-cell">{'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}</td>
                   <td>{fb.comments || '-'}</td>
                   <td>{new Date(fb.createdAt).toLocaleDateString()}</td>
                 </tr>

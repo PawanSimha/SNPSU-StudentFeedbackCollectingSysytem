@@ -88,13 +88,6 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="info-list__item">
-                  <span className="info-list__icon">⭐</span>
-                  <div className="info-list__text">
-                    <span className="info-list__value">1–5</span>
-                    <span className="info-list__label">Rating per Subject</span>
-                  </div>
-                </div>
-                <div className="info-list__item">
                   <span className="info-list__icon">💬</span>
                   <div className="info-list__text">
                     <span className="info-list__value">50–300</span>
@@ -115,7 +108,6 @@ const Dashboard = () => {
             <div className="dashboard-section">
               <h3 className="dashboard-section__title">How Feedback Works</h3>
               <ol className="steps-list">
-                <li><strong>Rate each subject</strong> - Give a 1–5 star rating for every subject you have studied this semester.</li>
                 <li><strong>Write your comments</strong> - Share your thoughts (50–300 characters per subject). Be specific about what worked well and what could be improved.</li>
                 <li><strong>Lock your response</strong> - Each subject's feedback is locked individually. You can unlock and edit before final submission.</li>
                 <li><strong>Submit all at once</strong> - Once all subjects are locked, review your responses and submit everything together.</li>

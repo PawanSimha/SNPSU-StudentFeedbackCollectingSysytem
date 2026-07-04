@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- **Removed star rating system** — all rating fields, validation, UI, and display removed from Feedback model, API, FeedbackForm, admin views, MyFeedback, Dashboard, Landing FAQ, and AuthContext cleanup.
+
 ## v1.3 — Phases A–D
 
 ### Phase A — Backend Hardening

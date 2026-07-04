@@ -32,9 +32,6 @@ const FeedbackForm = () => {
   const [feedbacks, setFeedbacks] = useState(() => {
     try { return JSON.parse(localStorage.getItem('fb_drafts') || '{}'); } catch { return {}; }
   });
-  const [ratings, setRatings] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('fb_ratings') || '{}'); } catch { return {}; }
-  });
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -53,14 +50,11 @@ const FeedbackForm = () => {
   const isLast = currentIndex === subjects.length - 1;
   const totalSubjects = subjects.length;
   const currentText = (feedbacks[currentSubject] || '');
-  const currentRating = ratings[currentSubject] || 0;
   const charCount = currentText.length;
-  const textValid = charCount >= MIN_LEN && charCount <= MAX_LEN && currentRating > 0;
+  const textValid = charCount >= MIN_LEN && charCount <= MAX_LEN;
   const isLocked = !!locked[currentSubject];
 
-  const validateField = (field, value, ratingVal) => {
-    if (field === 'rating' && !ratingVal) return 'Please select a rating';
-    if (field === 'rating') return '';
+  const validateField = (value) => {
     const len = value ? value.trim().length : 0;
     if (len === 0) return 'Feedback is required';
     if (len < MIN_LEN) return `Feedback must be at least ${MIN_LEN} characters (${len}/${MIN_LEN})`;
@@ -71,22 +65,8 @@ const FeedbackForm = () => {
   const handleCommentBlur = () => {
     const key = currentSubject;
     setTouched({ ...touched, comments: true });
-    const err = validateField('comments', currentText, currentRating);
+    const err = validateField(currentText);
     setFieldErrors({ ...fieldErrors, [key + '_comments']: err });
-  };
-
-  const handleRatingTouch = () => {
-    setTouched({ ...touched, rating: true });
-    const key = currentSubject;
-    if (!currentRating) {
-      setFieldErrors({ ...fieldErrors, [key + '_rating']: 'Please select a rating' });
-    } else {
-      setFieldErrors(prev => {
-        const next = { ...prev };
-        delete next[key + '_rating'];
-        return next;
-      });
-    }
   };
 
   const updateDrafts = (updated) => {
@@ -94,8 +74,8 @@ const FeedbackForm = () => {
     localStorage.setItem('fb_drafts', JSON.stringify(updated));
   };
 
-  const saveToDb = async (subject, comments, rating) => {
-    await axios.post(`${API}/feedback/submit`, { subject, rating, comments: comments.trim() });
+  const saveToDb = async (subject, comments) => {
+    await axios.post(`${API}/feedback/submit`, { subject, comments: comments.trim() });
   };
 
   const doLock = async () => {
@@ -111,7 +91,7 @@ const FeedbackForm = () => {
     }
     setError('');
     try {
-      await saveToDb(currentSubject, feedback, currentRating);
+      await saveToDb(currentSubject, feedback);
       const newLocked = { ...locked, [currentSubject]: true };
       setLocked(newLocked);
       localStorage.setItem('fb_locked', JSON.stringify(newLocked));
@@ -156,13 +136,6 @@ const FeedbackForm = () => {
     updateDrafts(updated);
   };
 
-  const handleRating = (value) => {
-    if (isLocked) return;
-    const updated = { ...ratings, [currentSubject]: value };
-    setRatings(updated);
-    localStorage.setItem('fb_ratings', JSON.stringify(updated));
-  };
-
   const handleSubmit = () => {
     if (!isLocked) return;
     setShowPopup(true);
@@ -174,13 +147,11 @@ const FeedbackForm = () => {
       for (const subject of subjects) {
         if (!locked[subject]) {
           const fb = (feedbacks[subject] || '').trim();
-          const rt = ratings[subject] || 0;
-          if (fb && rt) await saveToDb(subject, fb, rt);
+          if (fb) await saveToDb(subject, fb);
         }
       }
       localStorage.removeItem('fb_locked');
       localStorage.removeItem('fb_drafts');
-      localStorage.removeItem('fb_ratings');
       navigate('/my-feedback');
     } catch (err) {
       setError('Submit failed: ' + (err.response?.data?.message || err.message));
@@ -227,28 +198,6 @@ const FeedbackForm = () => {
         <h2>{currentSubject}</h2>
 
         {error && <div className="alert alert-error">{error}</div>}
-
-        <div className="form-group">
-          <label>Rating:</label>
-          <div className="star-rating" onBlur={handleRatingTouch} tabIndex={-1}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                className={`star-btn ${star <= currentRating ? 'active' : ''}`}
-                onClick={() => { handleRating(star); handleRatingTouch(); }}
-                disabled={isLocked}
-                aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
-              >
-                {star <= currentRating ? '★' : '☆'}
-              </button>
-            ))}
-            <span className="star-label">{currentRating > 0 ? `${currentRating}/5` : 'Select rating'}</span>
-          </div>
-          {touched.rating && fieldErrors[currentSubject + '_rating'] && (
-            <p className="field-error" role="alert">{fieldErrors[currentSubject + '_rating']}</p>
-          )}
-        </div>
 
         <div className="form-group">
           <label>Your Feedback:</label>

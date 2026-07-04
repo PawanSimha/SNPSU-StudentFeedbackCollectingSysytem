@@ -44,7 +44,7 @@ const options = {
           type: 'object',
           properties: {
             _id: { type: 'string' }, student: { type: 'string' }, subject: { type: 'string' },
-            rating: { type: 'integer', minimum: 1, maximum: 5 }, comments: { type: 'string' }, createdAt: { type: 'string' },
+            comments: { type: 'string' }, createdAt: { type: 'string' },
           },
         },
         PublicFeedback: {
@@ -84,7 +84,7 @@ const options = {
       '/api/feedback/submit': {
         post: {
           tags: ['Feedback'], summary: 'Submit authenticated feedback', security: [{ bearerAuth: [] }],
-          requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['subject', 'rating'], properties: { subject: { type: 'string' }, rating: { type: 'integer' }, comments: { type: 'string' } } } } } },
+          requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['subject'], properties: { subject: { type: 'string' }, comments: { type: 'string' } } } } } },
           responses: { 201: { description: 'Created' }, 400: { description: 'Validation error' }, 403: { description: 'Allotment closed' } },
         },
       },

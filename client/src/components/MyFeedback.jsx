@@ -48,7 +48,6 @@ const MyFeedback = () => {
             <thead>
               <tr>
                 <th>Subject</th>
-                <th>Rating</th>
                 <th>Comments</th>
                 <th>Date</th>
               </tr>
@@ -57,7 +56,6 @@ const MyFeedback = () => {
               {feedbacks.map((fb) => (
                 <tr key={fb._id}>
                   <td>{fb.subject}</td>
-                  <td>{'★'.repeat(fb.rating || 0)}{'☆'.repeat(5 - (fb.rating || 0))}</td>
                   <td>{fb.comments || '-'}</td>
                   <td>{new Date(fb.createdAt).toLocaleDateString()}</td>
                 </tr>

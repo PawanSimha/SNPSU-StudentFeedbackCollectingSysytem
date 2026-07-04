@@ -41,18 +41,14 @@ const MAX_LEN = 300;
 
 router.post('/submit', protect, async (req, res, next) => {
   try {
-    const { subject, rating, comments } = req.body;
+    const { subject, comments } = req.body;
 
-    if (!subject || !rating) {
-      return res.status(400).json({ message: 'Subject and rating are required' });
+    if (!subject) {
+      return res.status(400).json({ message: 'Subject is required' });
     }
 
     if (!SUBJECTS.includes(subject)) {
       return res.status(400).json({ message: 'Invalid subject' });
-    }
-
-    if (typeof rating !== 'number' || rating < 1 || rating > 5) {
-      return res.status(400).json({ message: 'Rating must be a number between 1 and 5' });
     }
 
     if (typeof comments === 'string' && comments.trim()) {
@@ -74,7 +70,6 @@ router.post('/submit', protect, async (req, res, next) => {
 
     const existing = await Feedback.findOne({ student: req.student._id, subject });
     if (existing) {
-      existing.rating = rating;
       existing.comments = comments;
       await existing.save();
       return res.json(existing);
@@ -83,7 +78,6 @@ router.post('/submit', protect, async (req, res, next) => {
     const feedback = await Feedback.create({
       student: req.student._id,
       subject,
-      rating,
       comments,
     });
 

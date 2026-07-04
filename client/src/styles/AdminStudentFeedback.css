@@ -15,6 +15,79 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+/* Back button */
+.btn-back {
+  background: var(--gray-100);
+  color: var(--primary);
+  border: 1.5px solid var(--gray-200);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.btn-back:hover {
+  background: var(--gray-200);
+  border-color: var(--primary);
+}
+
+/* Filter bar (subject filter buttons) */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  background: white;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all var(--transition);
+  color: var(--gray-600);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.filter-btn:hover:not(.active) {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+}
+
+/* Shared layout */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.no-data {
+  color: var(--gray-400);
+  font-style: italic;
+  padding: 16px 0;
+}
+
+.loading-text {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  padding: 20px 0;
+}
+
 /* Student Profile */
 .student-profile {
   display: flex;
@@ -32,9 +105,41 @@
   font-size: 1.3rem;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stats-grid.one-col {
+  grid-template-columns: 1fr;
+  max-width: 300px;
+}
+
 .stats-grid.two-col {
   grid-template-columns: repeat(2, 1fr);
   max-width: 400px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.stat-card p {
+  color: var(--gray-500);
+  font-size: 0.85rem;
 }
 
 /* Feedback Cards */

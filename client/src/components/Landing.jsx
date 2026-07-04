@@ -31,11 +31,11 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is my feedback anonymous?',
-    a: 'Yes, all feedback submissions are anonymous to instructors. Only the administrator can see your identity for coverage tracking. Your name, USN, and email are never shared with faculty. Only the subject, rating, and your comments are recorded to ensure honest and unbiased responses.',
+    a: 'Yes, all feedback submissions are anonymous to instructors. Only the administrator can see your identity for coverage tracking. Your name, USN, and email are never shared with faculty. Only the subject and your comments are recorded to ensure honest and unbiased responses.',
   },
   {
     q: 'How do I submit feedback?',
-    a: 'After logging in with your student credentials, navigate to the Dashboard and click on "Submit Feedback" for the active subject. Fill in your ratings and comments, then submit. You can submit feedback for each subject once per allotted session.',
+    a: 'After logging in with your student credentials, navigate to the Dashboard and click on "Submit Feedback" for the active subject. Write your comments and lock your response, then submit. You can submit feedback for each subject once per allotted session.',
   },
   {
     q: 'Can I view my past feedback?',

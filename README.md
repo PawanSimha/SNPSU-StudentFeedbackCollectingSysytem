@@ -45,12 +45,11 @@ Administrators open/close feedback windows per class, track participation covera
 ## ✨ Key Features
 
 ### 👤 User Features
-- **Star Rating** - Visual 1–5 star selector with localStorage persistence per subject
 - **Sequential Feedback Form** - Step-by-step multi-subject flow with lock/unlock, auto-saved drafts, and batch submission
 - **Student Dashboard** - View active feedback allotments and navigate to the feedback form
 - **Feedback History** - Browse all previously submitted feedback across subjects
 - **Public Anonymous Feedback** - Submit feedback without logging in (subject + optional faculty name + 100–300 char comments)
-- **Inline Validation** - Real-time validation on comments and ratings with clear error messages
+- **Inline Validation** - Real-time validation on comments with clear error messages
 
 ### 🔧 Admin Features
 - **Class Management** - View all class groups (fetched dynamically from API), drill into student-level details
@@ -270,7 +269,6 @@ cd client && npm run build   # Static output → client/dist/
 | **Analytics Dashboard** | Chart.js / Recharts + `/api/admin/analytics` endpoint |
 | **Email Notifications** | Nodemailer + cron/webhook when windows open/close |
 | **Faculty Role** | `role: 'faculty'` with read-only aggregated stats |
-| **TypeScript Migration** | Full static typing across the stack |
 | **TypeScript Migration** | Full static typing across the stack |
 
 ---

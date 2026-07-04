@@ -98,7 +98,6 @@ const AdminStudentFeedback = () => {
             <div key={fb._id} className="feedback-card">
               <div className="feedback-card-header">
                 <h4>{fb.subject}</h4>
-                <span className="stars-cell">{'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}</span>
                 <span className="feedback-date">{new Date(fb.createdAt).toLocaleDateString()}</span>
               </div>
               {fb.comments && <p className="feedback-comments">{fb.comments}</p>}

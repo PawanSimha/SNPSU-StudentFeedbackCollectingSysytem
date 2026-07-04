@@ -37,7 +37,7 @@ cd server && npm run prod    # PM2 cluster mode
 - **`server/app.js`** exports Express app; **`server/server.js`** starts it. Tests import `app.js` exclusively.
 - **Vite proxy** in `vite.config.js` forwards `/api` → `localhost:5000` in dev. No CORS config needed for dev.
 - **CSS custom properties** defined in `client/src/index.css`: `--primary`, `--gray-50`–`--gray-800`, `--success`, `--danger`, `--accent`. Use these instead of hardcoded hex. 16 per-component CSS files in `client/src/styles/`.
-- **No TypeScript, no PropTypes.** Backend validates at route level (subject whitelist, rating range 1-5, comment length).
+- **No TypeScript, no PropTypes.** Backend validates at route level (subject whitelist, comment length).
 - **Two feedback channels**: authenticated (JWT + allotment-gated, upsert on {student + subject} compound index) vs public anonymous (rate-limited 10/15min, no `student` field, 100-300 chars always).
 - **Login requires all three**: `email` (lowercased), `usn` (uppercased), `password` - bcrypt compared.
 - **JWT**: 30d in `sessionStorage`, refresh token 7d in `localStorage` via `tryRefresh()`.

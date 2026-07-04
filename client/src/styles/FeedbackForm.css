@@ -124,46 +124,6 @@
   color: var(--danger);
 }
 
-/* Star Rating */
-.star-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.star-btn {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  padding: 0 2px;
-  color: var(--gray-300);
-  transition: color 0.15s ease, transform 0.15s ease;
-  line-height: 1;
-}
-
-.star-btn.active {
-  color: var(--accent);
-}
-
-.star-btn:hover:not(:disabled) {
-  transform: scale(1.2);
-  color: var(--accent-hover);
-}
-
-.star-btn:disabled {
-  cursor: default;
-  opacity: 0.8;
-}
-
-.star-label {
-  font-size: 0.82rem;
-  color: var(--gray-500);
-  margin-left: 6px;
-  font-weight: 600;
-}
-
 .sf-steps {
   display: flex;
   gap: 8px;

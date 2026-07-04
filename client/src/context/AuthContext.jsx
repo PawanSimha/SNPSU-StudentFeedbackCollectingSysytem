@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('fb_locked');
     localStorage.removeItem('fb_drafts');
-    localStorage.removeItem('fb_ratings');
     delete axios.defaults.headers.common['Authorization'];
     setStudent(null);
   }, []);
