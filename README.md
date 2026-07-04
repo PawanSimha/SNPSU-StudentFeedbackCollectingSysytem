@@ -1,6 +1,6 @@
 
   <div align="center">
-    <img src="./client/public/images/footer-logo.webp" alt="SOAS Logo" width="220" />
+    <img src="./client/public/images/footer-logo.webp" alt="SOAS Logo" width="280" />
     <br/>
     <h1>SOAS Feedback Collector</h1>
     <p><em>Anonymous course feedback platform for Sapthagiri NPS University</em></p>
