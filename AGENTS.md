@@ -9,7 +9,7 @@ cd server && npm install                  # Express, Mongoose, JWT, pino, pm2, s
 cd client && npm install                  # React, Vite, Axios, react-router-dom
 
 # Seed DB (A/B/C section + admin)
-npm run seed       # A sec - 51 students, pw: MCAA@123
+npm run seed       # A sec - 50 students, pw: MCAA@123
 npm run seed-b     # B sec - 50 students, pw: MCAB@123
 npm run seed-c     # C sec - 49 students, pw: MCAC@123
 npm run seed-admin # admin@gmail.com / iamadmin
@@ -51,10 +51,10 @@ cd server && npm run prod    # PM2 cluster mode
 - **GPLv3 header** required in every source file. Template: project name, copyright year, author name, license disclaimer.
 - **BEM naming** in ~6 CSS files (CookieConsent, Footer, Landing, NotFound, PublicFeedback, Login). Others use flat classes.
 - **`<main role="main">`** on public pages (Landing, Login, PublicFeedback, NotFound). Authenticated pages get `<main className="container" id="main-content">`.
-- **FAQ accordion** in Landing.jsx uses CSS-only collapse (max-height/opacity). `hidden` attribute never used - content must stay in DOM for crawlers.
+- **FAQ accordion** in Landing.jsx uses React state toggle with CSS max-height/opacity animation. `hidden` attribute never used - content stays in DOM for crawlers.
 - **`.lean()`** on all read-only Mongoose queries.
 - **`next(error)`** for async error delegation; **`errorHandler.js`** middleware logs via pino.
-- **6 admin components** lazy-loaded via `React.lazy` + `Suspense`.
+- **7 admin components** lazy-loaded via `React.lazy` + `Suspense`.
 
 ## Context & entry points
 

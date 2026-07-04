@@ -2,6 +2,12 @@
 
 ## Unreleased
 - **Removed star rating system** — all rating fields, validation, UI, and display removed from Feedback model, API, FeedbackForm, admin views, MyFeedback, Dashboard, Landing FAQ, and AuthContext cleanup.
+- **Security hardening**: CSP script-src `unsafe-inline` removed; `validateOrigin` now requires Origin header; refresh endpoint rate-limited (10/min); protect middleware returns 401 on deleted user.
+- **SEO**: `<title>` shortened to 55 chars; FAQPage JSON-LD added; duplicate `robots` meta merged; `sitemap.xml` now 4 URLs with `lastmod`.
+- **Dependencies**: `prettier` installed (pre-commit fix); unused `vitest`, `jsdom`, `@testing-library/*` removed; lint-staged consolidated to root.
+- **Documentation**: `AGENTS.md` A sec count corrected (51→50); `PRIVACY.md` stale rating references removed; `PRD.md` + `context.md` stale rating references cleaned; sitemap URL count updated.
+- **Missing file**: Created `server/scripts/seed-c.js` (49 C section students).
+- **`.dockerignore` bugfix**: Removed `client/src` and `client/public` exclusions that would break Docker build.
 
 ## v1.3 — Phases A–D
 

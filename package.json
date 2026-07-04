@@ -15,7 +15,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": [
-      "eslint --fix",
+      "cd client && npx eslint --fix",
       "prettier --write"
     ],
     "*.css": [

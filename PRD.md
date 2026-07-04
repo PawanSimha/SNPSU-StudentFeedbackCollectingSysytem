@@ -68,9 +68,9 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Report Exports** | CSV (.csv, BOM-prefixed for Excel) and Word (.doc, styled HTML table) download utilities via Blob URLs | `client/src/utils/download.js` |
 | **Cookie Consent Banner** | Accessible dialog with Accept/Decline, localStorage persistence, links to PRIVACY.md | `client/src/components/CookieConsent.jsx` |
 | **AI-Aware robots.txt** | Search crawlers allowed; AI training scrapers (GPTBot, ClaudeBot, CCBot) blocked | `client/public/robots.txt` |
-| **Sitemap.xml** | 3 URLs anchored to production domain | `client/public/sitemap.xml` |
+| **Sitemap.xml** | 4 URLs anchored to production domain | `client/public/sitemap.xml` |
 | **Privacy Policy** | GDPR/CCPA coverage, data collection, retention, contact info | `PRIVACY.md` |
-| **Swagger API Documentation** | Interactive OpenAPI 3.0 docs at `/api/docs`; all 20 endpoints documented with request/response schemas; JWT bearer auth scheme | `server/config/swagger.js` |
+| **Swagger API Documentation** | Interactive OpenAPI 3.0 docs at `/api/docs`; documents 16 of 20 endpoints with request/response schemas; JWT bearer auth scheme | `server/config/swagger.js` |
 | **CSS Variable Refactor** | All hardcoded hex colors across all 16 per-component CSS files replaced with `--gray-*`, `--primary`, `--accent`, `--success`, `--danger` CSS custom properties | 16 cleaned files; `index.css` focus-visible outlines fixed; build passes 0 errors |
 
 ### P1: Should Have (Shipped)
@@ -93,7 +93,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 
 | Feature | Rationale | Suggested Approach |
 |---|---|---|
-| **Analytics Dashboard** | Visualize submission trends, average ratings, sentiment over time | Chart.js or Recharts + new `/api/admin/analytics` endpoint |
+| **Analytics Dashboard** | Visualize submission trends and sentiment over time | Chart.js or Recharts + new `/api/admin/analytics` endpoint |
 | **Email Notifications** | Alert students when a feedback window opens/closes | Nodemailer + cron-based or webhook-driven trigger |
 | **Faculty Role** | Read-only aggregated stats view without exposing student identity | New `role: 'faculty'` in Student model; filtered query layer |
 | **Auto-Scheduled Allotments** | Pre-configure feedback windows on a calendar | Extend Allotment model with `startDate`, `endDate`; background scheduler |
@@ -131,7 +131,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, canonical URL, author meta | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>`; class component (required for `getDerivedStateFromError`) | `client/src/components/ErrorBoundary.jsx` |
 | **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
-| **Environment Variables** | 10 configurable vars: `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_USN`, `ADMIN_NAME` | `server/.env.example` |
+| **Environment Variables** | 13 configurable vars: `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
 
 ---
 
@@ -151,7 +151,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
    -> Axios default header set: Authorization: Bearer <token>
 
 4. Dashboard loads -> GET /api/allotments/status -> { open: true, message: "..." }
-   -> Student clicks "Start Feedback"
+   -> Student clicks "Give Feedback"
 
 5. Feedback form loads subjects -> GET /api/feedback/subjects
     -> Sequential step-based UI: shows one subject at a time
@@ -213,6 +213,7 @@ This project is distributed under the **GNU General Public License v3.0**. Every
 - **Auto-grade feedback**: No sentiment analysis or NLP on comment text.
 - **SSO / OAuth**: Email+USN+password only; no Google/Microsoft login.
 - **Photo / file uploads**: Text only; no attachment support.
+- **Star ratings**: Removed (Unreleased); feedback is comment-only.
 - **Email verification**: Accounts are pre-seeded; no self-registration.
 - **Database migrations**: Schema evolves via Mongoose model changes; no formal migration tooling.
 - **WebSocket / real-time updates**: Polling-based; no Socket.IO or SSE support.

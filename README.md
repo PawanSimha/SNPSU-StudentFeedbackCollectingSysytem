@@ -149,12 +149,13 @@ mern-feedback-collector/
 │   ├── index.html                 # SEO/GEO meta, JSON-LD, preloads
 │   ├── vite.config.js             # React plugin + /api proxy → :5000
 │   ├── public/
-│   │   ├── images/                # WebP + ICO assets (5 files)
+│   │   ├── images/              # WebP + ICO assets (9 files)
 │   │   ├── robots.txt             # AI-aware crawler directives
-│   │   └── sitemap.xml            # 3-URL sitemap
+│   │   └── sitemap.xml            # 4-URL sitemap
 │   └── src/
 │       ├── App.jsx                # Route definitions + layouts
 │       ├── index.css              # CSS custom properties, reset, forms
+│       ├── main.jsx               # Entry point → mounts React app
 │       ├── config/api.js          # Centralized API base URL
 │       ├── context/AuthContext.jsx # JWT + refresh token auth state
 │       ├── styles/                # 16 per-component CSS files
@@ -202,7 +203,7 @@ PORT=5000
 ### 3. Seed the Database
 
 ```bash
-npm run seed       # A section - 51 students (pw: MCAA@123)
+    npm run seed       # A section - 50 students (pw: MCAA@123)
 npm run seed-b     # B section - 50 students (pw: MCAB@123)
 npm run seed-c     # C section - 49 students (pw: MCAC@123)
 npm run seed-admin # Admin account: admin@gmail.com / iamadmin

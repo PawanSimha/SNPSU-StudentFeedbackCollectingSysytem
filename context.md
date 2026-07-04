@@ -41,7 +41,7 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Build Tool** | Vite | ^8.0.12 | @vitejs/plugin-react ^6.0.1 |
 | **HTTP Client** | Axios | ^1.18.0 | Base instance configured per-component |
 | **Backend Runtime** | Node.js / Express | ^4.21.0 | cors ^2.8.5, dotenv ^16.4.5 |
-| **Rate Limiting** | express-rate-limit | ^8.5.2 | 10 req / 15 min on public endpoint; 5 req / 15 min on login |
+| **Rate Limiting** | express-rate-limit | ^8.5.2 | 10 req / 15 min on public endpoint; 5 req / 15 min on login; 10 req / 1 min on refresh |
 | **Security Headers** | Helmet | ^8.2.0 | X-Frame-Options, X-Content-Type-Options, CSP enforcement |
 | **Response Compression** | compression | ^1.8.1 | gzip on all API responses (~70% smaller payloads) |
 | **Process Manager** | PM2 | ^7.0.1 | Cluster mode: N workers = N CPU cores; auto-restart on crash |
@@ -59,7 +59,7 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Deployment** | Vercel | - | `vercel.json` with SPA rewrites + security headers |
 | **Containerization** | Docker | multi-stage | Node 20 Alpine; separate client build stage |
 | **CI** | GitHub Actions | - | 3 jobs: test, lint, build on push/PR to main |
-| **License** | GPLv3 | - | `LICENSE.md` + headers in all 56+ source files |
+| **License** | GPLv3 | - | `LICENSE.md` + headers in all 70 source files |
 
 ---
 
@@ -152,7 +152,7 @@ Guard layers:
 |---|---|---|---|---|---|
 | 1 | GET | `/api/health` | No | No | No |
 | 2 | POST | `/api/auth/login` | No | Yes (5/15m) | No |
-| 3 | POST | `/api/auth/refresh` | No | No | No |
+| 3 | POST | `/api/auth/refresh` | No | Yes (10/1m) | No |
 | 4 | GET | `/api/auth/me` | JWT | No | No |
 | 5 | GET | `/api/feedback/subjects` | JWT | No | No |
 | 6 | GET | `/api/feedback/my` | JWT | No | No |
@@ -210,9 +210,9 @@ mern-feedback-collector/
 │   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000)
 │   ├── index.html                SPA shell with SEO/GEO meta, JSON-LD, preloads, canonical URL
 │   ├── public/
-│   │   ├── images/               WebP + ICO assets (navbar-logo, footer-logo, hero-bg, footer-bg, favicon.ico)
+│   │   ├── images/               WebP + ICO assets (9 files: navbar-logo, footer-logo, hero-bg, footer-bg, about, thank-you-feedback, 3d model, favicon)
 │   │   ├── robots.txt            AI-aware crawler directives (search allowed, training scrapers blocked)
-│   │   └── sitemap.xml           3-URL sitemap anchored to production domain
+│   │   └── sitemap.xml           4-URL sitemap anchored to production domain
 │   └── src/
 │       ├── main.jsx              Entry point: BrowserRouter wraps App + AnalyticsTracker
 │       ├── App.jsx               Route definitions, layout composition, ProtectedRoute, AdminRoute
@@ -293,7 +293,7 @@ mern-feedback-collector/
 │   ├── tests/
 │   │   └── server.test.js        Smoke tests: health endpoint, 404 handler (Jest+Supertest)
 │   └── scripts/
-│       ├── seed.js               51 students for "MCA, 1st Year, 2nd Sem, A sec", pw: "MCAA@123"
+│       ├── seed.js               50 students for "MCA, 1st Year, 2nd Sem, A sec", pw: "MCAA@123"
 │       ├── seed-b.js             50 students for "B sec", pw: "MCAB@123"
 │       ├── seed-admin.js         Admin user seeder (env-var-ized credentials)
 │       ├── seed-c.js             49 students for "C sec", pw: "MCAC@123"
@@ -372,12 +372,12 @@ mern-feedback-collector/
 | **Initial MERN scaffold**, auth, feedback CRUD, admin routes, MongoDB models | `0c385ea` |
 | **WebP image migration**, all images to WebP (q85), originals deleted | `6b209d0` |
 | **SEO/GEO meta tags**, canonical URL, OG/Twitter cards, JSON-LD schema, author meta | `0e4bea9` |
-| **GPLv3 licensing**, full text in `LICENSE.md`, headers in all 56+ source files | `0e4bea9` |
+| **GPLv3 licensing**, full text in `LICENSE.md`, headers in all 70 source files | `0e4bea9` |
 | **Product documentation**, `PRD.md`, `README.md`, `context.md` | `0e4bea9`, `805fdf1` |
 | **Branded 404 page**, CSS compass illustration, brand logo, recovery CTAs, no navbar/footer | Current |
 | **Cookie consent banner**, accessible dialog with Accept/Decline, localStorage persistence | Current |
 | **AI-aware robots.txt**, search crawlers allowed, training scrapers blocked | Current |
-| **Sitemap.xml**, 3 URLs anchored to production domain | Current |
+| **Sitemap.xml**, 4 URLs anchored to production domain | Current |
 | **Privacy policy**, `PRIVACY.md` covering GDPR/CCPA, data collection, retention, rights | Current |
 | **API URL centralization**, `config/api.js` with `VITE_API_URL` env var; all 13 files updated | Current |
 | **Vercel deployment config**, `vercel.json` with SPA rewrites + strict security headers | Current |
@@ -391,7 +391,7 @@ mern-feedback-collector/
 | **API 404 handler**, catch-all returns JSON for unknown API routes | Current |
 | **Scripts env fix**, `update-classes.js` & `update-roles.js` use `process.env.MONGO_URI` | Current |
 | **Typo fix**, "Research Methadology" → "Research Methodology" | Current |
-| **UX improvements**, loading states, error handling, rating column, social icons, `aria-label` across components | Current |
+| **UX improvements**, loading states, error handling, social icons, `aria-label` across components | Current |
 | **MongoDB indexes**, compound + single-field indexes on Feedback & PublicFeedback | Current |
 | **`.lean()` optimization**, all read-only queries use `.lean()` (~40% faster reads) | Current |
 | **PM2 cluster mode**, `ecosystem.config.js` with `instances: 'max'`, `exec_mode: 'cluster'` | Current |
@@ -411,7 +411,7 @@ mern-feedback-collector/
 | **Smoke tests (Jest+Supertest)**, `server/tests/server.test.js` , 2 tests (health + 404) | Current |
 | **Stale build PNGs removed**, `dist/images/Gemini_*` deleted | Current |
 | **CSS modularization**, `index.css` split into 16 per-component CSS files in `styles/` | Current |
-| **JS lazy loading**, 6 admin components lazy-loaded with `React.lazy` + `Suspense` | Current |
+| **JS lazy loading**, 7 admin components lazy-loaded with `React.lazy` + `Suspense` | Current |
 | **Skip-to-content**, skip-link for keyboard users | Current |
 | **Inline validation**, comment length range on feedback form | Current |
 | **aria-live regions**, `role="alert"` on form submission errors | Current |

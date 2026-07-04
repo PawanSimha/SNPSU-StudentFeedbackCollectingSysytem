@@ -7,9 +7,8 @@ node_modules
 server/logs
 server/tests
 server/scripts
-client/src
-client/public
 client/node_modules
+client/dist
 dist
 tests/
 .husky/

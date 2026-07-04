@@ -16,6 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -63,6 +64,12 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.use('/api/*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
+});
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 app.use(errorHandler);

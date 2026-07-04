@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "prod": "pm2-runtime ecosystem.config.js",
+    "prod": "pm2 start ecosystem.config.js --no-daemon",
     "prod:start": "pm2 start ecosystem.config.js",
     "prod:stop": "pm2 stop feedback-server",
     "prod:logs": "pm2 logs feedback-server",

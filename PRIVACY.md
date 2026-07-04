@@ -10,13 +10,13 @@ SOAS Feedback Collector is an open-source project operated under the authority o
 
 ### 2.1 Information you provide
 - **Student accounts:** Name, USN (University Serial Number), email address, class group, and hashed password (bcrypt).
-- **Feedback submissions:** Subject ratings (1-5 scale), comments (50-300 characters).
+- **Feedback submissions:** Per-subject comments (50-300 characters).
 - **Public feedback:** Subject, optional faculty name, and comments (100-300 characters) , no personal identity is collected for anonymous submissions.
 
 ### 2.2 Information collected automatically
 - **No HTTP cookies:** This application does not set or read HTTP cookies.
 - **Session storage:** JWT access tokens are stored in `sessionStorage` (cleared on tab close).
-- **Local storage:** JWT refresh tokens and feedback draft state (lock status, per-subject ratings, comment drafts) are stored in `localStorage` for session continuity. A `cookie_consent` key records your banner preference (accepted/declined). No tracking, analytics, or advertising data is stored.
+- **Local storage:** JWT refresh tokens and feedback draft state (lock status, comment drafts) are stored in `localStorage` for session continuity. A `cookie_consent` key records your banner preference (accepted/declined). No tracking, analytics, or advertising data is stored.
 
 ### 2.3 No third-party analytics
 This application does **not** use Google Analytics, Plausible, or any third-party analytics service. No usage data is transmitted to external analytics providers. A built-in page-view tracker stores anonymized data locally in your browser only.
@@ -24,7 +24,7 @@ This application does **not** use Google Analytics, Plausible, or any third-part
 ## 3. How We Use Your Data
 
 - To authenticate students and administrators.
-- To enable per-subject course feedback with session-gated allotments.
+- To enable per-subject course feedback (comments only) with session-gated allotments.
 - To display aggregated feedback statistics to administrators (individual identities are never exposed).
 - To generate CSV/Word report exports for authorized administrators.
 - To track which students have/have not submitted feedback per subject (coverage tracking).
