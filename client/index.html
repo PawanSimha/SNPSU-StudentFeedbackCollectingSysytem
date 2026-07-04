@@ -68,9 +68,9 @@
     <meta name="twitter:image" content="https://snpsu-feedback-collector.vercel.app/images/hero-bg.webp" />
     <meta name="twitter:image:alt" content="SOAS Feedback Collector landing page with Sapthagiri NPS University branding" />
 
-    <title>SOAS Feedback Collector: Anonymous Course Feedback Platform | Sapthagiri NPS University | Pawan Simha R</title>
+    <title>SOAS Feedback Collector - Anonymous Course Feedback for SNPSU</title>
 
-    <!-- JSON-LD Structured Data (Graph-Anchored: WebApplication + Person + Organization) -->
+    <!-- JSON-LD Structured Data (Graph-Anchored: WebApplication + Person + Organization + FAQPage) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -186,6 +186,44 @@
             "name": "School of Sciences (SOAS)",
             "description": "School offering MCA and other science programs at Sapthagiri NPS University"
           }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://snpsu-feedback-collector.vercel.app/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is SOAS Feedback Collector?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A full-stack MERN application enabling MCA students at Sapthagiri NPS University to submit anonymous course feedback after each class session."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does the anonymous feedback channel work?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No login is required. Users select a subject, optionally enter a faculty name, and submit comments (100-300 characters). Identity is never collected."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do administrators track feedback coverage?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Admins can view per-subject coverage for any class group, showing which students have and have not submitted feedback, with real-time percentage calculations."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What reports can administrators export?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Administrators can download feedback data in CSV and Word document formats via client-side Blob URL generation."
+              }
+            }
+          ]
         }
       ]
     }

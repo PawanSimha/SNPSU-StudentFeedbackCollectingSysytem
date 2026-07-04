@@ -235,8 +235,28 @@
   background: white;
 }
 
-.landing-about .landing-section__inner {
-  text-align: center;
+.landing-about__inner {
+  max-width: 1100px;
+}
+
+.landing-about__grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.landing-about__image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  display: block;
+  transform: translateX(-32px);
+}
+
+.landing-about__content .landing-section__title {
+  text-align: left;
+  margin-top: 0;
 }
 
 .landing-about p {
@@ -248,6 +268,13 @@
 
 .landing-about p:last-child {
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .landing-about__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 /* Vision, Mission, Values */

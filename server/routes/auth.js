@@ -67,7 +67,13 @@ router.post('/login', loginLimiter, async (req, res, next) => {
   }
 });
 
-router.post('/refresh', async (req, res, next) => {
+const refreshLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: { message: 'Too many refresh attempts. Please try again later.' },
+});
+
+router.post('/refresh', refreshLimiter, async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) return res.status(400).json({ message: 'Refresh token required' });

@@ -12,7 +12,7 @@
 
 ## Executive Summary
 
-The SOAS Feedback Collector is a full-stack MERN application that replaces paper-based or ad-hoc course feedback at Sapthagiri NPS University's School of Sciences (SOAS). It enables MCA students to submit per-subject ratings and comments after each class session, provides a public anonymous channel for unfiltered input, and delivers aggregated analytics to administrators via a unified dashboard , all without exposing individual student identity.
+The SOAS Feedback Collector is a full-stack MERN application that replaces paper-based or ad-hoc course feedback at Sapthagiri NPS University's School of Sciences (SOAS). It enables MCA students to submit per-subject comments after each class session, provides a public anonymous channel for unfiltered input, and delivers aggregated analytics to administrators via a unified dashboard , all without exposing individual student identity.
 
 ---
 
@@ -24,7 +24,7 @@ MCA program coordinators at Sapthagiri NPS University lacked a structured, audit
 - **Zero identity verification**: Inflated or spam submissions with no way to attribute per-student participation.
 - **No public anonymity**: Students uncomfortable providing negative feedback through tracked channels had no outlet.
 - **Manual aggregation**: Faculty manually compiled CSV reports consuming 2-3 hours per review cycle.
-- **No participation tracking**: Instructors could not identify which students had/had not submitted feedback for a given subject.
+- **No participation tracking**: Instructors could not identify which students had/had not submitted for a given subject.
 
 This system solves all five pain points through JWT-authenticated feedback with session allotment gating, a dual-channel model (authenticated + fully anonymous), and real-time aggregated reporting with CSV/Word export.
 
@@ -61,7 +61,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Branded 404 Page** | Custom NotFound.jsx with CSS compass illustration, brand logo, two recovery CTAs, responsive/motion-reduced; renders outside main layout | `client/src/components/NotFound.jsx` |
 | **JWT Authentication** | Email + USN + password login; bcrypt hashing; 30-day token in sessionStorage; 7-day refresh token in localStorage; refresh endpoint at `POST /api/auth/refresh` | `server/routes/auth.js` |
 | **Allotment Gating** | Admin opens/closes feedback windows per class; students blocked when closed; opening-only message validation (15-50 chars) | `server/routes/allotment.js` |
-| **Per-Subject Feedback** | Rating (1-5) + comments (50-300 chars); upsert prevents duplicates; compound unique index `{ student, subject }` | `server/routes/feedback.js`, `server/models/Feedback.js` |
+| **Per-Subject Feedback** | Comments (50-300 chars); upsert prevents duplicates; compound unique index `{ student, subject }` | `server/routes/feedback.js`, `server/models/Feedback.js` |
 | **Public Anonymous Feedback** | No auth required; subject + optional faculty name + comments (100-300 chars); rate-limited (10/15min); Origin header validation for CSRF defense | `server/routes/public.js` |
 | **Admin DB Overview** | Unified dashboard: summary cards, per-class student lists, per-subject progress bars, allotments; 5-tab layout (Dashboard, Students, Feedbacks, Allotments, Anonymous) with search + export | `server/routes/admin.js`, `client/src/components/AdminDbOverview.jsx` |
 | **Admin Coverage Tracking** | Per-subject view of which students gave/did not give feedback within a class; gave/not-given student lists with percentages | `server/routes/admin.js` |
@@ -78,14 +78,14 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | Feature | Implementation | Evidence |
 |---|---|---|
 | **Student Dashboard** | Welcome view with active session status and start-feedback button | `client/src/components/Dashboard.jsx` |
-| **Feedback History** | Feedback table with star rating column, loading/error states | `client/src/components/MyFeedback.jsx` |
-| **Star Rating Selector** | Visual 1-5 star UI per subject with `aria-label`; ratings persisted to `localStorage` via `fb_ratings` key | `client/src/components/FeedbackForm.jsx` |
+| **Feedback History** | Feedback table with subject, comments, and date columns | `client/src/components/MyFeedback.jsx` |
+| **Comment-Only Feedback** | Per-subject comments (50-300 chars) with draft auto-save to `localStorage` via `fb_drafts` | `client/src/components/FeedbackForm.jsx` |
 | **Class Selection & Drill-Down** | Class list -> student grid -> individual student feedback; fetched dynamically from `/api/admin/classes` | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
 | **Admin Anonymous View** | Standalone page showing all public submissions with search by subject/faculty/comments | `AdminAnonymous.jsx` (standalone); `AdminDbOverview.jsx` AnonymousView tab (with CSV + Word export) |
 | **Session Allocation Message** | Admin sets custom message (15-50 chars) when opening; opening-only validation | `server/routes/allotment.js` |
 | **Rate Limiting** | Public: 10 req/15min (env-configurable via `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS`); Login: 5 req/15min (`LOGIN_RATE_LIMIT_MAX`) | `server/routes/public.js`, `server/routes/auth.js` |
 | **Vite API Proxy** | Dev server proxies `/api` to backend on port 5000 | `client/vite.config.js` |
-| **Sequential Feedback Form** | Multi-step subject flow with lock/unlock per subject, prev/next navigation, draft auto-save (`fb_drafts`), rating persistence (`fb_ratings`), lock state (`fb_locked`); confirmation popup before final submit | `client/src/components/FeedbackForm.jsx` |
+| **Sequential Feedback Form** | Multi-step subject flow with lock/unlock per subject, prev/next navigation, draft auto-save (`fb_drafts`), lock state (`fb_locked`); confirmation popup before final submit | `client/src/components/FeedbackForm.jsx` |
 | **Social Icons in Footer** | SVG icons for YouTube, Instagram, Facebook, LinkedIn, WhatsApp | `client/src/components/Footer.jsx` |
 | **Analytics Tracker** | Client-side page-view tracking via `AnalyticsTracker` component; stores up to 500 events in `localStorage` under `analytics_events` key | `client/src/components/AnalyticsTracker.jsx`, `client/src/utils/analytics.js` |
 
@@ -112,7 +112,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Authenticated Comment Length** | 50-300 characters (both server and client validate) | `server/routes/feedback.js`, `client/src/components/FeedbackForm.jsx` |
 | **Anonymous Comment Length** | 100-300 characters | `server/routes/public.js` |
 | **Allotment Message Length** | 15-50 characters (opening only; no validation on close) | `server/routes/allotment.js` |
-| **Rating Scale** | 1-5 (integer) with visual star selector; `aria-label` on each button | `client/src/components/FeedbackForm.jsx` |
+| **Comment Length** | 50-300 characters (authenticated), 100-300 characters (anonymous) | `server/routes/feedback.js`, `server/routes/public.js`, `client/src/components/FeedbackForm.jsx` |
 | **Subject Whitelist** | Validated against `SUBJECTS` constant: DevOps, Research Methodology & IPR, Java and Java Frameworks, Agile, MERN, DataScience | `server/config/subjects.js` |
 | **Rate Limiting** | Public: 10 req/15min; Login: 5 req/15min; both env-configurable | `server/routes/public.js`, `server/routes/auth.js` |
 | **Origin Validation** | CSRF defense on public POST; compares `req.headers.origin` against `CORS_ORIGIN` env | `server/routes/public.js` |
@@ -125,12 +125,12 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **CORS** | Restricted via `CORS_ORIGIN` env var (default: `http://localhost:5173`) | `server/app.js` |
 | **Auth Guard** | `ProtectedRoute` + `AdminRoute` (client); `protect` middleware (verify JWT, attach `req.student`) + explicit role check (server) | `client/src/App.jsx`, `server/middleware/auth.js` |
 | **Feedback Model Design** | Feedback does NOT store `classGroup`; coverage lookups join via Student._id; class filter resolves Student IDs first then queries Feedback | `server/routes/admin.js` |
-| **Logout Cleanup** | Clears `sessionStorage` (token/student), `localStorage` (refreshToken, fb_locked, fb_drafts, fb_ratings), and Axios default header | `client/src/context/AuthContext.jsx` |
+| **Logout Cleanup** | Clears `sessionStorage` (token/student), `localStorage` (refreshToken, fb_locked, fb_drafts), and Axios default header | `client/src/context/AuthContext.jsx` |
 | **404 Page** | Standalone NotFound with CSS compass illustration, animated needle, radial spotlight, recovery CTAs | `client/src/components/NotFound.jsx` |
 | **License** | GNU General Public License v3.0 | `LICENSE.md` |
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, canonical URL, author meta | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>`; class component (required for `getDerivedStateFromError`) | `client/src/components/ErrorBoundary.jsx` |
-| **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `fb_ratings` (per-subject ratings), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
+| **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
 | **Environment Variables** | 10 configurable vars: `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_USN`, `ADMIN_NAME` | `server/.env.example` |
 
 ---
@@ -154,13 +154,12 @@ This system solves all five pain points through JWT-authenticated feedback with 
    -> Student clicks "Start Feedback"
 
 5. Feedback form loads subjects -> GET /api/feedback/subjects
-   -> Sequential step-based UI: shows one subject at a time
-   -> Student rates (1-5 stars, persisted to fb_ratings in localStorage)
-   -> Student writes comments (50-300 chars, auto-saved to fb_drafts)
+    -> Sequential step-based UI: shows one subject at a time
+    -> Student writes comments (50-300 chars, auto-saved to fb_drafts)
 
 6. Per-subject lock:
-   - Student clicks "Lock" -> POST /api/feedback/submit { subject, rating, comments }
-     -> Server validates: subject whitelist, rating 1-5, comment length, allotment open
+   - Student clicks "Lock" -> POST /api/feedback/submit { subject, comments }
+     -> Server validates: subject whitelist, comment length, allotment open
      -> Upserts via findOne + update or create (compound unique index on {student, subject})
    - Lock state persisted to fb_locked in localStorage
    - Student can unlock and edit before final submission
@@ -213,7 +212,7 @@ This project is distributed under the **GNU General Public License v3.0**. Every
 - **LTI / LMS Integration**: No integration with Moodle, Canvas, or any LMS.
 - **Auto-grade feedback**: No sentiment analysis or NLP on comment text.
 - **SSO / OAuth**: Email+USN+password only; no Google/Microsoft login.
-- **Photo / file uploads**: Text + rating only; no attachment support.
+- **Photo / file uploads**: Text only; no attachment support.
 - **Email verification**: Accounts are pre-seeded; no self-registration.
 - **Database migrations**: Schema evolves via Mongoose model changes; no formal migration tooling.
 - **WebSocket / real-time updates**: Polling-based; no Socket.IO or SSE support.

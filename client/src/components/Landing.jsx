@@ -102,14 +102,24 @@ const Landing = () => {
       </section>
 
       <section id="about" className="landing-section landing-about">
-        <div className="landing-section__inner">
-          <h2 className="landing-section__title">About Sapthagiri NPS University</h2>
-          <p>
-            Sapthagiri NPS University is committed to providing high-quality technical education that combines strong foundational knowledge with practical skills, ethical values and leadership qualities. Our programme prepares graduates to excel in the rapidly evolving tech industry while contributing responsibly to society.
-          </p>
-          <p>
-            Through state-of-the-art infrastructure, innovative teaching-learning methods and a balanced focus on theory and hands-on applications, we nurture globally competent engineers capable of addressing complex computing challenges and developing sustainable, socially responsible solutions.
-          </p>
+        <div className="landing-section__inner landing-about__inner">
+          <div className="landing-about__grid">
+            <div className="landing-about__image">
+              <img src="/images/about.webp" alt="Sapthagiri NPS University Campus" loading="lazy" />
+            </div>
+            <div className="landing-about__content">
+              <h2 className="landing-section__title">About Sapthagiri NPS University</h2>
+              <p>
+                Sapthagiri NPS University is committed to providing high-quality technical education that combines strong foundational knowledge with practical skills, ethical values and leadership qualities. Our programme prepares graduates to excel in the rapidly evolving tech industry while contributing responsibly to society.
+              </p>
+              <p>
+                Through state-of-the-art infrastructure, innovative teaching-learning methods and a balanced focus on theory and hands-on applications, we nurture globally competent engineers capable of addressing complex computing challenges and developing sustainable, socially responsible solutions.
+              </p>
+              <p>
+                The School of Applied Sciences (SOAS) offers a dynamic learning environment with experienced faculty, modern laboratories, and industry-aligned curricula. Students benefit from hands-on training, research opportunities, and a strong emphasis on both technical competence and professional ethics, preparing them for leadership roles in their chosen fields.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

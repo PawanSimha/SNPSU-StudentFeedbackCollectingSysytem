@@ -10,7 +10,7 @@
 ## 1. System Overview & Strategic Intent
 
 **What it does:**  
-A full-stack MERN single-page application that enables MCA students at Sapthagiri NPS University to submit per-subject course feedback (ratings + comments) after each class session. Administrators open/close feedback windows via allotments, track participation coverage, drill into individual student feedback, and export aggregated reports in CSV or Word format.
+A full-stack MERN single-page application that enables MCA students at Sapthagiri NPS University to submit per-subject course feedback (comments only) after each class session. Administrators open/close feedback windows via allotments, track participation coverage, drill into individual student feedback, and export aggregated reports in CSV or Word format.
 
 **Dual-channel feedback model:**
 1. **Authenticated channel**: JWT-gated, session-allotment-gated per class group, identity-tracked for coverage reporting but aggregated for display.
@@ -87,7 +87,7 @@ Browser (React SPA)          Express REST API            MongoDB
 - **Auth state:** React Context (`AuthContext`): single provider wrapping the entire app tree. Stores `student` object, `loading` flag, `login()` and `logout()` functions. Includes `tryRefresh()` flow for expired tokens.
 - **Token persistence:** `sessionStorage` (cleared on tab close). Axios default header `Authorization: Bearer <token>` set on login, cleared on logout. Refresh token in `localStorage`.
 - **Component-local state:** `useState` / `useEffect` per component for feedback lists, allotments, form data, etc. No global state library (Redux, Zustand, etc.).
-- **localStorage:** Used for feedback lock state (`fb_locked`), feedback drafts (`fb_drafts`), per-subject ratings (`fb_ratings`), and cookie consent preference (`cookie_consent`). Never for sensitive data.
+- **localStorage:** Used for feedback lock state (`fb_locked`), feedback drafts (`fb_drafts`), and cookie consent preference (`cookie_consent`). Never for sensitive data.
 
 ### 3.4 Authentication & Authorization
 
@@ -279,7 +279,7 @@ mern-feedback-collector/
 │   │   └── errorHandler.js       Centralized error handler: logs via req.log, returns JSON
 │   ├── models/
 │   │   ├── Student.js            name, email (unique), usn (unique), password, role, classGroup
-│   │   ├── Feedback.js           student ref, subject, rating (1-5), comments; compound index { student, subject }
+│   │   ├── Feedback.js           student ref, subject, comments; compound index { student, subject }
 │   │   ├── PublicFeedback.js     subject, facultyName, comments; index { createdAt: -1 }
 │   │   └── Allotment.js          classGroup (unique), isOpen, message (15-50 chars), allottedBy ref
 │   ├── routes/
@@ -382,7 +382,7 @@ mern-feedback-collector/
 | **API URL centralization**, `config/api.js` with `VITE_API_URL` env var; all 13 files updated | Current |
 | **Vercel deployment config**, `vercel.json` with SPA rewrites + strict security headers | Current |
 | **CSP update**, `connect-src` points to production domain | Current |
-| **Star rating UI**, 1–5 star selector in FeedbackForm, localStorage persistence per subject | Current |
+| **Comment-only feedback**, per-subject comments with draft auto-save and lock/unlock flow | Current |
 | **Rate limiting**, `express-rate-limit` (10 req/15min public, 5 req/15min login) | Current |
 | **Class list API fetch**, `AdminClassSelect` + `AdminAllotments` fetch from `/api/admin/classes` | Current |
 | **Allotment close bug fix**, no message validation when closing an allotment | Current |
@@ -397,11 +397,11 @@ mern-feedback-collector/
 | **PM2 cluster mode**, `ecosystem.config.js` with `instances: 'max'`, `exec_mode: 'cluster'` | Current |
 | **Helmet security headers**, X-Frame-Options, X-Content-Type-Options, CSP enforcement | Current |
 | **gzip compression**, `compression()` middleware shrinks API responses by ~70% | Current |
-| **Input validation hardening**, subject whitelist `SUBJECTS.includes()` + rating 1-5 range check | Current |
+| **Input validation hardening**, subject whitelist `SUBJECTS.includes()` + comment length range check | Current |
 | **CORS restriction**, `CORS_ORIGIN` env var restricts allowed origins | Current |
 | **ErrorBoundary + crash resilience**, ErrorBoundary wrapping `<Routes>`; JSON.parse try/catch | Current |
 | **Security hardening**, Bearer token space fix, `console.error` to `.message`, admin creds env-var-ized | Current |
-| **Logout state cleanup**, clears `fb_locked`/`fb_drafts`/`fb_ratings` from localStorage | Current |
+| **Logout state cleanup**, clears `fb_locked`/`fb_drafts` from localStorage | Current |
 | **Admin UI enhancements**, AdminDashboard at `/admin/:classGroup/dashboard`; loading states | Current |
 | **`.env.example` template**, all env vars documented with defaults | Current |
 | **Centralized error handler**, `errorHandler.js` replacing repetitive try/catch `res.status(500).json` | Current |
@@ -413,7 +413,7 @@ mern-feedback-collector/
 | **CSS modularization**, `index.css` split into 16 per-component CSS files in `styles/` | Current |
 | **JS lazy loading**, 6 admin components lazy-loaded with `React.lazy` + `Suspense` | Current |
 | **Skip-to-content**, skip-link for keyboard users | Current |
-| **Inline validation**, comment length + rating range on feedback form | Current |
+| **Inline validation**, comment length range on feedback form | Current |
 | **aria-live regions**, `role="alert"` on form submission errors | Current |
 | **CSP dev metatag**, for Vite HMR compatibility | Current |
 | **Empty states**, no-data messages across all admin and user pages | Current |

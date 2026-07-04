@@ -35,7 +35,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 180px);
+  padding: 40px 0;
 }
 
 .success-message h2 {

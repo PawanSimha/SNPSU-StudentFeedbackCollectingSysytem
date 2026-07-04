@@ -36,7 +36,7 @@ router.get('/subjects', (req, res) => {
 const validateOrigin = (req, res, next) => {
   const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
   const origin = req.headers.origin;
-  if (origin && origin !== allowedOrigin) {
+  if (!origin || origin !== allowedOrigin) {
     return res.status(403).json({ message: 'Forbidden' });
   }
   next();

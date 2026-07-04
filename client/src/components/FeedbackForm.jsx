@@ -37,14 +37,32 @@ const FeedbackForm = () => {
   const [touched, setTouched] = useState({});
   const [showPopup, setShowPopup] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [existingCount, setExistingCount] = useState(0);
+  const [checkedExisting, setCheckedExisting] = useState(false);
   const textareaRef = useRef(null);
 
   const MIN_LEN = 50;
   const MAX_LEN = 300;
 
   useEffect(() => {
-    axios.get(`${API}/feedback/subjects`).then(({ data }) => setSubjects(data));
+    Promise.all([
+      axios.get(`${API}/feedback/subjects`),
+      axios.get(`${API}/feedback/my`),
+    ]).then(([subjectsRes, feedbackRes]) => {
+      setSubjects(subjectsRes.data);
+      setExistingCount(feedbackRes.data.length);
+      setCheckedExisting(true);
+    });
   }, []);
+
+  const alreadySubmitted = checkedExisting && existingCount >= subjects.length && subjects.length > 0;
+
+  useEffect(() => {
+    if (alreadySubmitted) {
+      localStorage.removeItem('fb_locked');
+      localStorage.removeItem('fb_drafts');
+    }
+  }, [alreadySubmitted]);
 
   const currentSubject = subjects[currentIndex];
   const isLast = currentIndex === subjects.length - 1;
@@ -169,6 +187,20 @@ const FeedbackForm = () => {
   };
 
   if (!subjects.length) return <div className="loading">Loading subjects...</div>;
+
+  if (alreadySubmitted) {
+    return (
+      <div className="success-message">
+        <div style={{ textAlign: 'center' }}>
+          <img src="/images/thank-you-feedback.webp" alt="Thank you for your feedback" style={{ maxWidth: '500px', width: '100%', height: 'auto', marginBottom: '24px' }} />
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <button className="btn btn-primary" onClick={() => navigate('/my-feedback')} style={{ width: 'auto', flex: '0 1 auto', padding: '12px 24px' }}>View My Feedback</button>
+            <button className="btn btn-primary" onClick={() => navigate('/dashboard')} style={{ width: 'auto', flex: '0 1 auto', padding: '12px 24px' }}>Go to Dashboard</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="sequential-feedback">
