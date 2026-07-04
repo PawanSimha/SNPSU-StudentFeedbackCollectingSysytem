@@ -10,64 +10,83 @@
       <img src="https://img.shields.io/badge/Express-4.21-000000?logo=express&logoColor=white" alt="Express 4.21" />
       <img src="https://img.shields.io/badge/MongoDB-8-47A248?logo=mongodb&logoColor=white" alt="MongoDB 8" />
       <img src="https://img.shields.io/badge/MERN-Stack-00d8ff" alt="MERN Stack" />
-      <img src="https://img.shields.io/badge/Status-Active-success" alt="Status" />
+      <img src="https://img.shields.io/badge/Status-Production_Ready-success" alt="Status" />
+      <img src="https://img.shields.io/badge/License-GPLv3-blue" alt="License GPLv3" />
     </p>
   </div>
 
 ---
 
-## Overview
+## 🎯 Product Strategy
 
-The **SOAS Feedback Collector** is a full-stack MERN application that enables MCA students at Sapthagiri NPS University to submit anonymous feedback on courses and instructors after each class session. Faculty and administrators gain aggregated insights through a dedicated dashboard, driving continuous improvement in curriculum delivery.
+### Problem Statement
 
-> **v1.3 updates (Phases A–D):** **Phase A:** Structured pino logging with `pino-http` middleware; `app.js`/`server.js` split for testability; centralized `errorHandler.js` delegating via `next(error)`; Helmet security headers; gzip compression; rate limiting (login 5/15min, public 10/15min); CORS restriction via `CORS_ORIGIN` env; Origin header validation on `POST /api/public/feedback` for CSRF defense; input validation (subject whitelist + rating 1–5 range); all read-only queries using `.lean()` (~40% faster); MongoDB indexes on all query patterns; PM2 cluster mode (multi-core); smoke tests (`server/tests/server.test.js`) with 2 passing tests. **Phase B:** CSS modularized from 1 monolithic file into 16 per-component CSS files; 6 admin components lazy-loaded via `React.lazy` + `Suspense`; skip-to-content link for keyboard accessibility; inline form validation (50–300 char comments, 1–5 star rating); `aria-live` regions for dynamic content announcements. **Phase C:** Multi-stage Dockerfile for optimized production builds; GitHub Actions CI pipeline; Swagger API documentation at `/api/docs`; empty states (no-data messages across all list views); image lazy loading (`loading="lazy"` on all assets). **Phase D:** Pagination on admin list endpoints (`/api/admin/feedback`, `/api/admin/students`, `/api/admin/public/feedbacks`); JWT refresh token flow (`POST /api/auth/refresh`); page-view analytics tracker in `utils/analytics.js`; Husky + lint-staged pre-commit hooks; AdminRoute guard component (non-admin users redirected from `/admin/*` routes).
+MCA program coordinators at Sapthagiri NPS University lacked a structured, auditable mechanism to collect course feedback. The existing paper-based and ad-hoc Google Forms approach suffered from five critical pain points:
 
-> **v1.2 updates:** Added MongoDB indexes, `.lean()` query optimization, PM2 clustering (multi-core), Helmet security headers, gzip compression, and production process management. System now handles 200-300 concurrent students on a standard 4-core server.
+| Pain Point | Impact |
+|---|---|
+| **No session gating** | Students submitted feedback at any time, decoupled from actual class delivery |
+| **Zero identity verification** | Inflated or spam submissions with no way to track per-student participation |
+| **No public anonymity** | Students uncomfortable providing negative feedback through tracked channels had no outlet |
+| **Manual aggregation** | Faculty spent 2–3 hours per review cycle compiling reports |
+| **No participation tracking** | Instructors could not identify which students had/had not submitted feedback |
 
-> **v1.1 updates:** Added star rating selector (1–5), rate limiting on public endpoint, Vite API proxy, class list dynamic fetch from API, improved loading/error states across all components, social media icons in footer, and various bug fixes.
+### What This Project Does
 
-The system supports authenticated student feedback with per-session allotments, a public anonymous feedback channel (no login required), and comprehensive admin tools including CSV/Word report exports.
+The **SOAS Feedback Collector** is a full-stack MERN single-page application that replaces this broken workflow with a **dual-channel feedback model**:
 
----
+- 🔐 **Authenticated channel** - JWT-gated, session-allotment-gated per class group, identity-tracked for coverage reporting
+- 🕵️ **Anonymous channel** - No authentication, no identity collected, rate-limited to prevent spam (10 req / 15 min)
 
-## Key Features
-
-### User Features
-- **Star Rating**: Visual 1–5 star selector for per-subject ratings in the feedback form
-- **Student Dashboard**: View active feedback allotments and submit ratings/comments per subject
-- **Feedback History**: Browse all previously submitted feedback across subjects
-- **Public Anonymous Feedback**: Submit feedback without logging in; select subject, optionally name faculty, and write comments (100-300 chars) — rate-limited to 10 submissions per 15 minutes
-- **Inline Form Validation**: Real-time validation enforced on comments (50–300 chars) and ratings (1–5) with clear error messages
-- **Feedback Drafts**: Per-subject ratings and comments auto-saved to localStorage as drafts
-
-### Admin Features
-- **Class Management** -- View all class groups (fetched dynamically from API) and drill into student-level details
-- **Allotment System** -- Open/close feedback windows for specific class groups with custom messages
-- **Database Overview** -- Unified view of all students, feedbacks (per-subject stats), allotments, and anonymous submissions
-- **Anonymous Feedbacks** -- Review, search, and filter all public submissions
-- **Report Exports** -- Download feedback data as CSV (Excel) or Word `.doc` files
-- **Subject Management** -- Pre-configured subject list shared across the system
-- **Pagination** -- Server-side paginated tables on feedback, student, and anonymous lists
-- **AdminRoute Guard** -- Non-admin users automatically redirected from `/admin/*` routes
-
-### Accessibility & UX
-- **Skip-to-Content Link** -- Keyboard-accessible skip link at page top for rapid navigation
-- **aria-live Regions** -- Dynamic content regions announced to screen readers on state changes
-- **Empty States** -- Descriptive no-data messages across all list views (no empty tables)
-- **Image Lazy Loading** -- All `<img>` assets use `loading="lazy"` for deferred loading
-- **CSS Modularization** -- 16 per-component CSS files replacing the single monolithic stylesheet
-- **Lazy Loading** -- 6 admin components loaded via `React.lazy` + `Suspense` for faster initial bundle
-- **Page-View Analytics** -- Tracks page views via `utils/analytics.js` for usage insights
-
-### DevOps
-- **Docker Deployment** -- Multi-stage Dockerfile for optimized production images
-- **CI Pipeline** -- GitHub Actions workflow runs lint, build, and tests on every push/PR
-- **Pre-commit Hooks** -- Husky + lint-staged enforce linting and formatting before commits
-- **Swagger API Docs** -- Interactive API documentation available at `/api/docs`
+Administrators open/close feedback windows per class, track participation coverage per subject with gave/not-given student lists, drill into individual student feedback, and export aggregated reports in CSV or Word format, all in real time.
 
 ---
 
-## Visual Architecture
+## ✨ Key Features
+
+### 👤 User Features
+- **Star Rating** - Visual 1–5 star selector with localStorage persistence per subject
+- **Sequential Feedback Form** - Step-by-step multi-subject flow with lock/unlock, auto-saved drafts, and batch submission
+- **Student Dashboard** - View active feedback allotments and navigate to the feedback form
+- **Feedback History** - Browse all previously submitted feedback across subjects
+- **Public Anonymous Feedback** - Submit feedback without logging in (subject + optional faculty name + 100–300 char comments)
+- **Inline Validation** - Real-time validation on comments and ratings with clear error messages
+
+### 🔧 Admin Features
+- **Class Management** - View all class groups (fetched dynamically from API), drill into student-level details
+- **Allotment System** - Open/close feedback windows per class group with custom messages (15–50 chars)
+- **Database Overview** - Unified dashboard with summary cards, per-class student lists, per-subject progress bars, and allotment status
+- **Coverage Tracking** - Per-subject view of which students gave/did not give feedback (gave/not-given lists)
+- **Anonymous Feedbacks** - Review, search, and export all public submissions
+- **Report Exports** - Download CSV (Excel) or Word `.doc` files with styled HTML tables
+- **Server-side Pagination** - Paginated tables on feedback, student, and anonymous list endpoints
+- **AdminRoute Guard** - Non-admin users automatically redirected from `/admin/*`
+
+### ♿ Accessibility & UX
+- Skip-to-content link for keyboard navigation
+- `role="alert"` regions for screen reader announcements
+- Descriptive empty states on all list views (no bare tables)
+- All images use `loading="lazy"` for deferred loading
+- 6 admin components lazy-loaded via `React.lazy` + `Suspense` (faster initial bundle)
+- Feedback drafts saved to localStorage (survives page refreshes)
+- Social media icons (YouTube, Instagram, Facebook, LinkedIn, WhatsApp) in footer
+
+### 🛡️ DevOps & Security
+- **Helmet** security headers (CSP, X-Frame-Options, X-Content-Type-Options)
+- **gzip compression** on all API responses (~70% smaller payloads)
+- **Rate limiting**: login (5/15min), public feedback (10/15min)
+- **CORS** restricted via `CORS_ORIGIN` env var
+- **Origin header validation** on public POST (CSRF defense)
+- **10kb request body limit** (memory exhaustion prevention)
+- **PM2 cluster mode** - N workers = N CPU cores, auto-restart on crash
+- **Pino structured logging** - JSON stdout, level configurable via `LOG_LEVEL`
+- **Centralized error handler** with request-scoped logging
+- **Swagger API docs** at `/api/docs`
+- **JWT refresh token flow** for extended sessions without re-login
+
+---
+
+## 🏗️ Visual Architecture
 
 ```
 Browser                          Express API                      MongoDB
@@ -77,186 +96,103 @@ Browser                          Express API                      MongoDB
 │  Vite 8  │     JWT tokens      └──────────────┘                 └──────────┘
 └─────────┘                           │
   │                                   │
-  ├─ Landing (/)                      ├─ /api/auth (JWT login + refresh)
-  ├─ Login (/login)                   ├─ /api/feedback (CRUD)
-  ├─ Dashboard (/dashboard)           ├─ /api/admin (admin ops)
+  ├─ Landing (/)                      ├─ /api/auth     (JWT login + refresh)
+  ├─ Login (/login)                   ├─ /api/feedback (authenticated CRUD)
+  ├─ Dashboard (/dashboard)           ├─ /api/admin    (admin analytics)
   ├─ Admin Panel (/admin/*)           ├─ /api/allotments (open/close)
-  ├─ PublicFeedback (/feedback/public)   ├─ /api/public (anonymous)
-  ├─ API Docs (/api/docs)             ├─ /api/docs (Swagger UI)
+  ├─ PublicFeedback (/feedback/public)  ├─ /api/public  (anonymous)
+  ├─ API Docs (/api/docs)             ├─ /api/docs     (Swagger UI)
   └─ 404 (*)                          (no backend)
 ```
 
 ---
 
-## Tech Stack
+## 🧰 Tech Stack
 
-| Layer        | Technology                              | Version   |
-| ------------ | --------------------------------------- | --------- |
-| **Frontend** | React                                   | ^19.2.6   |
-|              | React Router (declarative routing)      | ^7.17.0   |
-|              | Vite (build tool & dev server with API proxy) | ^8.0.12   |
-|              | Axios (HTTP client)                     | ^1.18.0   |
-| **Backend**  | Node.js / Express                       | ^4.21.0   |
-|              | Mongoose (ODM)                          | ^8.6.0    |
-|              | JSON Web Token (auth + refresh)        | ^9.0.2    |
-|              | bcryptjs (password hashing)             | ^2.4.3    |
-|              | express-rate-limit (spam prevention)     | (latest)  |
-|              | Helmet (security headers)               | ^8.2.0    |
-|              | compression (gzip)                       | ^1.8.1    |
-|              | swagger-jsdoc + swagger-ui-express (API docs) | (latest) |
-| **Process**  | PM2 (cluster mode, multi-core)          | ^7.0.1    |
-| **Database** | MongoDB                                 | (via Mongoose) |
-| **Styling**  | 16 per-component CSS files              | (custom)  |
-| **Tooling**  | Vite ESLint plugin, concurrently, Husky, lint-staged |           |
+| Layer | Technology | Version |
+|---|---|---|
+| **Frontend** | React | ^19.2.6 |
+| | React Router | ^7.17.0 |
+| | Vite (build tool + dev proxy) | ^8.0.12 |
+| | Axios (HTTP client) | ^1.18.0 |
+| **Backend** | Node.js / Express | ^4.21.0 |
+| | Mongoose (ODM) | ^8.6.0 |
+| | jsonwebtoken (auth + refresh tokens) | ^9.0.2 |
+| | bcryptjs (password hashing) | ^2.4.3 |
+| | express-rate-limit (spam prevention) | ^8.5.2 |
+| | Helmet (security headers) | ^8.2.0 |
+| | compression (gzip) | ^1.8.1 |
+| | swagger-jsdoc + swagger-ui-express | latest |
+| | pino (structured JSON logging) | ^9.14.0 |
+| **Process** | PM2 (cluster mode, multi-core) | ^7.0.1 |
+| **Database** | MongoDB (via Mongoose) | ^8.6.0 |
+| **Testing** | Jest + Supertest | ^30.4.2 / ^7.2.2 |
+| **Tooling** | ESLint, concurrently, Husky, lint-staged | - |
+| **CI/CD** | GitHub Actions (3 jobs: test, lint, build) | - |
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 mern-feedback-collector/
-├── .dockerignore                     # Docker ignore rules (node_modules, dist, .env)
-├── .gitignore                        # Ignores node_modules, .env, dist, server/logs/, editor dirs
-├── context.md                        # System context cross-session continuity
-├── Dockerfile                        # Multi-stage Docker build (prod image)
-├── LICENSE.md                        # GNU General Public License v3.0
-├── package.json                      # Root orchestration (concurrently)
-├── PRD.md                            # Product Requirements Document
-├── PRIVACY.md                        # GDPR/CCPA privacy policy
-├── README.md                         # Project overview (this file)
-├── vercel.json                       # Vercel deploy config: rewrites + CSP
+├── .github/workflows/ci.yml      # CI: test, lint, build on push/PR
+├── .husky/pre-commit              # Pre-commit hook (lint-staged)
+├── context.md                     # System context & architectural continuity
+├── Dockerfile                     # Multi-stage Docker build (Node 20 Alpine)
+├── LICENSE.md                     # GNU GPLv3
+├── package.json                   # Root orchestration (concurrently)
+├── PRD.md                         # Product Requirements Document
+├── PRIVACY.md                     # GDPR/CCPA privacy policy
+├── vercel.json                    # Vercel deploy config (SPA rewrites + CSP)
 │
-├── .github/
-│   └── workflows/
-│       └── ci.yml                    # GitHub Actions CI (lint, build, test)
-│
-├── .husky/
-│   ├── pre-commit                    # Pre-commit hook (lint-staged)
-│   └── _/
-│       └── .gitignore                # Husky internal gitignore
-│
-├── client/                           # React + Vite frontend
-│   ├── .gitignore
-│   ├── eslint.config.js              # ESLint flat config
-│   ├── index.html                    # SPA shell with SEO/GEO meta
-│   ├── package.json
-│   ├── vite.config.js                # Vite config + API proxy (/api → :5000)
-│   ├── public/                       # Static assets
-│   │   ├── images/                   # Image assets (4 WebP + 1 ICO = 5 files)
-│   │   ├── robots.txt                # AI-aware crawler directives
-│   │   └── sitemap.xml               # 3-URL sitemap
+├── client/                        # React 19 + Vite 8 SPA
+│   ├── index.html                 # SEO/GEO meta, JSON-LD, preloads
+│   ├── vite.config.js             # React plugin + /api proxy → :5000
+│   ├── public/
+│   │   ├── images/                # WebP + ICO assets (5 files)
+│   │   ├── robots.txt             # AI-aware crawler directives
+│   │   └── sitemap.xml            # 3-URL sitemap
 │   └── src/
-│       ├── main.jsx                  # Entry point (BrowserRouter)
-│       ├── App.jsx                   # Route definitions + layouts
-│       ├── index.css                 # Global styles (CSS custom properties, resets)
-│       ├── config/
-│       │   └── api.js                # Centralized API base URL
-│       ├── context/
-│       │   └── AuthContext.jsx       # Global auth state (JWT + refresh)
-│       ├── styles/                   # 16 per-component CSS files
-│       │   ├── AdminAllotments.css
-│       │   ├── AdminClassSelect.css
-│       │   ├── AdminDashboard.css
-│       │   ├── AdminStudentFeedback.css
-│       │   ├── AdminStudents.css
-│       │   ├── AdminTable.css
-│       │   ├── CookieConsent.css
-│       │   ├── Dashboard.css
-│       │   ├── FeedbackForm.css
-│       │   ├── Footer.css
-│       │   ├── Landing.css
-│       │   ├── Login.css
-│       │   ├── MyFeedback.css
-│       │   ├── Navbar.css
-│       │   ├── NotFound.css
-│       │   └── PublicFeedback.css
-│       ├── utils/
-│       │   ├── analytics.js          # Page-view analytics tracker
-│       │   └── download.js           # CSV & Word export helpers
-│       └── components/               # 19 React components
-│           ├── AdminAllotments.jsx
-│           ├── AdminAnonymous.jsx
-│           ├── AdminClassSelect.jsx
-│           ├── AdminDashboard.jsx
-│           ├── AdminDbOverview.jsx
-│           ├── AdminStudentFeedback.jsx
-│           ├── AdminStudents.jsx
-│           ├── AnalyticsTracker.jsx  # Page-view analytics (useLocation-based)
-│           ├── AdminRoute.jsx        # Admin route guard (redirects non-admin)
-│           ├── CookieConsent.jsx     # GDPR banner with Accept/Decline
-│           ├── Dashboard.jsx         # Student dashboard
-│           ├── ErrorBoundary.jsx     # Global error boundary with reload CTA
-│           ├── FeedbackForm.jsx      # Feedback submission form
-│           ├── Footer.jsx            # Shared site footer
-│           ├── Landing.jsx           # Public landing page
-│           ├── Login.jsx             # Auth login form
-│           ├── MyFeedback.jsx        # Feedback history
-│           ├── Navbar.jsx            # Auth-aware navigation
-│           ├── NotFound.jsx          # Branded 404 (compass, CTAs)
-│           └── PublicFeedback.jsx    # Anonymous (no login) feedback
+│       ├── App.jsx                # Route definitions + layouts
+│       ├── index.css              # CSS custom properties, reset, forms
+│       ├── config/api.js          # Centralized API base URL
+│       ├── context/AuthContext.jsx # JWT + refresh token auth state
+│       ├── styles/                # 16 per-component CSS files
+│       ├── utils/                 # download.js, analytics.js
+│       └── components/            # 19 React components
 │
-├── server/                           # Express backend
-│   ├── .env                          # Environment config (gitignored)
-│   ├── .env.example                  # Environment variable template (documented)
-│   ├── package.json
-│   ├── ecosystem.config.js           # PM2 cluster config (multi-core production)
-│   ├── app.js                        # Express app factory (helmet, compression, pino-http, cors, 10kb body limit, 404 handler, errorHandler)
-│   ├── server.js                     # App entry: dotenv, connectDB, JWT check, app.listen
-│   ├── config/
-│   │   ├── db.js                     # MongoDB connection
-│   │   ├── logger.js                 # Pino logger instance (structured JSON, level from LOG_LEVEL env)
-│   │   ├── subjects.js               # 6-subject constant
-│   │   └── swagger.js                # Swagger/OpenAPI configuration
-│   ├── middleware/
-│   │   ├── auth.js                   # JWT protect middleware
-│   │   └── errorHandler.js           # Centralized error handler (logs via req.log, returns JSON)
-│   ├── models/
-│   │   ├── Student.js                # User model (student/admin)
-│   │   ├── Feedback.js               # Authenticated feedback
-│   │   ├── PublicFeedback.js         # Anonymous feedback
-│   │   └── Allotment.js              # Session allotments
-│   ├── routes/
-│   │   ├── auth.js                   # POST /login, POST /refresh, GET /me
-│   │   ├── feedback.js               # Authenticated feedback CRUD
-│   │   ├── admin.js                  # Admin analytics & overview (paginated)
-│   │   ├── allotment.js              # Open/close feedback windows
-│   │   └── public.js                 # Anonymous feedback endpoints
-│   ├── tests/
-│   │   └── server.test.js            # Smoke tests (health + 404, Jest+Supertest)
-│   └── scripts/
-│       ├── seed.js                   # DB seeder (51 students)
-│       ├── seed-admin.js             # Admin user seeder
-│       ├── seed-b.js                 # Additional student seeder
-│       ├── update-classes.js         # Bulk class reassignment
-│       └── update-roles.js           # Bulk role update
+├── server/                        # Express 4.21 REST API
+│   ├── .env.example               # Documented env vars
+│   ├── ecosystem.config.js        # PM2 cluster config
+│   ├── app.js                     # Express app factory
+│   ├── server.js                  # Entry point
+│   ├── config/                    # db.js, logger.js, subjects.js, swagger.js
+│   ├── middleware/                # auth.js, errorHandler.js
+│   ├── models/                    # Student, Feedback, PublicFeedback, Allotment
+│   ├── routes/                    # auth, feedback, admin, allotment, public
+│   ├── tests/                     # Smoke tests (Jest+Supertest)
+│   └── scripts/                   # 6 seed/utility scripts
 ```
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js** >= 18
-- **npm** >= 9
-- **MongoDB** >= 6 (local or Atlas URI)
-- **Docker** (optional, for containerized deployment)
+- **Node.js** >= 18 • **npm** >= 9 • **MongoDB** >= 6 • **Docker** (optional)
 
 ### 1. Clone & Install
 
 ```bash
-# Install root dependencies (concurrently)
-npm install
-
-# Install server dependencies
-cd server && npm install && cd ..
-
-# Install client dependencies
-cd client && npm install && cd ..
+npm install                     # Root (concurrently)
+cd server && npm install && ..  # Backend dependencies
+cd client && npm install && ..  # Frontend dependencies
 ```
 
 ### 2. Configure Environment
 
-Edit `server/.env` (use `server/.env.example` as a template; modify as needed):
+Create `server/.env` (use `server/.env.example`):
 
 ```env
 MONGO_URI=mongodb://localhost:27017/feedback-collector
@@ -264,154 +200,103 @@ JWT_SECRET=your_secret_here
 PORT=5000
 ```
 
-Optionally set `client/.env` to override the API URL (defaults to `http://localhost:5000/api`):
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
 ### 3. Seed the Database
 
-Populates 51 students with password `MCAA@123` in class group `MCA, 1st Year, 2nd Sem, A sec`:
-
 ```bash
-npm run seed
+npm run seed       # A section - 51 students (pw: MCAA@123)
+npm run seed-b     # B section - 50 students (pw: MCAB@123)
+npm run seed-c     # C section - 49 students (pw: MCAC@123)
+npm run seed-admin # Admin account: admin@gmail.com / iamadmin
 ```
 
-(Optional) Seed additional sections and admin account:
+### 4. Run
 
 ```bash
-npm run seed-b       # 50 B section students, password "MCAB@123"
-npm run seed-admin   # Admin account: admin@gmail.com / iamadmin
+npm run dev    # Backend (:5000) + Frontend (:5173) concurrently
 ```
 
-### 4. Run the Application
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| API Health | http://localhost:5000/api/health |
+| Swagger Docs | http://localhost:5000/api/docs |
 
-Starts both backend (port 5000) and frontend (port 5173) concurrently:
-
-```bash
-npm run dev
-```
-
-- **Frontend:** http://localhost:5173
-- **Backend API:** http://localhost:5000/api/health
-- **API Docs:** http://localhost:5000/api/docs
-
-### 5. Docker Deployment
-
-Build and run with Docker:
+### 5. Docker
 
 ```bash
 docker build -t snpsu-feedback-collector .
 docker run -p 5000:5000 --env-file server/.env snpsu-feedback-collector
 ```
 
-### 6. Production Deployment (PM2)
-
-Uses **PM2 cluster mode** — spawns one worker per CPU core (auto-detected). Each worker is an independent Express instance behind the same port.
+### 6. Production (PM2)
 
 ```bash
-# Start with PM2 (cluster mode, all cores)
-cd server && npm run prod
-
-# Monitor running instances
-npm run prod:logs
-
-# Stop all workers
-npm run prod:stop
-```
-
-For frontend production build:
-
-```bash
-cd client && npm run build
-# Output: client/dist/ (deploy to Vercel or any static host)
+cd server && npm run prod    # Cluster mode (all CPU cores)
+cd client && npm run build   # Static output → client/dist/
 ```
 
 ---
 
-## API Overview
+## 📡 API Overview (20 endpoints)
 
-| Method | Endpoint                                            | Auth     | Description                                     |
-| ------ | --------------------------------------------------- | -------- | ----------------------------------------------- |
-| POST   | `/api/auth/login`                                   | Public   | Student/admin login (email + USN + pw)          |
-| POST   | `/api/auth/refresh`                                 | Public   | Refresh JWT token                               |
-| GET    | `/api/auth/me`                                      | JWT      | Return current user profile                     |
-| GET    | `/api/feedback/subjects`                            | JWT      | List subjects for feedback form                 |
-| GET    | `/api/feedback/my`                                  | JWT      | Current user's feedback history                 |
-| POST   | `/api/feedback/submit`                              | JWT      | Submit authenticated feedback                   |
-| GET    | `/api/allotments/status`                            | JWT      | Check if feedback session is open for user      |
-| GET    | `/api/allotments`                                   | Admin    | List all allotments by class                    |
-| POST   | `/api/allotments`                                   | Admin    | Toggle allotment open/close                     |
-| GET    | `/api/admin/classes`                                | Admin    | List all class groups                           |
-| GET    | `/api/admin/students`                               | Admin    | List students (paginated, optional `?class=` filter) |
-| GET    | `/api/admin/feedback`                               | Admin    | All feedbacks (paginated, optional `?class=`/`?student=`) |
-| GET    | `/api/admin/feedback/stats`                         | Admin    | Aggregated feedback statistics                  |
-| GET    | `/api/admin/feedback/subject/:subject`              | Admin    | Feedbacks for a specific subject                |
-| GET    | `/api/admin/feedback/subject/:subject/coverage`     | Admin    | Per-subject coverage (gave/not-given students)  |
-| GET    | `/api/admin/db-overview`                            | Admin    | Full database statistics & collections          |
-| POST   | `/api/public/feedback`                              | Public   | Submit anonymous feedback (rate-limited: 10/15min) |
-| GET    | `/api/public/subjects`                              | Public   | List available subjects                         |
-| GET    | `/api/public/feedbacks`                             | Admin    | List all anonymous feedbacks (paginated)        |
-| GET    | `/api/docs`                                         | Public   | Swagger/OpenAPI interactive documentation       |
-
----
-
-## Product Roadmap
-
-- **Analytics Dashboard**: Visual charts (submission rates, sentiment trends) using Chart.js or Recharts
-- **Email Notifications**: Automated reminders when a feedback window opens/closes
-- **Multi-Role Expansion**: Faculty view with per-subject aggregated reports (no individual identity)
-- **TypeScript Migration**: Full static typing across the entire stack
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/health` | - | Health check |
+| POST | `/api/auth/login` | Public (rate-limited) | Login: email + USN + password |
+| POST | `/api/auth/refresh` | Public | Refresh expiring JWT |
+| GET | `/api/auth/me` | JWT | Current user profile |
+| GET | `/api/feedback/subjects` | JWT | Available subjects |
+| GET | `/api/feedback/my` | JWT | Student's feedback history |
+| POST | `/api/feedback/submit` | JWT | Submit feedback (upsert, allotment-gated) |
+| GET | `/api/allotments/status` | JWT | Is a session open? |
+| GET/POST | `/api/allotments` | Admin | List / toggle allotments |
+| GET | `/api/admin/classes` | Admin | Class groups |
+| GET | `/api/admin/students` | Admin | Students (paginated, filterable) |
+| GET | `/api/admin/feedback` | Admin | All feedbacks (paginated, filterable) |
+| GET | `/api/admin/feedback/stats` | Admin | Aggregated stats |
+| GET | `/api/admin/feedback/subject/:subject` | Admin | Feedbacks by subject |
+| GET | `/api/admin/feedback/subject/:subject/coverage` | Admin | Gave / not-given students |
+| GET | `/api/admin/db-overview` | Admin | Full database dashboard |
+| GET | `/api/public/subjects` | - | Subjects for anonymous form |
+| POST | `/api/public/feedback` | Public (rate-limited) | Submit anonymous feedback |
+| GET | `/api/public/feedbacks` | JWT | List anonymous submissions |
 
 ---
 
-## Developer Experience
+## 🗺️ Product Roadmap (Backlog)
 
-### Linting
+| Feature | Approach |
+|---|---|
+| **Analytics Dashboard** | Chart.js / Recharts + `/api/admin/analytics` endpoint |
+| **Email Notifications** | Nodemailer + cron/webhook when windows open/close |
+| **Faculty Role** | `role: 'faculty'` with read-only aggregated stats |
+| **TypeScript Migration** | Full static typing across the stack |
+| **TypeScript Migration** | Full static typing across the stack |
 
-```bash
-cd client && npm run lint
-```
+---
 
-### Pre-commit Hooks
-
-Husky + lint-staged automatically lint and format staged files before each commit. Skip with `git commit --no-verify` if needed.
-
-### Building for Production
-
-```bash
-cd client && npm run build
-# Output: client/dist/
-```
-
-### Testing
-
-Smoke tests (health endpoint + 404 handler) are in `server/tests/server.test.js`. Run with:
+## 💻 Developer Experience
 
 ```bash
-npm test
+cd client && npm run lint   # ESLint (react-hooks + react-refresh)
+npm test                     # Smoke tests (Jest + Supertest)
 ```
 
-### API Documentation
-
-Swagger UI is available at `/api/docs` when the server is running. OpenAPI definitions are generated from JSDoc annotations in route files.
-
-### CI Pipeline
-
-GitHub Actions runs lint, build, and test on every push and pull request to the main branch. The workflow is defined in `.github/workflows/ci.yml`.
+- **Pre-commit hooks**: Husky + lint-staged run automatically. Skip with `git commit --no-verify`.
+- **API Docs**: Swagger UI at `/api/docs` when the server is running.
+- **CI**: GitHub Actions runs test, lint, and build on every push/PR to `main`.
 
 ### Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feat/your-feature`)
-3. Commit your changes (`git commit -m 'Add feature'`) — pre-commit hooks will run automatically
-4. Push to the branch (`git push origin feat/your-feature`)
-5. Open a Pull Request
+3. Commit your changes (pre-commit hooks run automatically)
+4. Push and open a Pull Request
 
 ---
 
-## License
+## 📄 License
 
-This project is licensed under the **GNU General Public License v3.0**. See the [LICENSE.md](./LICENSE.md) file for details.
+This project is licensed under the **GNU General Public License v3.0**. See [LICENSE.md](./LICENSE.md) for the full legal text.
 
-&copy; 2026 Pawan Simha R. All rights to the source code are granted under the terms of the GPLv3.
+&copy; 2026 **Pawan Simha R**. All rights to the source code are granted under the terms of the GPLv3.

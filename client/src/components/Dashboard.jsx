@@ -43,28 +43,95 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-welcome">
-        <h2>Welcome, {student?.name}</h2>
-        <p className="subtitle">{student?.usn} | {student?.email}</p>
-      </div>
-
       {error && <div className="alert alert-error">{error}</div>}
 
       {loading ? (
         <p className="loading-text">Checking feedback session...</p>
-      ) : allotment?.open ? (
-        <div className="allotment-block">
-          <div className="allotment-badge">Feedback Session Active</div>
-          <p className="allotment-msg">{allotment.message}</p>
-          <button className="btn btn-start-feedback" onClick={() => navigate('/feedback')}>
-            {lockedCount > 0 ? 'Continue Feedback →' : 'Give Feedback →'}
-          </button>
-        </div>
       ) : (
-        <div className="no-session">
-          <p>No feedback session is currently open for your class.</p>
-          <p className="subtitle">Please wait for the admin to open a session.</p>
-        </div>
+        <>
+          <div className="dashboard-top">
+            <div className="dashboard-main">
+              <div className="dashboard-main__header">
+                <h2>Welcome, {student?.name}</h2>
+                <p className="dashboard-main__meta">{student?.usn} &middot; {student?.email}</p>
+              </div>
+
+              {allotment?.open ? (
+                <div className="session-card">
+                  <div className="session-card__header">
+                    <span className="session-card__dot"></span>
+                    <span>Feedback Session Active</span>
+                  </div>
+                  <div className="session-card__body">
+                    <p className="session-card__message">{allotment.message}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="no-session-card">
+                  <div className="no-session-card__icon">📋</div>
+                  <h3 className="no-session-card__title">No Active Feedback Session</h3>
+                  <p className="no-session-card__desc">
+                    Feedback sessions are opened by your administrator after each class or assessment.
+                    Check back later to submit your responses.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="dashboard-side">
+              <div className="info-list">
+                <div className="info-list__item">
+                  <span className="info-list__icon">📚</span>
+                  <div className="info-list__text">
+                    <span className="info-list__value">6</span>
+                    <span className="info-list__label">Subjects to Review</span>
+                  </div>
+                </div>
+                <div className="info-list__item">
+                  <span className="info-list__icon">⭐</span>
+                  <div className="info-list__text">
+                    <span className="info-list__value">1–5</span>
+                    <span className="info-list__label">Rating per Subject</span>
+                  </div>
+                </div>
+                <div className="info-list__item">
+                  <span className="info-list__icon">💬</span>
+                  <div className="info-list__text">
+                    <span className="info-list__value">50–300</span>
+                    <span className="info-list__label">Characters per Comment</span>
+                  </div>
+                </div>
+              </div>
+
+              {allotment?.open && (
+                <button className="btn btn-start-feedback" onClick={() => navigate('/feedback')}>
+                  {lockedCount > 0 ? 'Continue Feedback →' : 'Give Feedback →'}
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="dashboard-bottom">
+            <div className="dashboard-section">
+              <h3 className="dashboard-section__title">How Feedback Works</h3>
+              <ol className="steps-list">
+                <li><strong>Rate each subject</strong> - Give a 1–5 star rating for every subject you have studied this semester.</li>
+                <li><strong>Write your comments</strong> - Share your thoughts (50–300 characters per subject). Be specific about what worked well and what could be improved.</li>
+                <li><strong>Lock your response</strong> - Each subject's feedback is locked individually. You can unlock and edit before final submission.</li>
+                <li><strong>Submit all at once</strong> - Once all subjects are locked, review your responses and submit everything together.</li>
+              </ol>
+            </div>
+            <div className="dashboard-section">
+              <h3 className="dashboard-section__title">Guidelines</h3>
+              <ul className="guidelines-list">
+                <li>Your honest feedback directly helps improve the quality of teaching and course delivery.</li>
+                <li>Be constructive - mention specific aspects that worked well or areas that need improvement.</li>
+                <li>All responses are aggregated - your identity is never revealed to faculty in individual reports.</li>
+                <li>This is your voice - use it genuinely to make a difference for future sessions.</li>
+              </ul>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

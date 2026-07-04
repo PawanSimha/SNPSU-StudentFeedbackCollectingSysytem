@@ -127,19 +127,23 @@ const DashboardView = ({ collections }) => (
     <div className="db-section">
       <h3>Students by Class</h3>
       <div className="db-class-grid">
-        {Object.entries(collections.students.classGroups).map(([cls, info]) => (
+        {Object.entries(collections.students.classGroups).filter(([cls]) => /[ABC] sec$/i.test(cls)).map(([cls, info]) => (
           <div key={cls} className="db-class-card">
-            <h4>{cls}</h4>
-            <p className="db-count">{info.total} student{info.total !== 1 ? 's' : ''}</p>
-            <div className="db-student-list">
-              {info.students.map((s, i) => (
-                <div key={i} className="db-student-row">
-                  <span className="db-name">{s.name}</span>
-                  <span className="db-usn">{s.usn}</span>
-                  <span className="db-email">{s.email}</span>
-                  {s.role === 'admin' && <span className="db-role-badge">Admin</span>}
-                </div>
-              ))}
+            <div className="db-class-card-header">
+              <h4>{cls}</h4>
+              <span className="db-class-count">{info.total} student{info.total !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="db-class-card-body">
+              <div className="db-student-list">
+                {info.students.map((s, i) => (
+                  <div key={i} className="db-student-row">
+                    <span className="db-name">{s.name}</span>
+                    <span className="db-usn">{s.usn}</span>
+                    <span className="db-email">{s.email}</span>
+  
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
@@ -149,12 +153,21 @@ const DashboardView = ({ collections }) => (
     <div className="db-section">
       <h3>Feedback per Subject</h3>
       <div className="db-subject-grid">
-        {Object.entries(collections.feedbacks.subjectStats).map(([sub, stats]) => (
-          <div key={sub} className="db-subject-card">
-            <h4>{sub}</h4>
-            <p className="db-count">{stats.total} submission{stats.total !== 1 ? 's' : ''} &middot; {stats.uniqueStudents} student{stats.uniqueStudents !== 1 ? 's' : ''}</p>
-          </div>
-        ))}
+        {Object.entries(collections.feedbacks.subjectStats).map(([sub, stats]) => {
+          const pct = collections.students.count ? Math.round((stats.uniqueStudents / collections.students.count) * 100) : 0;
+          return (
+            <div key={sub} className="db-subject-card">
+              <h4>{sub}</h4>
+              <div className="db-subject-stats">
+                <span><strong>{stats.total}</strong> submissions</span>
+                <span><strong>{stats.uniqueStudents}</strong> students</span>
+              </div>
+              <div className="db-subject-bar">
+                <div className="db-subject-bar-fill" style={{ width: `${pct}%` }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
 
@@ -165,7 +178,7 @@ const DashboardView = ({ collections }) => (
           {collections.allotments.all.map((a, i) => (
             <div key={i} className={`db-allot-row ${a.isOpen ? 'open' : 'closed'}`}>
               <span className="db-allot-class">{a.classGroup}</span>
-              <span className={`db-allot-status ${a.isOpen ? 'open' : 'closed'}`}>{a.isOpen ? '● Open' : '○ Closed'}</span>
+              <span className={`db-allot-status ${a.isOpen ? 'open' : 'closed'}`}>{a.isOpen ? 'Open' : 'Closed'}</span>
               {a.message && <span className="db-allot-msg">&quot;{a.message}&quot;</span>}
               <span className="db-allot-date">{new Date(a.allottedAt).toLocaleDateString()}</span>
             </div>

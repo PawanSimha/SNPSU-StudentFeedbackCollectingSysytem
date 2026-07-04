@@ -110,7 +110,7 @@
 
 .allotment-input:disabled {
   background: var(--gray-50);
-  border-color: #c8e6c9;
+  border-color: var(--gray-200);
 }
 
 .char-hint {
@@ -146,7 +146,7 @@
 }
 
 .btn-allot.open:hover {
-  background: #1b5e20;
+  background: var(--success);
 }
 
 .btn-allot.close {
@@ -155,5 +155,5 @@
 }
 
 .btn-allot.close:hover {
-  background: #b71c1c;
+  background: var(--danger);
 }

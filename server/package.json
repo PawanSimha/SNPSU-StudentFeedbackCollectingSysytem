@@ -12,6 +12,7 @@
     "test": "jest --forceExit --detectOpenHandles",
     "seed": "node scripts/seed.js",
     "seed-b": "node scripts/seed-b.js",
+    "seed-c": "node scripts/seed-c.js",
     "seed-admin": "node scripts/seed-admin.js"
   },
   "dependencies": {

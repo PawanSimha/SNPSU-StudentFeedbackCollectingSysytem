@@ -189,7 +189,7 @@
 
 .sf-step.active {
   border-color: var(--primary);
-  background: #e8eaf6;
+  background: var(--gray-200);
 }
 
 .sf-step.done {
@@ -293,7 +293,7 @@
 }
 
 .btn-next:disabled {
-  background: #9fa8da;
+  background: var(--gray-400);
   cursor: not-allowed;
 }
 
@@ -311,7 +311,7 @@
 }
 
 .btn-prev:hover:not(:disabled) {
-  background: #e8eaf6;
+  background: var(--gray-200);
 }
 
 .btn-prev:disabled {
@@ -333,7 +333,7 @@
 }
 
 .btn-unlock:hover {
-  background: #bf360c;
+  background: var(--accent-hover);
 }
 
 .btn-submit-final {
@@ -351,7 +351,7 @@
 }
 
 .btn-submit-final:hover:not(:disabled) {
-  background: #1b5e20;
+  background: var(--success);
 }
 
 .btn-submit-final:disabled {
@@ -462,45 +462,7 @@
   max-width: 300px;
 }
 
-.allotment-block {
-  background: white;
-  border-radius: var(--radius-lg);
-  padding: 36px 32px;
-  box-shadow: var(--shadow-md);
-  text-align: center;
-  max-width: 500px;
-  margin: 28px auto 0;
-  border: 2px solid var(--success);
-}
 
-.allotment-badge {
-  display: inline-block;
-  padding: 6px 18px;
-  background: var(--success);
-  color: white;
-  border-radius: var(--radius-full);
-  font-size: 0.82rem;
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-
-.allotment-msg {
-  font-size: 1.08rem;
-  color: var(--gray-700);
-  margin: 16px 0 24px;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-.no-session {
-  text-align: center;
-  margin-top: 60px;
-  color: var(--gray-500);
-}
-
-.no-session p {
-  font-size: 1.05rem;
-}
 
 .loading-text {
   text-align: center;

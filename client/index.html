@@ -23,13 +23,20 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/images/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SOAS Feedback Collector: Anonymous course feedback platform for Sapthagiri NPS University. MCA students submit per-subject ratings and comments with session-gated allotments. Administrators manage feedback windows, track coverage, and export CSV/Word reports." />
-    <meta name="keywords" content="SOAS Feedback Collector, Sapthagiri NPS University, MCA feedback, anonymous feedback, course evaluation, student feedback system, MERN stack, Pawan Simha R" />
+    <meta name="description" content="SOAS Feedback Collector: Anonymous course feedback platform for Sapthagiri NPS University. MCA students submit per-subject ratings and comments with session-gated allotments. Administrators manage feedback windows, track coverage, and export CSV/Word reports. Developed by Pawan Simha R." />
+    <meta name="keywords" content="SOAS Feedback Collector, Sapthagiri NPS University, MCA feedback, anonymous feedback, course evaluation, student feedback system, MERN stack, Pawan Simha R, SNPSU, feedback platform, open-source" />
     <meta name="author" content="Pawan Simha R" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="application-name" content="SOAS Feedback Collector" />
     <meta name="theme-color" content="#1a237e" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <link rel="canonical" href="https://snpsu-feedback-collector.vercel.app" />
+
+    <!-- GEO / LLM-SEO: AI crawler directives -->
+    <meta name="generator" content="Vite 8" />
+    <!-- Prevent AI training scrapers from using content; does not block search indexing -->
+    <meta name="robots" content="noai, noimageai" />
 
     <!-- Preload critical assets (LCP: hero background, fonts) -->
     <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" />
@@ -40,71 +47,281 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="SOAS Feedback Collector: Anonymous Course Feedback Platform" />
-    <meta property="og:description" content="Full-stack MERN application for session-gated, per-subject course feedback with anonymous channel, admin analytics, and CSV/Word report exports for Sapthagiri NPS University." />
+    <meta property="og:title" content="SOAS Feedback Collector: Anonymous Course Feedback Platform | Pawan Simha R" />
+    <meta property="og:description" content="Full-stack MERN application for session-gated, per-subject course feedback with anonymous channel, admin analytics, and CSV/Word report exports for Sapthagiri NPS University. Developed by Pawan Simha R, MCA, SOAS." />
     <meta property="og:url" content="https://snpsu-feedback-collector.vercel.app" />
     <meta property="og:image" content="https://snpsu-feedback-collector.vercel.app/images/hero-bg.webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:alt" content="SOAS Feedback Collector landing page with Sapthagiri NPS University branding" />
     <meta property="og:locale" content="en_IN" />
+    <meta property="og:site_name" content="SOAS Feedback Collector" />
+    <meta property="og:see_also" content="https://github.com/PawanSimha/SNPSU-FeedbackCollector" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@snpsu" />
+    <meta name="twitter:creator" content="@PawanSimhaR" />
     <meta name="twitter:title" content="SOAS Feedback Collector: Anonymous Course Feedback Platform" />
-    <meta name="twitter:description" content="Session-gated, per-subject course feedback with anonymous channel, admin analytics, and CSV/Word report exports for Sapthagiri NPS University." />
+    <meta name="twitter:description" content="Session-gated, per-subject course feedback with anonymous channel, admin analytics, and CSV/Word report exports for Sapthagiri NPS University. Built by Pawan Simha R." />
     <meta name="twitter:image" content="https://snpsu-feedback-collector.vercel.app/images/hero-bg.webp" />
+    <meta name="twitter:image:alt" content="SOAS Feedback Collector landing page with Sapthagiri NPS University branding" />
 
-    <title>SOAS Feedback Collector: Anonymous Course Feedback Platform | Sapthagiri NPS University</title>
+    <title>SOAS Feedback Collector: Anonymous Course Feedback Platform | Sapthagiri NPS University | Pawan Simha R</title>
 
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD Structured Data (Graph-Anchored: WebApplication + Person + Organization) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "SOAS Feedback Collector",
-      "alternateName": "SNPSU-FeedbackCollector",
-      "description": "Anonymous course feedback platform for MCA students at Sapthagiri NPS University with session-gated allotments, per-subject ratings and comments, public anonymous channel, admin coverage tracking, and CSV/Word report exports.",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Cross-platform",
-      "browserRequirements": "Requires JavaScript. Modern browser with ES module support.",
-      "softwareVersion": "1.0.0",
-      "url": "https://snpsu-feedback-collector.vercel.app",
-      "sameAs": [
-        "https://github.com/PawanSimha/SNPSU-FeedbackCollector",
-        "https://github.com/PawanSimha"
-      ],
-      "author": {
-        "@type": "Person",
-        "name": "Pawan Simha R",
-        "email": "iampawansimha.2004@gmail.com",
-        "url": "https://github.com/PawanSimha",
-        "knowsAbout": ["MERN Stack", "React", "Node.js", "MongoDB", "Express", "Full-Stack Development"]
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock"
-      },
-      "affiliation": {
-        "@type": "Organization",
-        "name": "Sapthagiri NPS University",
-        "url": "https://snpsu.edu.in/"
-      },
-      "featureList": [
-        "JWT-authenticated student feedback with session-gated allotments",
-        "Public anonymous feedback channel (no login required)",
-        "Admin dashboard with class management and drill-down",
-        "Per-subject coverage tracking (gave / not-given students)",
-        "CSV and Word document report exports",
-        "Open-source under GNU GPLv3"
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://snpsu-feedback-collector.vercel.app/#webapp",
+          "name": "SOAS Feedback Collector",
+          "alternateName": "SNPSU Feedback Collector",
+          "description": "Anonymous course feedback platform for MCA students at Sapthagiri NPS University with session-gated allotments, per-subject ratings and comments, public anonymous channel, admin coverage tracking, and CSV/Word report exports.",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Cross-platform (Web)",
+          "browserRequirements": "Requires JavaScript. Modern browser with ES module support.",
+          "softwareVersion": "1.3.0",
+          "url": "https://snpsu-feedback-collector.vercel.app",
+          "sameAs": [
+            "https://github.com/PawanSimha/SNPSU-FeedbackCollector",
+            "https://github.com/PawanSimha"
+          ],
+          "author": {
+            "@id": "https://github.com/PawanSimha#person"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "category": "Open Source"
+          },
+          "affiliation": {
+            "@id": "https://snpsu.edu.in/#organization"
+          },
+          "featureList": [
+            "JWT-authenticated student feedback with session-gated allotments",
+            "Public anonymous feedback channel (no login required)",
+            "Admin dashboard with class management and drill-down",
+            "Per-subject coverage tracking (gave / not-given students)",
+            "CSV and Word document report exports",
+            "Open-source under GNU GPLv3"
+          ],
+          "softwareHelp": {
+            "@id": "https://github.com/PawanSimha/SNPSU-FeedbackCollector#readme"
+          },
+          "releaseNotes": "https://github.com/PawanSimha/SNPSU-FeedbackCollector/releases",
+          "datePublished": "2026-01-01",
+          "license": "https://www.gnu.org/licenses/gpl-3.0.html"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://github.com/PawanSimha#person",
+          "name": "Pawan Simha R",
+          "alternateName": "Pawan Simha",
+          "givenName": "Pawan",
+          "familyName": "Simha R",
+          "email": "iampawansimha.2004@gmail.com",
+          "url": "https://github.com/PawanSimha",
+          "sameAs": [
+            "https://github.com/PawanSimha",
+            "https://github.com/PawanSimha/SNPSU-FeedbackCollector",
+            "https://snpsu-feedback-collector.vercel.app"
+          ],
+          "jobTitle": "MCA Student & Full-Stack Developer",
+          "affiliation": {
+            "@id": "https://snpsu.edu.in/#organization"
+          },
+          "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "School of Sciences (SOAS), Sapthagiri NPS University",
+            "url": "https://snpsu.edu.in/"
+          },
+          "knowsAbout": [
+            "MERN Stack Development",
+            "React.js",
+            "Node.js",
+            "Express.js",
+            "MongoDB",
+            "Full-Stack Web Development",
+            "REST API Design",
+            "JWT Authentication",
+            "Software Engineering",
+            "Open Source Development"
+          ],
+          "mainEntityOfPage": {
+            "@type": "WebApplication",
+            "@id": "https://snpsu-feedback-collector.vercel.app/#webapp"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://snpsu.edu.in/#organization",
+          "name": "Sapthagiri NPS University",
+          "alternateName": "SNPSU",
+          "url": "https://snpsu.edu.in/",
+          "description": "Sapthagiri NPS University offers quality education and holistic development for students across disciplines in Bengaluru, Karnataka.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "#14/5, Chikkasandra, Hesaraghatta Main Road",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "postalCode": "560057",
+            "addressCountry": "IN"
+          },
+          "telephone": "9353204949",
+          "sameAs": [
+            "https://snpsu.edu.in/",
+            "https://www.youtube.com/channel/UC7CQf-ButBsrY0L_5wNh43Q",
+            "https://www.instagram.com/sapthagirinpsuniversity/",
+            "https://www.facebook.com/sapthagiriuniversity/",
+            "https://www.linkedin.com/school/sapthagiri-nps-university/"
+          ],
+          "department": {
+            "@type": "EducationalOrganization",
+            "name": "School of Sciences (SOAS)",
+            "description": "School offering MCA and other science programs at Sapthagiri NPS University"
+          }
+        }
       ]
     }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Skip-link for keyboard accessibility (rendered by React but defined here for SEO crawlers) -->
+    <a href="#main-content" class="skip-link" style="position:absolute;left:-9999px">Skip to content</a>
+
+    <div id="root">
+      <!--
+        ============================================================
+        SPA SHELL - Content rendered dynamically by React 19 + Vite 8
+        ============================================================
+        Below is the static structural outline of the application
+        as rendered at build time for SEO/GEO crawler extraction.
+        ============================================================
+
+        --- PUBLIC PAGES (no navbar/footer) ---
+
+        LANDING PAGE (/)
+        <main class="landing" role="main">
+          <section class="landing__hero">
+            <img src="/images/hero-bg.webp" alt="SOAS Sapthagiri NPS University" />
+            <h1>SOAS Feedback Collector</h1>
+            <p>Anonymous course feedback platform for MCA students</p>
+            <div class="landing__actions">
+              <a href="/login" class="btn-landing">Get Started</a>
+              <a href="/feedback/public" class="btn-landing btn-landing--secondary">Anonymous Feedback</a>
+            </div>
+          </section>
+          <section class="landing__features">
+            <h2>What features does SOAS Feedback Collector offer?</h2>
+            <p>SOAS Feedback Collector provides a dual-channel feedback model with JWT-authenticated submissions and a fully anonymous public channel. Administrators can open or close feedback windows, track per-subject coverage, and export reports in CSV or Word format, all without exposing individual student identity.</p>
+            <ul>
+              <li>JWT-authenticated feedback with session-gated allotments</li>
+              <li>Public anonymous feedback (no login, rate-limited)</li>
+              <li>Admin dashboard with class management and drill-down</li>
+              <li>Per-subject coverage tracking (gave / not-given lists)</li>
+              <li>CSV and Word report exports via Blob URL generation</li>
+            </ul>
+          </section>
+          <section class="landing__technical">
+            <h2>What is the technical architecture of this feedback system?</h2>
+            <p>This is a full-stack MERN application: React 19 with Vite 8 on the frontend, Express 4.21 on Node.js on the backend, and MongoDB 8 with Mongoose 8 for persistence. Authentication uses JWT with 30-day access tokens and 7-day refresh tokens. The server runs in PM2 cluster mode with Helmet security headers and gzip compression.</p>
+            <table>
+              <caption>Technology Stack</caption>
+              <thead><tr><th>Layer</th><th>Technology</th><th>Version</th></tr></thead>
+              <tbody>
+                <tr><td>Frontend</td><td>React / Vite</td><td>React 19, Vite 8</td></tr>
+                <tr><td>Backend</td><td>Node.js / Express</td><td>Express 4.21</td></tr>
+                <tr><td>Database</td><td>MongoDB / Mongoose</td><td>MongoDB 8, Mongoose 8</td></tr>
+                <tr><td>Auth</td><td>JWT / bcryptjs</td><td>jsonwebtoken 9, bcryptjs 2</td></tr>
+                <tr><td>Process</td><td>PM2 Cluster</td><td>PM2 7, auto-restart</td></tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="landing__coverage">
+            <h2>How does feedback coverage tracking work?</h2>
+            <p>Administrators can view per-subject coverage for any class group. The system identifies all students in a class, cross-references them against feedback submissions for a given subject, and returns two lists: students who gave feedback and students who have not. Coverage percentages are calculated and displayed in real time.</p>
+          </section>
+        </main>
+
+        LOGIN PAGE (/login)
+        <main class="login" role="main">
+          <h1>Login to SOAS Feedback Collector</h1>
+          <form>Email + USN + Password fields</form>
+          <p>Developed by Pawan Simha R, MCA, SOAS, Sapthagiri NPS University</p>
+        </main>
+
+        PUBLIC FEEDBACK (/feedback/public)
+        <main class="public-feedback" role="main">
+          <h1>Submit Anonymous Feedback</h1>
+          <p>No login required. Your identity is not collected.</p>
+          <form>Subject dropdown + Faculty name + Comments (100-300 chars)</form>
+        </main>
+
+        --- AUTHENTICATED PAGES (with navbar + footer) ---
+
+        DASHBOARD (/dashboard)
+        <main class="container" id="main-content">
+          <h1>Student Dashboard</h1>
+          <section>Active session status</section>
+          <section>Start feedback button</section>
+        </main>
+
+        FEEDBACK FORM (/feedback)
+        <main class="container" id="main-content">
+          <h1>Sequential Feedback Form</h1>
+          <nav>Step indicators for 6 subjects</nav>
+          <section class="sf-card">
+            <h2>Current Subject Name</h2>
+            <div>Star rating 1-5 selector</div>
+            <textarea>Feedback comments (50-300 chars)</textarea>
+            <div>Previous / Lock / Next buttons</div>
+          </section>
+        </main>
+
+        MY FEEDBACK (/my-feedback)
+        <main class="container" id="main-content">
+          <h1>My Feedback History</h1>
+          <table>
+            <thead><tr><th>Subject</th><th>Rating</th><th>Comments</th><th>Date</th></tr></thead>
+            <tbody><tr><td>-</td><td>-</td><td>-</td><td>-</td></tr></tbody>
+          </table>
+        </main>
+
+        ADMIN PAGES (/admin/*)
+        [All admin routes require JWT with admin role]
+        /admin         -> Class selection grid
+        /admin/database-> Database Overview (5 tabs: Dashboard, Students, Feedbacks, Allotments, Anonymous)
+        /admin/allotments -> Open/close feedback windows per class
+        /admin/anonymous -> Search anonymous submissions
+        /admin/:classGroup -> Per-class student grid
+        /admin/:classGroup/dashboard -> Per-class feedback dashboard with subject filter
+        /admin/:classGroup/student/:studentId -> Individual student feedback view
+
+        --- 404 PAGE ---
+        <main class="not-found" role="main">
+          <h1>404 - Page Not Found</h1>
+          <div>CSS compass illustration with animated needle</div>
+          <a href="/">Return Home</a>
+          <a href="/dashboard">Go to Dashboard</a>
+        </main>
+      -->
+    </div>
+
+    <!-- Footer rendered by React component; static placeholder for crawlers -->
+    <noscript>
+      <footer>
+        <p>SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University</p>
+        <p>Developed by Pawan Simha R, MCA, SOAS, Sapthagiri NPS University</p>
+        <p>&copy; 2026 Sapthagiri NPS University. All rights reserved.</p>
+      </footer>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

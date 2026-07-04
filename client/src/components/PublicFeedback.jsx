@@ -62,25 +62,25 @@ const PublicFeedback = () => {
 
   if (submitted) {
     return (
-    <div className="public-feedback public-feedback--dark">
+    <main className="public-feedback public-feedback--dark" role="main">
         <div className="public-feedback__card">
           <div className="public-feedback__success">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <h2>Thank You!</h2>
+            <h1>Thank You!</h1>
             <p>Your anonymous feedback has been submitted successfully.</p>
             <button className="public-feedback__btn" onClick={() => navigate('/')}>Back to Home</button>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="public-feedback public-feedback--dark">
+    <main className="public-feedback public-feedback--dark" role="main">
       <div className="public-feedback__card">
         <div className="public-feedback__header">
           <img src="/images/footer-logo.webp" alt="SOAS - Sapthagiri NPS University" width="1777" height="435" loading="lazy" className="public-feedback__logo" />
-          <h2>Give Anonymous Feedback</h2>
+          <h1>Give Anonymous Feedback</h1>
           <p>Your identity will not be revealed. Share your honest thoughts.</p>
         </div>
 
@@ -121,7 +121,7 @@ const PublicFeedback = () => {
           <button className="public-feedback__link" onClick={() => navigate('/')}>← Back to Home</button>
         </p>
       </div>
-    </div>
+    </main>
   );
 };
 

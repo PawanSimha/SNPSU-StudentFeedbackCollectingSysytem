@@ -17,41 +17,273 @@
 */
 /* Dashboard */
 .dashboard {
-  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 0 40px;
 }
 
-.dashboard-welcome {
-  text-align: center;
-  padding: 50px 20px 30px;
+/* ─── Top row: 2-column grid ─── */
+.dashboard-top {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  margin-bottom: 28px;
+  align-items: start;
 }
 
-.dashboard-welcome h2 {
+/* Left column */
+.dashboard-main__header {
+  margin-bottom: 20px;
+}
+
+.dashboard-main__header h2 {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--gray-800);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
-.dashboard-welcome .subtitle {
+.dashboard-main__meta {
   color: var(--gray-500);
-  margin-bottom: 10px;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
-.locked-info {
-  color: var(--success);
-  font-size: 0.88rem;
-  margin-bottom: 28px;
+/* Right column */
+.dashboard-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Info list (vertical, in sidebar) */
+.info-list {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-list__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.info-list__icon {
+  font-size: 1.4rem;
+  display: block;
+  width: 40px;
+  height: 40px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-list__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.info-list__value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.info-list__label {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+/* ─── Active session card ─── */
+.session-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.session-card__header {
+  background: var(--success);
+  color: white;
+  padding: 12px 24px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+}
+
+.session-card__dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: sessionPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes sessionPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.session-card__body {
+  padding: 24px;
+}
+
+.session-card__message {
+  font-size: 1.15rem;
+  color: var(--gray-700);
   font-weight: 600;
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
 }
 
+/* ─── No-session card ─── */
+.no-session-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.no-session-card__icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.no-session-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gray-700);
+  margin-bottom: 8px;
+}
+
+.no-session-card__desc {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ─── Bottom row: 2 equal columns ─── */
+.dashboard-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Section cards */
+.dashboard-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.dashboard-section__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+
+/* Steps list */
+.steps-list {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  margin: 0;
+}
+
+.steps-list li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 14px 34px;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.steps-list li:last-child {
+  padding-bottom: 0;
+}
+
+.steps-list li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.steps-list li strong {
+  color: var(--gray-700);
+}
+
+/* Guidelines list */
+.guidelines-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guidelines-list li {
+  position: relative;
+  padding: 0 0 10px 24px;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.guidelines-list li:last-child {
+  padding-bottom: 0;
+}
+
+.guidelines-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* ─── CTA button ─── */
 .btn-start-feedback {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 14px 44px;
+  width: 100%;
+  padding: 14px 24px;
   border-radius: var(--radius-md);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -65,10 +297,27 @@
   transform: translateY(-2px);
 }
 
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .dashboard-top {
+    grid-template-columns: 1fr;
+  }
 
-/* Locked badge on Dashboard */
-.btn-small.locked {
-  background: var(--success);
-  color: white;
+  .dashboard-bottom {
+    grid-template-columns: 1fr;
+  }
 }
 
+@media (max-width: 600px) {
+  .dashboard-section {
+    padding: 22px 20px;
+  }
+
+  .no-session-card {
+    padding: 28px 20px;
+  }
+
+  .info-list {
+    padding: 16px;
+  }
+}

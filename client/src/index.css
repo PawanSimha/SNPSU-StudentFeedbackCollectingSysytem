@@ -143,6 +143,16 @@ body {
 }
 
 /* Focus-visible: WCAG 2.2 AA keyboard navigation */
-:focus-visible { outline: 2.5px solid #1a237e; outline-offset: 2px; border-radius: 4px; }
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2.5px solid #1a237e; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2.5px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2.5px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
 :focus:not(:focus-visible) { outline: none; }
+
+/* Respect OS-level motion preferences (GEO: accessibility-friendly) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

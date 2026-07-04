@@ -64,7 +64,7 @@ const Landing = () => {
   };
 
   return (
-    <div className="landing">
+    <main className="landing" role="main">
       <header className="landing-header">
         <div className="landing-header__inner">
           <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
@@ -228,7 +228,6 @@ const Landing = () => {
                   id={`faq-answer-${i}`}
                   className="landing-faq__answer"
                   role="region"
-                  hidden={openFaq !== i}
                 >
                   <p>{item.a}</p>
                 </div>
@@ -254,7 +253,7 @@ const Landing = () => {
       </section>
 
       <Footer />
-    </div>
+    </main>
   );
 };
 

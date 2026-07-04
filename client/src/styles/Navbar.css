@@ -76,7 +76,7 @@
 }
 
 .nav-links a:hover {
-  color: #3949ab;
+  color: var(--primary-light);
 }
 
 .btn-logout {

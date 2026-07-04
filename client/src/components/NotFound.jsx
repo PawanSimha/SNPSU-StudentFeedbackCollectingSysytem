@@ -30,7 +30,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className="not-found">
+    <main className="not-found" role="main">
       <div className="not-found__spotlight" aria-hidden="true" />
 
       <div className="not-found__brand">
@@ -79,7 +79,7 @@ const NotFound = () => {
           Go Back
         </button>
       </div>
-    </div>
+    </main>
   );
 };
 

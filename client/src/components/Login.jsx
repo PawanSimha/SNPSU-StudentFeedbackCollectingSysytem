@@ -65,7 +65,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
+    <main className="login-page" role="main">
       <div className="login-bg">
         <div className="login-orb login-orb--1" />
         <div className="login-orb login-orb--2" />
@@ -152,7 +152,7 @@ const Login = () => {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
