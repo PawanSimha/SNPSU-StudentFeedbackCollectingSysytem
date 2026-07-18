@@ -17,6 +17,10 @@
 
 ---
 
+<p align="center">
+  <img src="./client/public/images/readme.webp" alt="SOAS Feedback Collector Dashboard" width="100%" style="border-radius: 12px; max-width: 900px;"/>
+</p>
+
 ## 🎯 Product Strategy
 
 ### Problem Statement
