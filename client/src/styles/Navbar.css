@@ -21,6 +21,20 @@
 .navbar--landing {
   background: transparent;
 }
+.navbar--landing:not(.navbar--scrolled) .navbar__inner {
+  height: 80px;
+  padding: 14px 28px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__logo {
+  height: 52px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link {
+  font-size: 0.95rem;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta {
+  font-size: 0.92rem;
+  padding: 10px 32px;
+}
 .navbar--landing.navbar--scrolled {
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(14px);
