@@ -50,8 +50,10 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Password Hashing** | bcryptjs | ^2.4.3 | Salt rounds: 10 |
 | **Dev Orchestration** | concurrently | ^8.2.2 | Runs server + client in parallel |
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
-| **Linting** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins |
-| **CSS** | Custom properties (no framework) | - | 16 per-component files in `styles/`; BEM naming in 6 files |
+| **Linting (client)** | ESLint | ^10.3.0 | react-hooks + react-refresh plugins; flat config `client/eslint.config.js` |
+| **Linting (server)** | ESLint | ^9.39.5 | Node.js CommonJS; flat config `server/eslint.config.mjs` |
+| **Linting (root)** | ESLint | ^9.39.5 | Used by lint-staged for server `*.js` files |
+| **CSS** | Custom properties (no framework) | - | 17 per-component files in `styles/`; BEM naming in 11 files |
 | **Structured Logging** | pino | ^9.14.0 | `pino-http` for HTTP request logging, level from `LOG_LEVEL` env |
 | **Image Format** | WebP | quality 85 | All raster assets in `client/public/images/` |
 | **API Documentation** | Swagger (swagger-jsdoc + swagger-ui-express) | latest | Interactive docs at `/api/docs` |
@@ -202,6 +204,7 @@ mern-feedback-collector/
 │
 ├── context.md                   ← THIS FILE: system context and session continuity
 │
+├── .gitattributes               LF normalization for all text files
 ├── .gitignore                   Ignores: node_modules, .env, dist, Thumbs.db, editor dirs
 │
 ├── client/                      React 19 + Vite 8 SPA (frontend)
@@ -224,7 +227,7 @@ mern-feedback-collector/
 │       ├── utils/
 │       │   ├── download.js       CSV and Word doc export (Blob + download link)
 │       │   └── analytics.js      Page-view analytics tracker (localStorage-based)
-│       ├── styles/               16 per-component CSS files (modularized from index.css)
+│       ├── styles/               17 per-component CSS files (modularized from index.css)
 │       │   ├── AdminAllotments.css
 │       │   ├── AdminClassSelect.css
 │       │   ├── AdminDashboard.css
@@ -263,7 +266,8 @@ mern-feedback-collector/
 │           └── PublicFeedback.jsx
 │
 ├── server/                      Express 4.21 REST API (backend)
-│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pino, pm2, swagger
+│   ├── package.json              Dependencies: express, mongoose, bcryptjs, jsonwebtoken, cors, dotenv, helmet, compression, pino, pm2, swagger, eslint, globals
+│   ├── eslint.config.mjs         ESLint flat config: Node.js CommonJS, jest globals
 │   ├── ecosystem.config.js       PM2 cluster config: N workers = N CPU cores, auto-restart, log rotation
 │   ├── server.js                 App entry: dotenv, connectDB, JWT check, app.listen
 │   ├── app.js                    Express app factory: helmet, compression, pino-http, cors, 10kb body limit, 5 route mounts, health, 404 catch-all, errorHandler
@@ -459,7 +463,7 @@ All four audit phases (A, B, C, D) are fully implemented. The project is product
 | `CORS_ORIGIN` | `http://localhost:5173` | Set via hosting platform |
 | `JWT_EXPIRES_IN` | `30d` | Set via hosting platform |
 | `LOGIN_RATE_LIMIT_MAX` | `5` | Set via hosting platform |
-| `RATE_LIMIT_WINDOW_MS` | `15` minutes | Set via hosting platform |
+| `RATE_LIMIT_WINDOW_MINUTES` | `15` minutes | Set via hosting platform |
 | `RATE_LIMIT_MAX` | `10` | Set via hosting platform |
 | `LOG_LEVEL` | `info` | `info` |
 | `ADMIN_EMAIL` | `admin@gmail.com` | Set via hosting platform |

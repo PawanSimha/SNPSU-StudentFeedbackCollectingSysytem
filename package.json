@@ -19,7 +19,7 @@
       "prettier --write"
     ],
     "server/**/*.js": [
-      "cd server && npx eslint --fix",
+      "eslint --fix --config server/eslint.config.mjs",
       "prettier --write"
     ],
     "*.css": [
@@ -28,6 +28,8 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "eslint": "^9.39.5",
+    "globals": "^17.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "^3.9.4"

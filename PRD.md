@@ -84,7 +84,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Admin Session Management** | AdminAllotments page: 6 summary cards, search + 6 filter chips, session cards with message textarea + template dropdown + character counter (25/50), progress bar, confirmation dialog (replaces `confirm()`), open/close/reopen with Sonner toasts, bulk Open All/Close All, Recharts pie + bar charts, activity panel, skeleton loading | `client/src/components/AdminAllotments.jsx` |
 | **Admin Anonymous View** | Standalone page showing all public submissions with search by subject/faculty/comments | `AdminAnonymous.jsx` (standalone); `AdminDbOverview.jsx` AnonymousView tab (with CSV + Word export) |
 | **Session Allocation Message** | Admin sets custom message (15-50 chars) when opening; opening-only validation | `server/routes/allotment.js` |
-| **Rate Limiting** | Public: 10 req/15min (env-configurable via `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS`); Login: 5 req/15min (`LOGIN_RATE_LIMIT_MAX`) | `server/routes/public.js`, `server/routes/auth.js` |
+| **Rate Limiting** | Public: 10 req/15min (env-configurable via `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MINUTES`); Login: 5 req/15min (`LOGIN_RATE_LIMIT_MAX`) | `server/routes/public.js`, `server/routes/auth.js` |
 | **Vite API Proxy** | Dev server proxies `/api` to backend on port 5000 | `client/vite.config.js` |
 | **Sequential Feedback Form** | Multi-step subject flow with lock/unlock per subject, prev/next navigation, draft auto-save (`fb_drafts`), lock state (`fb_locked`); confirmation popup before final submit | `client/src/components/FeedbackForm.jsx` |
 | **Social Icons in Footer** | SVG icons for YouTube, Instagram, Facebook, LinkedIn, WhatsApp | `client/src/components/Footer.jsx` |
@@ -130,7 +130,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, canonical URL, author meta | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>`; class component (required for `getDerivedStateFromError`) | `client/src/components/ErrorBoundary.jsx` |
 | **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
-| **Environment Variables** | 14 configurable vars: `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
+| **Environment Variables** | 14 configurable vars: `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MINUTES`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
 | **Animation Libraries** | Framer Motion (entrance/exit animations, `AnimatePresence`), CountUp (animated stat numbers), Sonner (toast notifications), Recharts (PieChart, BarChart for admin analytics) | `client/package.json` |
 | **Form Validation (Client)** | React Hook Form + Zod (`@hookform/resolvers`); `onBlur` mode with per-field dirty/error/valid visual states | `client/src/components/Login.jsx` |
 

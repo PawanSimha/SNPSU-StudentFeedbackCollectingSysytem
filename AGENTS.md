@@ -4,7 +4,7 @@
 
 ```bash
 # Install dependencies (three separate npm installs required)
-npm install                               # root (concurrently, husky, lint-staged, prettier)
+npm install                               # root (concurrently, husky, lint-staged, prettier, eslint)
 cd server && npm install                  # Express, Mongoose, JWT, pino, pm2, swagger
 cd client && npm install                  # React, Vite, Axios, react-router-dom, framer-motion
 
@@ -28,6 +28,7 @@ cd client && npm run dev   # Vite on :5173
 npm test                     # server tests (Jest+Supertest, smoke only)
 cd client && npm run build   # Vite build (must pass before deploy)
 cd client && npm run lint    # ESLint (react-hooks + react-refresh)
+cd server && npm run lint    # ESLint (Node.js CommonJS, flat config)
 cd server && npm run prod    # PM2 cluster mode
 ```
 
@@ -36,7 +37,7 @@ cd server && npm run prod    # PM2 cluster mode
 - **CommonJS on server** (`require`), **ES Modules on client** (`import`). `type: "module"` only in `client/package.json`.
 - **`server/app.js`** exports Express app; **`server/server.js`** starts it. Tests import `app.js` exclusively.
 - **Vite proxy** in `vite.config.js` forwards `/api` → `localhost:5000` in dev. No CORS config needed for dev.
-- **CSS custom properties** defined in `client/src/index.css`: `--primary: #1a237e`, `--gray-50`–`--gray-800`, `--success`, `--danger`, `--accent`, `--font-heading: Lora`, `--font-body: Inter`, `--radius-sm: 8px`, `--radius-md: 12px`, `--radius-lg: 14px`, `--radius-xl: 20px`, `--radius-full: 999px`, `--transition: 0.2s ease`. Use these instead of hardcoded values. 17 per-component CSS files in `client/src/styles/`.
+- **CSS custom properties** defined in `client/src/index.css`: `--primary: #1a237e`, `--primary-light: #283593`, `--gray-50`–`--gray-800`, `--success`, `--success-light`, `--danger`, `--danger-light`, `--accent: #C69E66`, `--accent-hover: #B0884D`, `--font-heading: Lora`, `--font-body: Inter`, `--radius-sm: 8px`, `--radius-md: 12px`, `--radius-lg: 14px`, `--radius-xl: 20px`, `--radius-full: 999px`, `--transition: 0.2s ease`. Use these instead of hardcoded values. 17 per-component CSS files in `client/src/styles/`.
 - **No TypeScript, no PropTypes.** Backend validates at route level (subject whitelist, comment length).
 - **Two feedback channels**: authenticated (JWT + allotment-gated, upsert on {student + subject} compound index) vs public anonymous (rate-limited 10/15min, no `student` field, 100-300 chars always).
 - **Login requires all three**: `email` (lowercased), `usn` (uppercased), `password` - bcrypt compared. Login form uses React Hook Form + Zod for client-side validation (`onBlur` mode).
@@ -73,5 +74,5 @@ Key vars: `MONGO_URI`, `JWT_SECRET`, `CORS_ORIGIN`, `ADMIN_EMAIL`/`ADMIN_PASSWOR
 
 ## CI / pre-commit
 
-- GitHub Actions: test (server jest), lint (client eslint), build (client vite) on push/PR to `main`.
-- Husky + lint-staged runs ESLint + Prettier pre-commit. Bypass with `git commit --no-verify`. Server `.js` files not linted (ESLint config lives in `client/` only).
+- GitHub Actions: test (server jest), lint (client eslint + server eslint), build (client vite) on push/PR to `main`.
+- Husky + lint-staged runs ESLint + Prettier pre-commit. Bypass with `git commit --no-verify`. Client uses flat config (`client/eslint.config.js`), server uses flat config (`server/eslint.config.mjs`).

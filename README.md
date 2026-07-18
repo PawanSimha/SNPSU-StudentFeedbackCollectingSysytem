@@ -138,7 +138,7 @@ Browser                          Express API                      MongoDB
 | **Process** | PM2 (cluster mode, multi-core) | ^7.0.1 |
 | **Database** | MongoDB (via Mongoose) | ^8.6.0 |
 | **Testing** | Jest + Supertest | ^30.4.2 / ^7.2.2 |
-| **Tooling** | ESLint, concurrently, Husky, lint-staged, Prettier | - |
+| **Tooling** | ESLint (root + client + server), concurrently, Husky, lint-staged, Prettier | - |
 | **CI/CD** | GitHub Actions (3 jobs: test, lint, build) | - |
 
 ---
@@ -147,12 +147,13 @@ Browser                          Express API                      MongoDB
 
 ```
 mern-feedback-collector/
+├── .gitattributes                 # LF normalization for all text files
 ├── .github/workflows/ci.yml      # CI: test, lint, build on push/PR
 ├── .husky/pre-commit              # Pre-commit hook (lint-staged)
 ├── context.md                     # System context & architectural continuity
 ├── Dockerfile                     # Multi-stage Docker build (Node 20 Alpine)
 ├── LICENSE.md                     # GNU GPLv3
-├── package.json                   # Root orchestration (concurrently)
+├── package.json                   # Root orchestration (concurrently, eslint, husky, lint-staged)
 ├── PRD.md                         # Product Requirements Document
 ├── PRIVACY.md                     # GDPR/CCPA privacy policy
 ├── vercel.json                    # Vercel deploy config (SPA rewrites + CSP)
@@ -176,6 +177,7 @@ mern-feedback-collector/
 │
 ├── server/                        # Express 4.21 REST API
 │   ├── .env.example               # Documented env vars (14 vars)
+│   ├── eslint.config.mjs          # ESLint flat config (Node.js CommonJS)
 │   ├── ecosystem.config.js        # PM2 cluster config
 │   ├── app.js                     # Express app factory
 │   ├── server.js                  # Entry point
@@ -291,6 +293,7 @@ cd client && npm run build   # Static output → client/dist/
 
 ```bash
 cd client && npm run lint   # ESLint (react-hooks + react-refresh)
+cd server && npm run lint   # ESLint (Node.js CommonJS)
 npm test                     # Smoke tests (Jest + Supertest)
 ```
 

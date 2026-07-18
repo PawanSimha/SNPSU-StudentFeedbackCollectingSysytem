@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+- **Server ESLint** — `server/eslint.config.mjs` flat config added, `globals` + `eslint` devDependencies, `serve:lint` script, root ESLint for lint-staged pipeline, 5 lint warnings fixed.
+- **CSS quality** — 7 `!important` flags removed from `Landing.css` anonymous button; hardcoded `#8B6914` replaced with `var(--accent)` in 4 CSS files; redundant `appearance:auto` and `box-sizing` properties removed.
+- **`.gitattributes`** — LF normalization for all text files.
+- **Docs sync** — AGENTS.md, context.md, PRD.md, README.md, CHANGELOG.md updated for server linting, `.gitattributes`, CSS variable refactors, and env var `RATE_LIMIT_WINDOW_MINUTES`.
 - **Removed star rating system** — all rating fields, validation, UI, and display removed from Feedback model, API, FeedbackForm, admin views, MyFeedback, Dashboard, Landing FAQ, and AuthContext cleanup.
 - **Security hardening**: CSP script-src `unsafe-inline` removed; `validateOrigin` now requires Origin header; refresh endpoint rate-limited (10/min); protect middleware returns 401 on deleted user.
 - **SEO**: `<title>` shortened to 55 chars; FAQPage JSON-LD added; duplicate `robots` meta merged; `sitemap.xml` now 4 URLs with `lastmod`.
