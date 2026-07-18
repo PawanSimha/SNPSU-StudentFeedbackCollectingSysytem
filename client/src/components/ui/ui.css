@@ -1,0 +1,162 @@
+/* ── Shared UI Components ── */
+/* Button */
+.btn-ui {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
+  text-decoration: none;
+  line-height: 1;
+  position: relative;
+}
+.btn-ui:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-ui--sm { padding: 8px 18px; font-size: 0.82rem; }
+.btn-ui--md { padding: 12px 28px; font-size: 0.92rem; }
+.btn-ui--lg { padding: 16px 40px; font-size: 1rem; }
+
+.btn-ui--primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-ui--primary:hover:not(:disabled) {
+  background: var(--primary-light);
+  box-shadow: 0 4px 16px rgba(26,35,126,0.25);
+}
+
+.btn-ui--outline {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+.btn-ui--outline:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-ui--ghost {
+  background: transparent;
+  color: var(--gray-600);
+}
+.btn-ui--ghost:hover:not(:disabled) {
+  background: var(--gray-100);
+  color: var(--primary);
+}
+
+.btn-ui--danger {
+  background: var(--danger);
+  color: white;
+}
+.btn-ui--danger:hover:not(:disabled) {
+  background: #b71c1c;
+}
+
+.btn-ui--loading { position: relative; }
+.btn-ui__text--hidden { visibility: hidden; }
+
+.btn-ui__spinner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Card */
+.card-ui {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--gray-200);
+  padding: 28px;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.card-ui--hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Badge */
+.badge-ui {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.badge-ui--default { background: var(--gray-100); color: var(--gray-600); }
+.badge-ui--primary { background: rgba(26,35,126,0.1); color: var(--primary); }
+.badge-ui--success { background: var(--success-light); color: var(--success); }
+.badge-ui--warning { background: #fff3e0; color: #e65100; }
+
+/* Input */
+.input-ui {
+  position: relative;
+  margin-bottom: 18px;
+}
+.input-ui__field {
+  width: 100%;
+  padding: 14px 14px 8px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.input-ui__field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+}
+.input-ui__field::placeholder { color: transparent; }
+
+.input-ui__label {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-size: 0.92rem;
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: all 0.2s;
+  background: white;
+  padding: 0 4px;
+}
+.input-ui__field:focus ~ .input-ui__label,
+.input-ui__field:not(:placeholder-shown) ~ .input-ui__label {
+  top: -8px;
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.input-ui--error .input-ui__field {
+  border-color: var(--danger);
+}
+.input-ui--error .input-ui__field:focus {
+  box-shadow: 0 0 0 3px rgba(198,40,40,0.1);
+}
+.input-ui--error .input-ui__label {
+  color: var(--danger);
+}
+
+.input-ui__error {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

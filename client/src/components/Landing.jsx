@@ -1,24 +1,31 @@
-/*
-  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
-  Copyright (C) 2026 Pawan Simha R
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import '../styles/Landing.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import CountUp from 'react-countup';
+import { Helmet } from 'react-helmet-async';
+import {
+  Target, Clock, Shield, ArrowRight, ChevronDown,
+  MessageSquare, BarChart3, ShieldCheck, Users,
+  BookOpen, Award, GraduationCap
+} from 'lucide-react';
+import Button from './ui/Button';
+import Navbar from './Navbar';
 import Footer from './Footer';
+
+const StatItem = ({ icon: Icon, num, suffix, label, decimals }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
+  return (
+    <div className="landing-stat" ref={ref}>
+      <Icon size={28} className="landing-stat__icon" />
+      <span className="landing-stat__num">
+        {inView ? <CountUp start={0} end={num} duration={2} decimals={decimals} /> : 0}{suffix}
+      </span>
+      <span className="landing-stat__label">{label}</span>
+    </div>
+  );
+};
 
 const FAQ_ITEMS = [
   {
@@ -43,11 +50,11 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How do administrators use the data?',
-    a: 'Administrators can access aggregated feedback reports through the dashboard. They can view submission rates, subject-wise feedback, and export reports in Excel or Word format for analysis and accreditation purposes.',
+    a: 'Administrators can access aggregated feedback reports through the dashboard. They can view submission rates, subject-wise feedback, and export reports in CSV or Word format for analysis and accreditation purposes.',
   },
   {
     q: 'What if I face login issues?',
-    a: 'If you are unable to log in, ensure you are using the correct email, USN, and password provided by the college. These credentials are issued to you during admission, not during registration on this platform. If the problem persists, contact the department administrator or your class coordinator for assistance.',
+    a: 'If you are unable to log in, ensure you are using the correct email, USN, and password provided by the college. These credentials are issued to you during admission. If the problem persists, contact the department administrator or your class coordinator for assistance.',
   },
   {
     q: 'Is the platform accessible on mobile?',
@@ -55,60 +62,130 @@ const FAQ_ITEMS = [
   },
 ];
 
+const SectionTitle = ({ children }) => (
+  <h2 className="section-title">{children}</h2>
+);
+
+const AnimatedSection = ({ children, className = '' }) => {
+  const prefersReduced = useReducedMotion();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  return (
+    <motion.section
+      ref={ref}
+      className={className}
+      initial={prefersReduced ? {} : { opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.section>
+  );
+};
+
+const HowItWorksStep = ({ num, icon: Icon, title, desc, isLast }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+
+  return (
+    <div className="how-step" ref={ref}>
+      <motion.div
+        className="how-step__circle"
+        initial={{ scale: 0 }}
+        animate={inView ? { scale: 1 } : {}}
+        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+      >
+        <Icon size={22} />
+        <span className="how-step__num">{num}</span>
+      </motion.div>
+      {!isLast && <div className="how-step__line" />}
+      <motion.div
+        className="how-step__content"
+        initial={{ opacity: 0, y: 10 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.15, duration: 0.35 }}
+      >
+        <h3>{title}</h3>
+        <p>{desc}</p>
+      </motion.div>
+    </div>
+  );
+};
+
 const Landing = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
+  const prefersReduced = useReducedMotion();
 
-  const toggleFaq = (i) => {
-    setOpenFaq(openFaq === i ? null : i);
+  const fadeUp = (delay = 0) => prefersReduced ? {} : {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay, duration: 0.4, ease: 'easeOut' },
   };
 
   return (
     <main className="landing" role="main">
-      <header className="landing-header">
-        <div className="landing-header__inner">
-          <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="landing-header__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }} />
-          <div className="landing-header__right">
-            <nav className="landing-header__nav" aria-label="Landing page navigation">
-              <a href="#about">About</a>
-              <a href="#faq">FAQ</a>
-              <a href="https://snpsu.edu.in/engineering/" target="_blank" rel="noreferrer">University</a>
-            </nav>
-            <button className="landing-header__cta" onClick={() => navigate('/login')}>Sign In</button>
-          </div>
-        </div>
-      </header>
+      <Navbar variant="landing" />
+      <Helmet>
+        <title>SOAS Feedback Collector - Anonymous Course Feedback for SNPSU</title>
+        <meta name="description" content="Anonymous course feedback platform for MCA students at Sapthagiri NPS University. Submit per-subject feedback with session-gated allotments." />
+      </Helmet>
 
+      {/* ── Hero ── */}
       <section className="landing-hero">
+        <div className="landing-hero__bg" />
         <div className="landing-hero__overlay" />
         <div className="landing-hero__content">
-          <span className="landing-hero__badge">Sapthagiri NPS University</span>
-          <h1 className="landing-hero__title">Feedback Collector</h1>
-          <p className="landing-hero__subtitle">
+          <motion.span className="landing-hero__badge" {...fadeUp(0)}>
+            Sapthagiri NPS University
+          </motion.span>
+          <motion.h1 className="landing-hero__title" {...fadeUp(0.1)}>
+            Feedback Collector
+          </motion.h1>
+          <motion.p className="landing-hero__subtitle" {...fadeUp(0.2)}>
             A streamlined platform for students to share course feedback and for faculty to gain actionable insights, driving continuous improvement in education.
-          </p>
-          <div className="landing-hero__actions">
-            <button className="landing-hero__btn landing-hero__btn--primary" onClick={() => navigate('/login')}>
-              Get Started
-            </button>
-            <button className="landing-hero__btn landing-hero__btn--outline" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}>
+          </motion.p>
+          <motion.div className="landing-hero__actions" {...fadeUp(0.3)}>
+            <Button variant="primary" size="lg" onClick={() => navigate('/login')}>
+              Get Started <ArrowRight size={18} />
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}>
               Learn More
-            </button>
-          </div>
-          <button className="landing-hero__btn landing-hero__btn--ghost" onClick={() => navigate('/feedback/public')}>
-            Give Feedback Anonymously
-          </button>
+            </Button>
+          </motion.div>
+          <motion.div {...fadeUp(0.4)}>
+            <Button variant="ghost" size="md" onClick={() => navigate('/feedback/public')} className="landing-hero__anonymous-btn">
+              <ShieldCheck size={16} /> Give Feedback Anonymously
+            </Button>
+          </motion.div>
         </div>
+
+        <motion.div className="landing-hero__cards" {...fadeUp(0.5)}>
+          <div className="hero-stat-card">
+            <ShieldCheck size={20} />
+            <div>
+              <span className="hero-stat-card__num">100%</span>
+              <span className="hero-stat-card__label">Anonymous</span>
+            </div>
+          </div>
+          <div className="hero-stat-card">
+            <GraduationCap size={20} />
+            <div>
+              <span className="hero-stat-card__num">MCA</span>
+              <span className="hero-stat-card__label">Department</span>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
-      <section id="about" className="landing-section landing-about">
+      {/* ── About ── */}
+      <AnimatedSection className="landing-section landing-about" id="about">
         <div className="landing-section__inner landing-about__inner">
           <div className="landing-about__grid">
             <div className="landing-about__image">
               <img src="/images/about.webp" alt="Sapthagiri NPS University Campus" loading="lazy" />
             </div>
             <div className="landing-about__content">
-              <h2 className="landing-section__title">About Sapthagiri NPS University</h2>
+              <SectionTitle>About Sapthagiri NPS University</SectionTitle>
               <p>
                 Sapthagiri NPS University is committed to providing high-quality technical education that combines strong foundational knowledge with practical skills, ethical values and leadership qualities. Our programme prepares graduates to excel in the rapidly evolving tech industry while contributing responsibly to society.
               </p>
@@ -116,27 +193,48 @@ const Landing = () => {
                 Through state-of-the-art infrastructure, innovative teaching-learning methods and a balanced focus on theory and hands-on applications, we nurture globally competent engineers capable of addressing complex computing challenges and developing sustainable, socially responsible solutions.
               </p>
               <p>
-                The School of Applied Sciences (SOAS) offers a dynamic learning environment with experienced faculty, modern laboratories, and industry-aligned curricula. Students benefit from hands-on training, research opportunities, and a strong emphasis on both technical competence and professional ethics, preparing them for leadership roles in their chosen fields.
+                The School of Applied Sciences (SOAS) offers a dynamic learning environment with experienced faculty, modern laboratories, and industry-aligned curricula. Students benefit from hands-on training, research opportunities, and a strong emphasis on both technical competence and professional ethics.
               </p>
+
+              <div className="landing-about__highlights">
+                <div className="highlight-card">
+                  <Award size={20} />
+                  <div>
+                    <span className="highlight-card__num">10+</span>
+                    <span className="highlight-card__label">Years of Excellence</span>
+                  </div>
+                </div>
+                <div className="highlight-card">
+                  <Users size={20} />
+                  <div>
+                    <span className="highlight-card__num">500+</span>
+                    <span className="highlight-card__label">Students Enrolled</span>
+                  </div>
+                </div>
+                <div className="highlight-card">
+                  <BookOpen size={20} />
+                  <div>
+                    <span className="highlight-card__num">6+</span>
+                    <span className="highlight-card__label">Programs Offered</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="landing-section landing-vmv">
+      {/* ── Vision, Mission, Values ── */}
+      <AnimatedSection className="landing-section landing-vmv">
         <div className="landing-section__inner">
           <div className="landing-vmv__grid">
-            <div className="landing-vmv__card">
-              <div className="landing-vmv__icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              </div>
+            <div className="vmv-card">
+              <div className="vmv-card__icon"><Target size={24} /></div>
               <h3>Our Vision</h3>
               <p>To empower students with deep technical knowledge, ethical values and leadership skills, enabling them to become responsible contributors to society and the tech industry.</p>
             </div>
-            <div className="landing-vmv__card">
-              <div className="landing-vmv__icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              </div>
+            <div className="vmv-card">
+              <div className="vmv-card__icon"><Clock size={24} /></div>
               <h3>Our Mission</h3>
               <ul>
                 <li>Value-based technical education with state-of-the-art infrastructure</li>
@@ -145,122 +243,96 @@ const Landing = () => {
                 <li>Nurture globally competent engineers for sustainable solutions</li>
               </ul>
             </div>
-            <div className="landing-vmv__card landing-vmv__card--wide">
-              <div className="landing-vmv__icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
+            <div className="vmv-card vmv-card--wide">
+              <div className="vmv-card__icon"><Shield size={24} /></div>
               <h3>Core Values</h3>
-              <div className="landing-vmv__tags">
-                <span>Technical Excellence</span>
-                <span>Ethics &amp; Integrity</span>
-                <span>Innovation &amp; Creativity</span>
-                <span>Collaboration &amp; Teamwork</span>
-                <span>Lifelong Learning</span>
-                <span>Social Responsibility</span>
-                <span>Leadership</span>
+              <div className="vmv-card__tags">
+                {['Technical Excellence', 'Ethics & Integrity', 'Innovation & Creativity', 'Collaboration & Teamwork', 'Lifelong Learning', 'Social Responsibility', 'Leadership'].map((v) => (
+                  <span key={v}>{v}</span>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="landing-section landing-features">
+      {/* ── How It Works ── */}
+      <AnimatedSection className="landing-section landing-how" id="how-it-works">
         <div className="landing-section__inner">
-          <h2 className="landing-section__title">How It Works</h2>
-          <div className="landing-features__grid">
-            <div className="landing-feature-card">
-              <div className="landing-feature-card__num">01</div>
-              <h3>Submit Feedback</h3>
-              <p>Students can anonymously submit feedback on courses and instructors after each class session.</p>
-            </div>
-            <div className="landing-feature-card">
-              <div className="landing-feature-card__num">02</div>
-              <h3>Track Progress</h3>
-              <p>Students can view their feedback history across all subjects and stay updated on submission deadlines.</p>
-            </div>
-            <div className="landing-feature-card">
-              <div className="landing-feature-card__num">03</div>
-              <h3>Admin Dashboard</h3>
-              <p>Only admin can view aggregated feedback, track submission rates, and export reports.</p>
-            </div>
-            <div className="landing-feature-card">
-              <div className="landing-feature-card__num">04</div>
-              <h3>Anonymous Feedback</h3>
-              <p>Anyone can submit anonymous feedback without logging in. Select a subject, optionally name the faculty, and share your thoughts.</p>
-            </div>
+          <SectionTitle>How It Works</SectionTitle>
+          <div className="how-flow">
+            <HowItWorksStep num={1} icon={MessageSquare} title="Submit Feedback" desc="Students can anonymously submit feedback on courses and instructors after each class session." />
+            <HowItWorksStep num={2} icon={BarChart3} title="Track Progress" desc="Students can view their feedback history across all subjects and stay updated on submission deadlines." />
+            <HowItWorksStep num={3} icon={Users} title="Admin Dashboard" desc="Administrators can view aggregated feedback, track submission rates, and export reports." />
+            <HowItWorksStep num={4} icon={ShieldCheck} title="Anonymous Channel" desc="Anyone can submit anonymous feedback without logging in. No identity is collected." isLast />
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="landing-section landing-stats">
+      {/* ── Stats ── */}
+      <AnimatedSection className="landing-section landing-stats">
         <div className="landing-stats__bg" />
         <div className="landing-section__inner">
           <div className="landing-stats__grid">
-            <div className="landing-stat">
-              <span className="landing-stat__num">3+</span>
-              <span className="landing-stat__label">Academic Sections</span>
-            </div>
-            <div className="landing-stat">
-              <span className="landing-stat__num">6+</span>
-              <span className="landing-stat__label">Subjects per Sem</span>
-            </div>
-            <div className="landing-stat">
-              <span className="landing-stat__num">100%</span>
-              <span className="landing-stat__label">Digital Workflow</span>
-            </div>
-            <div className="landing-stat">
-              <span className="landing-stat__num">24/7</span>
-              <span className="landing-stat__label">Platform Access</span>
-            </div>
+            <StatItem icon={Users} num={3} suffix="+" label="Academic Sections" decimals={0} />
+            <StatItem icon={BookOpen} num={6} suffix="+" label="Subjects per Sem" decimals={0} />
+            <StatItem icon={ShieldCheck} num={100} suffix="%" label="Digital Workflow" decimals={0} />
+            <StatItem icon={Clock} num={24} suffix="/7" label="Platform Access" decimals={0} />
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section id="faq" className="landing-section landing-faq">
+      {/* ── FAQ ── */}
+      <AnimatedSection className="landing-section landing-faq" id="faq">
         <div className="landing-section__inner">
-          <h2 className="landing-section__title">Frequently Asked Questions</h2>
+          <SectionTitle>Frequently Asked Questions</SectionTitle>
           <div className="landing-faq__list">
             {FAQ_ITEMS.map((item, i) => (
-              <div key={i} className={`landing-faq__item ${openFaq === i ? 'landing-faq__item--open' : ''}`}>
+              <div key={i} className={`faq-item ${openFaq === i ? 'faq-item--open' : ''}`}>
                 <button
-                  className="landing-faq__question"
-                  onClick={() => toggleFaq(i)}
+                  className="faq-item__question"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                   aria-controls={`faq-answer-${i}`}
                 >
                   <span>{item.q}</span>
-                  <svg className="landing-faq__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <line x1="12" y1="5" x2="12" y2="19" className="landing-faq__icon-v" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
+                  <ChevronDown size={18} className="faq-item__icon" />
                 </button>
-                <div
+                <motion.div
                   id={`faq-answer-${i}`}
-                  className="landing-faq__answer"
+                  className="faq-item__answer"
                   role="region"
+                  initial={false}
+                  animate={{
+                    height: openFaq === i ? 'auto' : 0,
+                    opacity: openFaq === i ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
                   <p>{item.a}</p>
-                </div>
+                </motion.div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      <section className="landing-section landing-cta">
+      {/* ── CTA ── */}
+      <AnimatedSection className="landing-section landing-cta">
+        <div className="landing-cta__bg" />
         <div className="landing-section__inner">
           <h2>Ready to share your feedback?</h2>
           <p>Sign in with your student credentials or submit anonymous feedback without logging in.</p>
           <div className="landing-cta__actions">
-            <button className="landing-hero__btn landing-hero__btn--primary" onClick={() => navigate('/login')}>
-              Sign In Now
-            </button>
-            <button className="landing-hero__btn landing-hero__btn--outline" onClick={() => navigate('/feedback/public')}>
-              Give Anonymous Feedback
-            </button>
+            <Button variant="primary" size="lg" onClick={() => navigate('/login')}>
+              Sign In Now <ArrowRight size={18} />
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate('/feedback/public')}>
+              <ShieldCheck size={18} /> Give Anonymous Feedback
+            </Button>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       <Footer />
     </main>

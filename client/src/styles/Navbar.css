@@ -1,100 +1,243 @@
-/*
-  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
-  Copyright (C) 2026 Pawan Simha R
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-/* Navbar */
+/* ── Shared Navbar ── */
 .navbar {
   position: fixed;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  max-width: 880px;
-  width: calc(100% - 24px);
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--primary);
-  padding: 0 18px;
+  transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar--solid {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.navbar--solid.navbar--scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.navbar--landing {
+  background: transparent;
+}
+.navbar--landing.navbar--scrolled {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.navbar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: 64px;
 }
 
-.nav-brand-group {
+.navbar__brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  color: var(--primary);
   text-decoration: none;
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: -0.3px;
 }
 
-.nav-logo {
-  height: 32px;
+.navbar__logo {
+  height: 40px;
   width: auto;
   display: block;
 }
 
-.nav-links {
+.navbar__right {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
 }
 
-.nav-links a {
-  color: var(--primary);
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar__links li { margin: 0; }
+
+.navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: color var(--transition);
-  padding: 6px 0;
+  color: var(--gray-700);
+  transition: color 0.2s;
+  position: relative;
+  padding: 4px 0;
+  white-space: nowrap;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link {
+  color: rgba(255,255,255,0.85);
+}
+.navbar__link:hover {
+  color: var(--primary);
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link:hover {
+  color: white;
+}
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.25s;
+  border-radius: 2px;
+}
+.navbar__link:hover::after,
+.navbar__link--active::after {
+  width: 100%;
+}
+.navbar__link--active {
+  color: var(--primary);
+  font-weight: 600;
 }
 
-.nav-links a:hover {
-  color: var(--primary-light);
+.navbar__actions {
+  display: flex;
+  align-items: center;
 }
 
-.btn-logout {
-  flex-shrink: 0;
+.navbar__cta {
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  padding: 8px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.navbar__cta:hover {
+  background: var(--primary-light);
+  transform: scale(1.04);
+}
+
+.navbar__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: var(--accent);
   color: white;
   border: none;
-  padding: 7px 24px;
-  border-radius: var(--radius-full);
+  padding: 7px 18px;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  transition: background var(--transition), transform var(--transition);
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
 }
-
-.btn-logout:hover {
+.navbar__logout:hover {
   background: var(--accent-hover);
   transform: scale(1.04);
 }
 
+/* Toggle */
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-700);
+  padding: 4px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__toggle {
+  color: white;
+}
+
+/* Drawer */
+.navbar__drawer {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  padding: 16px 24px 24px;
+}
+.navbar__drawer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.navbar__drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  transition: background 0.2s, color 0.2s;
+}
+.navbar__drawer-link:hover,
+.navbar__drawer-link--active {
+  background: var(--gray-50);
+  color: var(--primary);
+}
+.navbar__drawer-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-100);
+}
+.navbar__drawer-cta {
+  display: block;
+  text-align: center;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.navbar__drawer-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .navbar__links { display: none; }
+  .navbar__actions { display: none; }
+  .navbar__toggle { display: flex; }
+  .navbar__inner { padding: 10px 16px; }
+  .navbar__logo { height: 32px; }
+}

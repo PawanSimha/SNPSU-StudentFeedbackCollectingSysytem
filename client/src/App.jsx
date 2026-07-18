@@ -16,12 +16,19 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
+import ToastProvider from './components/ui/Toast';
+import './components/ui/ui.css';
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false, retry: 1 } },
+});
 
 const Landing = lazy(() => import('./components/Landing'));
 const Login = lazy(() => import('./components/Login'));
@@ -63,9 +70,11 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
-const ProtectedLayout = () => (
-  <>
-    <Navbar />
+const ProtectedLayout = () => {
+  const loc = useLocation();
+  return (
+    <>
+    <Navbar variant="solid" key={loc.pathname} />
     <main className="container" id="main-content">
       <Suspense fallback={<Loading />}>
         <Outlet />
@@ -73,42 +82,46 @@ const ProtectedLayout = () => (
     </main>
     <Footer />
   </>
-);
+  );
+};
 
 const App = () => (
-  <AuthProvider>
-    <ErrorBoundary>
-      <a href="#main-content" className="skip-link">Skip to content</a>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          {/* Public pages: no navbar/footer */}
-          <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/feedback/public" element={<PublicFeedback />} />
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <ErrorBoundary>
+        <a href="#main-content" className="skip-link">Skip to content</a>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            {/* Public pages */}
+            <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/feedback/public" element={<PublicFeedback />} />
 
-          {/* Authenticated pages: with navbar/footer */}
-          <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/feedback" element={<FeedbackForm />} />
-            <Route path="/my-feedback" element={<MyFeedback />} />
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminClassSelect />} />
-              <Route path="/admin/:classGroup/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/allotments" element={<AdminAllotments />} />
-              <Route path="/admin/database" element={<AdminDbOverview />} />
-              <Route path="/admin/anonymous" element={<AdminAnonymous />} />
-              <Route path="/admin/:classGroup" element={<AdminStudents />} />
-              <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
+            {/* Authenticated pages: with navbar/footer */}
+            <Route element={<ProtectedRoute><ProtectedLayout /></ProtectedRoute>}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/feedback" element={<FeedbackForm />} />
+              <Route path="/my-feedback" element={<MyFeedback />} />
+              <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<AdminClassSelect />} />
+                <Route path="/admin/:classGroup/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/allotments" element={<AdminAllotments />} />
+                <Route path="/admin/database" element={<AdminDbOverview />} />
+                <Route path="/admin/anonymous" element={<AdminAnonymous />} />
+                <Route path="/admin/:classGroup" element={<AdminStudents />} />
+                <Route path="/admin/:classGroup/student/:studentId" element={<AdminStudentFeedback />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* 404: no navbar/footer */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-      <CookieConsent />
-    </ErrorBoundary>
-  </AuthProvider>
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+        <CookieConsent />
+        <ToastProvider />
+      </ErrorBoundary>
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export default App;
