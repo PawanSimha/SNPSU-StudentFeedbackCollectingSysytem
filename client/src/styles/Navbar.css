@@ -51,6 +51,7 @@
   align-items: center;
   justify-content: space-between;
   height: 64px;
+  transition: height 0.3s ease, padding 0.3s ease;
 }
 
 .navbar__brand {
@@ -63,6 +64,7 @@
   height: 40px;
   width: auto;
   display: block;
+  transition: height 0.3s ease;
 }
 
 .navbar__right {
@@ -89,7 +91,7 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--gray-700);
-  transition: color 0.2s;
+  transition: color 0.2s, font-size 0.3s ease;
   position: relative;
   padding: 4px 0;
   white-space: nowrap;
@@ -136,7 +138,7 @@
   border-radius: 999px;
   font-weight: 600;
   font-size: 0.82rem;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.2s, padding 0.3s ease, font-size 0.3s ease;
   white-space: nowrap;
 }
 .navbar--landing:not(.navbar--scrolled) .navbar__cta {
