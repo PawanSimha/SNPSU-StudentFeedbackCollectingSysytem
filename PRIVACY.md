@@ -16,10 +16,10 @@ SOAS Feedback Collector is an open-source project operated under the authority o
 ### 2.2 Information collected automatically
 - **No HTTP cookies:** This application does not set or read HTTP cookies.
 - **Session storage:** JWT access tokens are stored in `sessionStorage` (cleared on tab close).
-- **Local storage:** JWT refresh tokens and feedback draft state (lock status, comment drafts) are stored in `localStorage` for session continuity. A `cookie_consent` key records your banner preference (accepted/declined). No tracking, analytics, or advertising data is stored.
+- **Local storage:** JWT refresh tokens, feedback draft state (`fb_drafts`), lock status (`fb_locked`), cookie consent preference (`cookie_consent`), and anonymized page-view events (`analytics_events`) are stored in `localStorage` for session continuity and app functionality. No tracking, advertising, or third-party analytics data is stored.
 
 ### 2.3 No third-party analytics
-This application does **not** use Google Analytics, Plausible, or any third-party analytics service. No usage data is transmitted to external analytics providers. A built-in page-view tracker stores anonymized data locally in your browser only.
+This application does **not** use Google Analytics, Plausible, or any third-party analytics service. No usage data is transmitted to external analytics providers. A built-in page-view tracker stores anonymized data locally in your browser only, subject to your cookie consent preference.
 
 ## 3. How We Use Your Data
 
@@ -62,7 +62,7 @@ or the project maintainer via the GitHub profile at [https://github.com/PawanSim
 
 ## 8. Third-Party Services
 
-- **Google Fonts:** The application loads the Inter and Playfair Display font families from Google Fonts. Google's [privacy policy](https://policies.google.com/privacy) applies to font requests.
+- **Google Fonts:** The application loads the Inter and Lora font families from Google Fonts. Google's [privacy policy](https://policies.google.com/privacy) applies to font requests.
 - **Hosting:** When deployed, the platform (Vercel) processes requests and may retain server logs per their respective policies.
 
 ## 9. Changes to This Policy

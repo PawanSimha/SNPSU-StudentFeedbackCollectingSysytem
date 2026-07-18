@@ -61,9 +61,9 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Branded 404 Page** | Custom NotFound.jsx with CSS compass illustration, brand logo, two recovery CTAs, responsive/motion-reduced; renders outside main layout | `client/src/components/NotFound.jsx` |
 | **JWT Authentication** | Email + USN + password login; bcrypt hashing; 30-day token in sessionStorage; 7-day refresh token in localStorage; refresh endpoint at `POST /api/auth/refresh` | `server/routes/auth.js` |
 | **Allotment Gating** | Admin opens/closes feedback windows per class; students blocked when closed; opening-only message validation (15-50 chars) | `server/routes/allotment.js` |
-| **Per-Subject Feedback** | Comments (50-300 chars); upsert prevents duplicates; compound unique index `{ student, subject }` | `server/routes/feedback.js`, `server/models/Feedback.js` |
+| **Per-Subject Feedback** | Comments (50-300 chars); upsert prevents duplicate submissions; compound unique index `{ student, subject }` | `server/routes/feedback.js`, `server/models/Feedback.js` |
 | **Public Anonymous Feedback** | No auth required; subject + optional faculty name + comments (100-300 chars); rate-limited (10/15min); Origin header validation for CSRF defense | `server/routes/public.js` |
-| **Admin DB Overview** | Unified dashboard: summary cards, per-class student lists, per-subject progress bars, allotments; 5-tab layout (Dashboard, Students, Feedbacks, Allotments, Anonymous) with search + export | `server/routes/admin.js`, `client/src/components/AdminDbOverview.jsx` |
+| **Admin DB Overview** | Enterprise-grade database dashboard: sticky tabs (Dashboard/Students/Feedbacks/Allotments/Anonymous), 6 stat cards with CountUp, global search with `/` kbd shortcut, Recharts bar+pie charts, class cards with expandable student lists, subject analytics with progress bars, allotment timeline cards, activity feed, system health widget, sortable tables per tab, skeleton loading, CSV/Word export | `server/routes/admin.js`, `client/src/components/AdminDbOverview.jsx` |
 | **Admin Coverage Tracking** | Per-subject view of which students gave/did not give feedback within a class; gave/not-given student lists with percentages | `server/routes/admin.js` |
 | **Report Exports** | CSV (.csv, BOM-prefixed for Excel) and Word (.doc, styled HTML table) download utilities via Blob URLs | `client/src/utils/download.js` |
 | **Cookie Consent Banner** | Accessible dialog with Accept/Decline, localStorage persistence, links to PRIVACY.md | `client/src/components/CookieConsent.jsx` |
@@ -71,16 +71,17 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Sitemap.xml** | 4 URLs anchored to production domain | `client/public/sitemap.xml` |
 | **Privacy Policy** | GDPR/CCPA coverage, data collection, retention, contact info | `PRIVACY.md` |
 | **Swagger API Documentation** | Interactive OpenAPI 3.0 docs at `/api/docs`; documents 16 of 20 endpoints with request/response schemas; JWT bearer auth scheme | `server/config/swagger.js` |
-| **CSS Variable Refactor** | All hardcoded hex colors across all 16 per-component CSS files replaced with `--gray-*`, `--primary`, `--accent`, `--success`, `--danger` CSS custom properties | 16 cleaned files; `index.css` focus-visible outlines fixed; build passes 0 errors |
+| **CSS Variable Refactor** | All hardcoded hex colors across all 17 per-component CSS files replaced with `--gray-*`, `--primary`, `--accent`, `--success`, `--danger` CSS custom properties | All 17 CSS files; `index.css` focus-visible outlines, autofill overrides, scrollbar styling; build passes 0 errors |
 
 ### P1: Should Have (Shipped)
 
 | Feature | Implementation | Evidence |
 |---|---|---|
-| **Student Dashboard** | Welcome view with active session status and start-feedback button | `client/src/components/Dashboard.jsx` |
+| **Student Dashboard** | Welcome view with active session status card, stats grid (subjects/completed/locked), quick actions, guided stepper, guidelines section, activity feed, skeleton loading, framer-motion entrance | `client/src/components/Dashboard.jsx` |
 | **Feedback History** | Feedback table with subject, comments, and date columns | `client/src/components/MyFeedback.jsx` |
-| **Comment-Only Feedback** | Per-subject comments (50-300 chars) with draft auto-save to `localStorage` via `fb_drafts` | `client/src/components/FeedbackForm.jsx` |
-| **Class Selection & Drill-Down** | Class list -> student grid -> individual student feedback; fetched dynamically from `/api/admin/classes` | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
+| **Comment-Only Feedback** | Per-subject comments (50-300 chars) with draft auto-save to `localStorage` via `fb_drafts`, lock/unlock per subject, prev/next navigation, confirmation popup before final submit | `client/src/components/FeedbackForm.jsx` |
+| **Class Selection & Drill-Down** | Admin class list (AdminClassSelect — 8 stat cards, 6 filter chips, PieChart + BarChart, activity panel, system health widget) → student grid (AdminStudents — search, coverage tabs, CSV/Word export) → individual student feedback (AdminStudentFeedback — subject filter, stats cards, feedback list) | `AdminClassSelect.jsx`, `AdminStudents.jsx`, `AdminStudentFeedback.jsx` |
+| **Admin Session Management** | AdminAllotments page: 6 summary cards, search + 6 filter chips, session cards with message textarea + template dropdown + character counter (25/50), progress bar, confirmation dialog (replaces `confirm()`), open/close/reopen with Sonner toasts, bulk Open All/Close All, Recharts pie + bar charts, activity panel, skeleton loading | `client/src/components/AdminAllotments.jsx` |
 | **Admin Anonymous View** | Standalone page showing all public submissions with search by subject/faculty/comments | `AdminAnonymous.jsx` (standalone); `AdminDbOverview.jsx` AnonymousView tab (with CSV + Word export) |
 | **Session Allocation Message** | Admin sets custom message (15-50 chars) when opening; opening-only validation | `server/routes/allotment.js` |
 | **Rate Limiting** | Public: 10 req/15min (env-configurable via `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS`); Login: 5 req/15min (`LOGIN_RATE_LIMIT_MAX`) | `server/routes/public.js`, `server/routes/auth.js` |
@@ -98,7 +99,6 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Faculty Role** | Read-only aggregated stats view without exposing student identity | New `role: 'faculty'` in Student model; filtered query layer |
 | **Auto-Scheduled Allotments** | Pre-configure feedback windows on a calendar | Extend Allotment model with `startDate`, `endDate`; background scheduler |
 
-
 ---
 
 ## AI & Technical Constraints
@@ -112,7 +112,6 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Authenticated Comment Length** | 50-300 characters (both server and client validate) | `server/routes/feedback.js`, `client/src/components/FeedbackForm.jsx` |
 | **Anonymous Comment Length** | 100-300 characters | `server/routes/public.js` |
 | **Allotment Message Length** | 15-50 characters (opening only; no validation on close) | `server/routes/allotment.js` |
-| **Comment Length** | 50-300 characters (authenticated), 100-300 characters (anonymous) | `server/routes/feedback.js`, `server/routes/public.js`, `client/src/components/FeedbackForm.jsx` |
 | **Subject Whitelist** | Validated against `SUBJECTS` constant: DevOps, Research Methodology & IPR, Java and Java Frameworks, Agile, MERN, DataScience | `server/config/subjects.js` |
 | **Rate Limiting** | Public: 10 req/15min; Login: 5 req/15min; both env-configurable | `server/routes/public.js`, `server/routes/auth.js` |
 | **Origin Validation** | CSRF defense on public POST; compares `req.headers.origin` against `CORS_ORIGIN` env | `server/routes/public.js` |
@@ -131,7 +130,9 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, canonical URL, author meta | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>`; class component (required for `getDerivedStateFromError`) | `client/src/components/ErrorBoundary.jsx` |
 | **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
-| **Environment Variables** | 13 configurable vars: `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
+| **Environment Variables** | 14 configurable vars: `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
+| **Animation Libraries** | Framer Motion (entrance/exit animations, `AnimatePresence`), CountUp (animated stat numbers), Sonner (toast notifications), Recharts (PieChart, BarChart for admin analytics) | `client/package.json` |
+| **Form Validation (Client)** | React Hook Form + Zod (`@hookform/resolvers`); `onBlur` mode with per-field dirty/error/valid visual states | `client/src/components/Login.jsx` |
 
 ---
 

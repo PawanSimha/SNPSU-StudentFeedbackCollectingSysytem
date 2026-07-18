@@ -435,7 +435,10 @@
 .db-search-bar .input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1), var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
+}
+.db-search-bar .input:focus-visible {
+  outline: none;
 }
 
 /* ─── Table Utilities ─── */

@@ -32,7 +32,7 @@
 }
 .btn-ui--primary:hover:not(:disabled) {
   background: var(--primary-light);
-  box-shadow: 0 4px 16px rgba(0,40,85,0.2);
+  box-shadow: 0 4px 16px rgba(26,35,126,0.2);
 }
 
 .btn-ui--outline {
@@ -101,7 +101,7 @@
   letter-spacing: 0.3px;
 }
 .badge-ui--default { background: var(--gray-100); color: var(--gray-600); }
-.badge-ui--primary { background: rgba(0,40,85,0.08); color: var(--primary); }
+.badge-ui--primary { background: rgba(26,35,126,0.08); color: var(--primary); }
 .badge-ui--success { background: var(--success-light); color: var(--success); }
 .badge-ui--warning { background: rgba(198,158,102,0.15); color: #8B6914; }
 
@@ -123,7 +123,7 @@
 }
 .input-ui__field:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0,40,85,0.08);
+  box-shadow: 0 0 0 3px rgba(26,35,126,0.08);
 }
 .input-ui__field::placeholder { color: transparent; }
 

@@ -16,9 +16,9 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 :root {
-  --primary: #002855;
-  --primary-light: #003D7A;
-  --primary-dark: #00152B;
+  --primary: #1a237e;
+  --primary-light: #283593;
+  --primary-dark: #0d1442;
   --accent: #C69E66;
   --accent-hover: #B0884D;
   --success: #2e7d32;
@@ -89,7 +89,7 @@ body {
 .form-group input,
 .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; transition: border-color var(--transition), box-shadow var(--transition); background: white; }
 .form-group input:focus,
-.form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,40,85,0.08); }
+.form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,35,126,0.08); }
 
 /* Alerts */
 .alert { padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 16px; font-size: 0.9rem; }

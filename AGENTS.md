@@ -4,9 +4,9 @@
 
 ```bash
 # Install dependencies (three separate npm installs required)
-npm install                               # root (concurrently, husky, lint-staged)
+npm install                               # root (concurrently, husky, lint-staged, prettier)
 cd server && npm install                  # Express, Mongoose, JWT, pino, pm2, swagger
-cd client && npm install                  # React, Vite, Axios, react-router-dom
+cd client && npm install                  # React, Vite, Axios, react-router-dom, framer-motion
 
 # Seed DB (A/B/C section + admin)
 npm run seed       # A sec - 50 students, pw: MCAA@123
@@ -18,7 +18,7 @@ npm run seed-admin # admin@gmail.com / iamadmin
 npm run dev        # Backend :5000 + Frontend :5173
 
 # Individual
-npm run server     # Node on :5000 (from root)
+npm run server     # Node on :5000 (from root, no nodemon)
 cd client && npm run dev   # Vite on :5173
 ```
 
@@ -36,12 +36,12 @@ cd server && npm run prod    # PM2 cluster mode
 - **CommonJS on server** (`require`), **ES Modules on client** (`import`). `type: "module"` only in `client/package.json`.
 - **`server/app.js`** exports Express app; **`server/server.js`** starts it. Tests import `app.js` exclusively.
 - **Vite proxy** in `vite.config.js` forwards `/api` → `localhost:5000` in dev. No CORS config needed for dev.
-- **CSS custom properties** defined in `client/src/index.css`: `--primary`, `--gray-50`–`--gray-800`, `--success`, `--danger`, `--accent`. Use these instead of hardcoded hex. 16 per-component CSS files in `client/src/styles/`.
+- **CSS custom properties** defined in `client/src/index.css`: `--primary: #1a237e`, `--gray-50`–`--gray-800`, `--success`, `--danger`, `--accent`, `--font-heading: Lora`, `--font-body: Inter`, `--radius-sm: 8px`, `--radius-md: 12px`, `--radius-lg: 14px`, `--radius-xl: 20px`, `--radius-full: 999px`, `--transition: 0.2s ease`. Use these instead of hardcoded values. 17 per-component CSS files in `client/src/styles/`.
 - **No TypeScript, no PropTypes.** Backend validates at route level (subject whitelist, comment length).
 - **Two feedback channels**: authenticated (JWT + allotment-gated, upsert on {student + subject} compound index) vs public anonymous (rate-limited 10/15min, no `student` field, 100-300 chars always).
-- **Login requires all three**: `email` (lowercased), `usn` (uppercased), `password` - bcrypt compared.
-- **JWT**: 30d in `sessionStorage`, refresh token 7d in `localStorage` via `tryRefresh()`.
-- **Three class groups** (hardcoded string match): `"MCA, 1st Year, 2nd Sem, A sec"` / B sec / C sec. Exact spelling everywhere.
+- **Login requires all three**: `email` (lowercased), `usn` (uppercased), `password` - bcrypt compared. Login form uses React Hook Form + Zod for client-side validation (`onBlur` mode).
+- **JWT**: 30d in `sessionStorage`, refresh token 7d in `localStorage` via `tryRefresh()`. No axios 401 interceptor — tokens must be refreshed at app init.
+- **Three class groups** (hardcoded string match): `"MCA, 1st Year, 2nd Sem, A sec"` / B sec / C sec. Exact spelling everywhere. No schedule tabs in AdminAllotments (no backend support).
 - **Triple admin guard**: client-side `AdminRoute` redirect → server-side `protect` middleware → explicit `role !== 'admin'` check.
 - **Rate limits**: login 5/15min, public POST 10/15min. Request body capped at 10kb.
 - **Pagination**: `?page=1&limit=50` on admin list endpoints. Returns `{data, total, page, pages}`.
@@ -49,12 +49,15 @@ cd server && npm run prod    # PM2 cluster mode
 ## Code conventions
 
 - **GPLv3 header** required in every source file. Template: project name, copyright year, author name, license disclaimer.
-- **BEM naming** in ~6 CSS files (CookieConsent, Footer, Landing, NotFound, PublicFeedback, Login). Others use flat classes.
+- **BEM naming** in ~11 CSS files (CookieConsent, Footer, Landing, NotFound, PublicFeedback, Login, AdminAllotments, AdminClassSelect, AdminDbOverview, AdminTable, Navbar). Older files (AdminDashboard, AdminStudentFeedback, AdminStudents, FeedbackForm, MyFeedback) use flat classes.
+- **Enterprise design system**: 8px spacing grid, 10–16px border-radii, Lucide React icons, Framer Motion animations (entrance/exit variants), Sonner toast notifications, Recharts (PieChart, BarChart), CountUp counters for stat cards.
 - **`<main role="main">`** on public pages (Landing, Login, PublicFeedback, NotFound). Authenticated pages get `<main className="container" id="main-content">`.
 - **FAQ accordion** in Landing.jsx uses React state toggle with CSS max-height/opacity animation. `hidden` attribute never used - content stays in DOM for crawlers.
 - **`.lean()`** on all read-only Mongoose queries.
 - **`next(error)`** for async error delegation; **`errorHandler.js`** middleware logs via pino.
-- **7 admin components** lazy-loaded via `React.lazy` + `Suspense`.
+- **7 admin components** lazy-loaded via `React.lazy` + `Suspense`: AdminClassSelect, AdminDashboard, AdminStudents, AdminStudentFeedback, AdminAllotments, AdminDbOverview, AdminAnonymous.
+- **React 19 lint rule**: `react-hooks/set-state-in-effect` forbids `setState` calls in `useEffect` body. All data fetching uses `.then()` callbacks outside the effect function.
+- **Focus styling**: Single border-color change on focus (`1.5px → var(--primary)`). No `box-shadow: 0 0 0 3px` rings. Inputs override global `input:focus-visible` with `outline: none` since parent container handles focus.
 
 ## Context & entry points
 
@@ -66,9 +69,9 @@ cd server && npm run prod    # PM2 cluster mode
 
 ## Environment (`server/.env`)
 
-Key vars: `MONGO_URI`, `JWT_SECRET`, `CORS_ORIGIN`, `ADMIN_EMAIL`/`ADMIN_PASSWORD` (for seed). See `server/.env.example`.
+Key vars: `MONGO_URI`, `JWT_SECRET`, `CORS_ORIGIN`, `ADMIN_EMAIL`/`ADMIN_PASSWORD` (for seed). See `server/.env.example` (14 vars total).
 
 ## CI / pre-commit
 
 - GitHub Actions: test (server jest), lint (client eslint), build (client vite) on push/PR to `main`.
-- Husky + lint-staged runs ESLint + Prettier pre-commit. Bypass with `git commit --no-verify`.
+- Husky + lint-staged runs ESLint + Prettier pre-commit. Bypass with `git commit --no-verify`. Server `.js` files not linted (ESLint config lives in `client/` only).

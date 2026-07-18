@@ -38,7 +38,7 @@ The **SOAS Feedback Collector** is a full-stack MERN single-page application tha
 - 🔐 **Authenticated channel** - JWT-gated, session-allotment-gated per class group, identity-tracked for coverage reporting
 - 🕵️ **Anonymous channel** - No authentication, no identity collected, rate-limited to prevent spam (10 req / 15 min)
 
-Administrators open/close feedback windows per class, track participation coverage per subject with gave/not-given student lists, drill into individual student feedback, and export aggregated reports in CSV or Word format, all in real time.
+Administrators open/close feedback windows per class, track participation coverage per subject with gave/not-given student lists, drill into individual student feedback, review the full database in a 5-tab enterprise dashboard, and export aggregated reports in CSV or Word format, all in real time.
 
 ---
 
@@ -46,28 +46,30 @@ Administrators open/close feedback windows per class, track participation covera
 
 ### 👤 User Features
 - **Sequential Feedback Form** - Step-by-step multi-subject flow with lock/unlock, auto-saved drafts, and batch submission
-- **Student Dashboard** - View active feedback allotments and navigate to the feedback form
+- **Student Dashboard** - View active feedback allotments, session status, progress stats, and guided stepper
 - **Feedback History** - Browse all previously submitted feedback across subjects
 - **Public Anonymous Feedback** - Submit feedback without logging in (subject + optional faculty name + 100–300 char comments)
 - **Inline Validation** - Real-time validation on comments with clear error messages
 
 ### 🔧 Admin Features
-- **Class Management** - View all class groups (fetched dynamically from API), drill into student-level details
-- **Allotment System** - Open/close feedback windows per class group with custom messages (15–50 chars)
-- **Database Overview** - Unified dashboard with summary cards, per-class student lists, per-subject progress bars, and allotment status
-- **Coverage Tracking** - Per-subject view of which students gave/did not give feedback (gave/not-given lists)
-- **Anonymous Feedbacks** - Review, search, and export all public submissions
-- **Report Exports** - Download CSV (Excel) or Word `.doc` files with styled HTML tables
+- **Class Management** - Enterprise dashboard: 8 stat cards, search + 6 filter chips, Recharts pie/bar charts, activity panel, system health widget
+- **Session Management** - Open/close feedback windows per class with custom messages, bulk actions, progress tracking, Recharts analytics
+- **Database Overview** - 5-tab unified dashboard (Dashboard, Students, Feedbacks, Allotments, Anonymous) with global search, stat cards, class cards with expandable student lists, subject analytics with progress bars, allotment timeline cards, activity feed, and system health indicators
+- **Coverage Tracking** - Per-subject view of which students gave/did not give feedback (gave/not-given lists with percentages)
+- **Anonymous Feedbacks** - Review, search, and export all public submissions (standalone page + DB Overview tab)
+- **Report Exports** - Download CSV (Excel, BOM-prefixed) or Word `.doc` files with styled HTML tables
 - **Server-side Pagination** - Paginated tables on feedback, student, and anonymous list endpoints
 - **AdminRoute Guard** - Non-admin users automatically redirected from `/admin/*`
 
 ### ♿ Accessibility & UX
 - Skip-to-content link for keyboard navigation
 - `role="alert"` regions for screen reader announcements
+- Framer Motion entrance animations with `prefers-reduced-motion` support
 - Descriptive empty states on all list views (no bare tables)
 - All images use `loading="lazy"` for deferred loading
-- 6 admin components lazy-loaded via `React.lazy` + `Suspense` (faster initial bundle)
+- 7 admin components lazy-loaded via `React.lazy` + `Suspense` (faster initial bundle)
 - Feedback drafts saved to localStorage (survives page refreshes)
+- Sonner toast notifications for admin actions (open, close, error, success)
 - Social media icons (YouTube, Instagram, Facebook, LinkedIn, WhatsApp) in footer
 
 ### 🛡️ DevOps & Security
@@ -95,12 +97,12 @@ Browser                          Express API                      MongoDB
 │  Vite 8  │     JWT tokens      └──────────────┘                 └──────────┘
 └─────────┘                           │
   │                                   │
-  ├─ Landing (/)                      ├─ /api/auth     (JWT login + refresh)
-  ├─ Login (/login)                   ├─ /api/feedback (authenticated CRUD)
-  ├─ Dashboard (/dashboard)           ├─ /api/admin    (admin analytics)
-  ├─ Admin Panel (/admin/*)           ├─ /api/allotments (open/close)
-  ├─ PublicFeedback (/feedback/public)  ├─ /api/public  (anonymous)
-  ├─ API Docs (/api/docs)             ├─ /api/docs     (Swagger UI)
+  ├─ Landing (/)                      ├─ /api/auth        (JWT login + refresh)
+  ├─ Login (/login)                   ├─ /api/feedback    (authenticated CRUD)
+  ├─ Dashboard (/dashboard)           ├─ /api/admin       (admin analytics)
+  ├─ Admin Panel (/admin/*)           ├─ /api/allotments  (open/close)
+  ├─ PublicFeedback (/feedback/public)  ├─ /api/public     (anonymous)
+  ├─ API Docs (/api/docs)             ├─ /api/docs        (Swagger UI)
   └─ 404 (*)                          (no backend)
 ```
 
@@ -112,8 +114,18 @@ Browser                          Express API                      MongoDB
 |---|---|---|
 | **Frontend** | React | ^19.2.6 |
 | | React Router | ^7.17.0 |
-| | Vite (build tool + dev proxy) | ^8.0.12 |
+| | Vite (build tool + dev proxy) | ^8.0.16 |
 | | Axios (HTTP client) | ^1.18.0 |
+| | Framer Motion (animations) | ^12.42.2 |
+| | React Hook Form + Zod (form validation) | ^7.81.0 / ^4.4.3 |
+| | Recharts (charts) | ^3.9.2 |
+| | Sonner (toast notifications) | ^2.0.7 |
+| | react-countup (animated counters) | ^6.5.3 |
+| | react-helmet-async (SEO meta) | ^3.0.0 |
+| | react-intersection-observer (scroll detection) | ^10.1.0 |
+| | react-loading-skeleton (skeleton UI) | ^3.5.0 |
+| | @tanstack/react-query (data fetching) | ^5.101.2 |
+| | Lucide React (icons) | ^1.25.0 |
 | **Backend** | Node.js / Express | ^4.21.0 |
 | | Mongoose (ODM) | ^8.6.0 |
 | | jsonwebtoken (auth + refresh tokens) | ^9.0.2 |
@@ -126,7 +138,7 @@ Browser                          Express API                      MongoDB
 | **Process** | PM2 (cluster mode, multi-core) | ^7.0.1 |
 | **Database** | MongoDB (via Mongoose) | ^8.6.0 |
 | **Testing** | Jest + Supertest | ^30.4.2 / ^7.2.2 |
-| **Tooling** | ESLint, concurrently, Husky, lint-staged | - |
+| **Tooling** | ESLint, concurrently, Husky, lint-staged, Prettier | - |
 | **CI/CD** | GitHub Actions (3 jobs: test, lint, build) | - |
 
 ---
@@ -158,12 +170,12 @@ mern-feedback-collector/
 │       ├── main.jsx               # Entry point → mounts React app
 │       ├── config/api.js          # Centralized API base URL
 │       ├── context/AuthContext.jsx # JWT + refresh token auth state
-│       ├── styles/                # 16 per-component CSS files
+│       ├── styles/                # 17 per-component CSS files
 │       ├── utils/                 # download.js, analytics.js
-│       └── components/            # 19 React components
+│       └── components/            # 19 React components + ui/ subfolder
 │
 ├── server/                        # Express 4.21 REST API
-│   ├── .env.example               # Documented env vars
+│   ├── .env.example               # Documented env vars (14 vars)
 │   ├── ecosystem.config.js        # PM2 cluster config
 │   ├── app.js                     # Express app factory
 │   ├── server.js                  # Entry point
@@ -203,7 +215,7 @@ PORT=5000
 ### 3. Seed the Database
 
 ```bash
-    npm run seed       # A section - 50 students (pw: MCAA@123)
+npm run seed       # A section - 50 students (pw: MCAA@123)
 npm run seed-b     # B section - 50 students (pw: MCAB@123)
 npm run seed-c     # C section - 49 students (pw: MCAC@123)
 npm run seed-admin # Admin account: admin@gmail.com / iamadmin
@@ -249,7 +261,8 @@ cd client && npm run build   # Static output → client/dist/
 | GET | `/api/feedback/my` | JWT | Student's feedback history |
 | POST | `/api/feedback/submit` | JWT | Submit feedback (upsert, allotment-gated) |
 | GET | `/api/allotments/status` | JWT | Is a session open? |
-| GET/POST | `/api/allotments` | Admin | List / toggle allotments |
+| GET | `/api/allotments` | Admin | List all allotments |
+| POST | `/api/allotments` | Admin | Open/close an allotment |
 | GET | `/api/admin/classes` | Admin | Class groups |
 | GET | `/api/admin/students` | Admin | Students (paginated, filterable) |
 | GET | `/api/admin/feedback` | Admin | All feedbacks (paginated, filterable) |

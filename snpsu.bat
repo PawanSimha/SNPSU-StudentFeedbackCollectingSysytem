@@ -48,9 +48,8 @@ echo.
 cd /d "%~dp0"
 call npm run dev
 
-REM Cleanup after stopping
+REM Cleanup after stopping (Ctrl+C)
 echo.
 echo Stopping services...
-taskkill /f /im node.exe >nul 2>&1
 echo Done! Press any key to close.
 pause >nul

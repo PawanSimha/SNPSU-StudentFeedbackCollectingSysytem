@@ -18,112 +18,162 @@
 import '../styles/Login.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { motion } from 'framer-motion';
+import { Mail, User, Lock, Eye, EyeOff, ArrowLeft, ShieldCheck, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { Mail, User, Lock, Eye, EyeOff } from 'lucide-react';
-import Button from './ui/Button';
+
+const loginSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
+  usn: z.string().min(5, 'USN must be at least 5 characters').max(20, 'USN is too long'),
+  password: z.string().min(4, 'Password must be at least 4 characters'),
+});
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', usn: '', password: '' });
-  const [error, setError] = useState('');
-  const [errors, setErrors] = useState({});
-  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [mounted] = useState(() => true);
-  const [touched, setTouched] = useState({});
+  const [serverError, setServerError] = useState('');
 
-  const validate = (name, value) => {
-    if (!value) return `${name === 'usn' ? 'USN' : name.charAt(0).toUpperCase() + name.slice(1)} is required`;
-    if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) return 'Invalid email format';
-    if (name === 'usn' && value.length < 5) return 'USN is too short';
-    if (name === 'password' && value.length < 4) return 'Password must be at least 4 characters';
-    return '';
-  };
+  const { register, handleSubmit, formState: { errors, isSubmitting, dirtyFields } } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
+    defaultValues: { email: '', usn: '', password: '' },
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-    if (touched[name]) setErrors({ ...errors, [name]: validate(name, value) });
-  };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    setTouched({ ...touched, [name]: true });
-    setErrors({ ...errors, [name]: validate(name, value) });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSubmitting(true);
+  const onSubmit = async (data) => {
+    setServerError('');
     try {
-      await login(form.email, form.usn, form.password);
+      await login(data.email, data.usn, data.password);
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
-    } finally {
-      setSubmitting(false);
+      setServerError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <main className="login-page" role="main">
-      <div className="login-bg">
-        <div className="login-orb login-orb--1" />
-        <div className="login-orb login-orb--2" />
-        <div className="login-orb login-orb--3" />
-      </div>
+    <main className="lg" role="main">
+      <div className="lg-bg" />
+      <div className="lg-overlay" />
 
-      <div className={`login-card ${mounted ? 'login-card--visible' : ''}`}>
-        <div className="login-card__inner">
-          <div className="login-card__header">
-            <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="login-card__logo" />
-            <h1 className="login-card__title">Feedback Collector</h1>
+      <motion.div
+        className="lg-card"
+        initial={{ opacity: 0, y: 24, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="lg-card__inner">
+          {/* Logo & Header */}
+          <div className="lg-header">
+            <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" loading="lazy" className="lg-header__logo" />
+            <h1 className="lg-header__title">Feedback Collector</h1>
+            <p className="lg-header__desc">Sign in to access the Student Feedback Collection System</p>
           </div>
 
-          {error && <div className="login-card__error">{error}</div>}
+          {/* Server Error */}
+          {serverError && (
+            <motion.div className="lg-error" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} role="alert">
+              {serverError}
+            </motion.div>
+          )}
 
-          <form className="login-card__form" onSubmit={handleSubmit} noValidate>
-            <div className="login-card__field">
-              <label htmlFor="email">Email</label>
-              <div className="login-card__input-wrap">
-                <Mail size={16} className="login-card__input-icon" />
-                <input id="email" type="email" name="email" value={form.email} onChange={handleChange} onBlur={handleBlur} required placeholder="Student@gmail.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} />
+          {/* Form */}
+          <form className="lg-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+            {/* Email */}
+            <div className="lg-field">
+              <label className="lg-field__label" htmlFor="email">Email</label>
+              <div className={`lg-input ${errors.email ? 'is-error' : dirtyFields.email && !errors.email ? 'is-valid' : ''}`}>
+                <Mail size={16} className="lg-input__icon" />
+                <input
+                  id="email"
+                  type="email"
+                  className="lg-input__field"
+                  placeholder="student@snpsu.edu.in"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  {...register('email')}
+                />
               </div>
-              {errors.email && <p className="field-error" id="email-error" role="alert">{errors.email}</p>}
+              {errors.email && <p className="lg-field__error" id="email-error" role="alert">{errors.email.message}</p>}
             </div>
 
-            <div className="login-card__field">
-              <label htmlFor="usn">USN</label>
-              <div className="login-card__input-wrap">
-                <User size={16} className="login-card__input-icon" />
-                <input id="usn" type="text" name="usn" value={form.usn} onChange={handleChange} onBlur={handleBlur} required placeholder="25SUPMCAGL000" aria-invalid={!!errors.usn} aria-describedby={errors.usn ? 'usn-error' : undefined} />
+            {/* USN */}
+            <div className="lg-field">
+              <label className="lg-field__label" htmlFor="usn">USN</label>
+              <div className={`lg-input ${errors.usn ? 'is-error' : dirtyFields.usn && !errors.usn ? 'is-valid' : ''}`}>
+                <User size={16} className="lg-input__icon" />
+                <input
+                  id="usn"
+                  type="text"
+                  className="lg-input__field"
+                  placeholder="25SUPMCAGL000"
+                  aria-invalid={!!errors.usn}
+                  aria-describedby={errors.usn ? 'usn-error' : undefined}
+                  {...register('usn')}
+                />
               </div>
-              {errors.usn && <p className="field-error" id="usn-error" role="alert">{errors.usn}</p>}
+              {errors.usn && <p className="lg-field__error" id="usn-error" role="alert">{errors.usn.message}</p>}
             </div>
 
-            <div className="login-card__field">
-              <label htmlFor="password">Password</label>
-              <div className="login-card__input-wrap">
-                <Lock size={16} className="login-card__input-icon" />
-                <input id="password" type={showPassword ? 'text' : 'password'} name="password" value={form.password} onChange={handleChange} onBlur={handleBlur} required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : undefined} />
-                <button type="button" className="login-card__eye" onClick={() => setShowPassword((p) => !p)} tabIndex={-1} aria-label={showPassword ? 'Hide password' : 'Show password'}>
+            {/* Password */}
+            <div className="lg-field">
+              <div className="lg-field__label-row">
+                <label className="lg-field__label" htmlFor="password">Password</label>
+                <button type="button" className="lg-field__forgot" tabIndex={-1} disabled>Forgot?</button>
+              </div>
+              <div className={`lg-input ${errors.password ? 'is-error' : dirtyFields.password && !errors.password ? 'is-valid' : ''}`}>
+                <Lock size={16} className="lg-input__icon" />
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="lg-input__field"
+                  placeholder="Enter your password"
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? 'password-error' : undefined}
+                  autoComplete="current-password"
+                  {...register('password')}
+                />
+                <button
+                  type="button"
+                  className="lg-input__eye"
+                  onClick={() => setShowPassword(p => !p)}
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.password && <p className="field-error" id="password-error" role="alert">{errors.password}</p>}
+              {errors.password && <p className="lg-field__error" id="password-error" role="alert">{errors.password.message}</p>}
             </div>
 
-            <Button type="submit" loading={submitting} disabled={submitting} size="lg" style={{ width: '100%' }}>
-              Sign In
-            </Button>
+            {/* Submit */}
+            <button
+              type="submit"
+              className="lg-submit"
+              disabled={isSubmitting}
+              aria-label="Sign in to your account"
+            >
+              {isSubmitting ? (
+                <span className="lg-submit__loading"><Loader2 size={18} className="lg-submit__spinner" /> Signing In...</span>
+              ) : (
+                'Sign In'
+              )}
+            </button>
           </form>
 
-          <Button type="button" variant="ghost" onClick={() => navigate('/')} style={{ margin: '24px auto 0', display: 'block' }}>
-            ← Back to Home
-          </Button>
+          {/* Security Footer */}
+          <div className="lg-security">
+            <ShieldCheck size={13} />
+            <span>Secure authentication &middot; Encrypted connection &middot; Authorized access only</span>
+          </div>
+
+          {/* Back */}
+          <button type="button" className="lg-back" onClick={() => navigate('/')}>
+            <ArrowLeft size={15} /> Back to Home
+          </button>
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 };

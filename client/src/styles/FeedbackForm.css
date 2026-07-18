@@ -97,7 +97,9 @@
 .sf-card textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+}
+.sf-card textarea:focus-visible {
+  outline: none;
 }
 
 .sf-card textarea:disabled {

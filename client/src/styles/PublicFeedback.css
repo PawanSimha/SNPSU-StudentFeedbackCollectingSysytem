@@ -98,6 +98,10 @@
   outline: none;
   border-color: var(--primary);
 }
+.public-feedback__field select:focus-visible,
+.public-feedback__field textarea:focus-visible {
+  outline: none;
+}
 
 .public-feedback__field textarea {
   resize: vertical;
@@ -118,6 +122,9 @@
 .public-feedback__field input[type="text"]:focus {
   outline: none;
   border-color: var(--primary);
+}
+.public-feedback__field input[type="text"]:focus-visible {
+  outline: none;
 }
 
 .public-feedback__optional {
