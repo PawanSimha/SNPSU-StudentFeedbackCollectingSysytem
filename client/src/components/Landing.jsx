@@ -230,13 +230,17 @@ const Landing = () => {
         <div className="landing-section__inner">
           <div className="landing-vmv__grid">
             <div className="vmv-card">
-              <div className="vmv-card__icon"><Target size={24} /></div>
-              <h3>Our Vision</h3>
+              <div className="vmv-card__header">
+                <div className="vmv-card__icon"><Target size={24} /></div>
+                <h3>Our Vision</h3>
+              </div>
               <p>To empower students with deep technical knowledge, ethical values and leadership skills, enabling them to become responsible contributors to society and the tech industry.</p>
             </div>
             <div className="vmv-card">
-              <div className="vmv-card__icon"><Clock size={24} /></div>
-              <h3>Our Mission</h3>
+              <div className="vmv-card__header">
+                <div className="vmv-card__icon"><Clock size={24} /></div>
+                <h3>Our Mission</h3>
+              </div>
               <ul>
                 <li>Value-based technical education with state-of-the-art infrastructure</li>
                 <li>Nurture ethical, motivated and skilled engineers</li>
@@ -245,8 +249,10 @@ const Landing = () => {
               </ul>
             </div>
             <div className="vmv-card vmv-card--wide">
-              <div className="vmv-card__icon"><Shield size={24} /></div>
-              <h3>Core Values</h3>
+              <div className="vmv-card__header">
+                <div className="vmv-card__icon"><Shield size={24} /></div>
+                <h3>Core Values</h3>
+              </div>
               <div className="vmv-card__tags">
                 {['Technical Excellence', 'Ethics & Integrity', 'Innovation & Creativity', 'Collaboration & Teamwork', 'Lifelong Learning', 'Social Responsibility', 'Leadership'].map((v) => (
                   <span key={v}>{v}</span>
