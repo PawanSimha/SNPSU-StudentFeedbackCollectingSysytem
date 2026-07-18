@@ -1,5 +1,5 @@
 import '../styles/Landing.css';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -68,11 +68,28 @@ const SectionTitle = ({ children }) => (
 
 const AnimatedSection = ({ children, className = '' }) => {
   const prefersReduced = useReducedMotion();
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <motion.section
-      ref={ref}
+      ref={sectionRef}
       className={className}
       initial={prefersReduced ? {} : { opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}

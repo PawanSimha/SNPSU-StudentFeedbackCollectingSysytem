@@ -20,11 +20,15 @@ import { Component } from 'react';
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('ErrorBoundary caught:', error, info);
   }
 
   render() {
@@ -33,6 +37,9 @@ class ErrorBoundary extends Component {
         <div className="error-boundary">
           <h2>Something went wrong</h2>
           <p>An unexpected error occurred. Please try refreshing the page.</p>
+          <pre style={{ fontSize: 12, maxWidth: '90vw', overflow: 'auto', textAlign: 'left', background: '#f5f5f5', padding: 12, borderRadius: 8, margin: '12px 0' }}>
+            {this.state.error?.message}
+          </pre>
           <button className="btn" onClick={() => window.location.reload()}>Refresh Page</button>
         </div>
       );
