@@ -314,8 +314,21 @@ npm test                     # Smoke tests (Jest + Supertest)
 
 ---
 
-## 📄 License
+## 🔗 Links
 
-This project is licensed under the **GNU General Public License v3.0**. See [LICENSE.md](./LICENSE.md) for the full legal text.
+| Platform | URL |
+|----------|-----|
+| **GitHub** | [github.com/PawanSimha](https://github.com/PawanSimha) |
+| **LinkedIn** | [linkedin.com/in/pawansimha](https://www.linkedin.com/in/pawansimha) |
+| **X / Twitter** | [x.com/pawansimha](https://x.com/pawansimha) |
+| **Google Developer** | [g.dev/pawansimha](https://g.dev/pawansimha) |
+| **Google Skills Profile** | [skills.google.com/public_profiles/...](https://www.skills.google.com/public_profiles/9108dded-855b-466a-b261-0a7519d472cf) |
+| **Credly Badges** | [credly.com/users/pawansimha/badges](https://www.credly.com/users/pawansimha/badges) |
 
-&copy; 2026 **Pawan Simha R**. All rights to the source code are granted under the terms of the GPLv3.
+---
+
+<p align="center">
+  <b>Pawan Simha R</b>
+  <br />
+  <sub>Built with React 19 · Vite 8 · Express 4.21 · MongoDB 8 · Mongoose 8 · Node.js · JWT · bcryptjs · Framer Motion · Recharts · Sonner · Lucide React · React Hook Form · Zod · Helmet · compression · express-rate-limit · pino · PM2 · Docker · GitHub Actions · ESLint · Husky · lint-staged · Prettier</sub>
+</p>
