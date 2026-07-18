@@ -32,6 +32,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [subjects, setSubjects] = useState([]);
+  const [error, setError] = useState('');
 
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
@@ -47,7 +48,7 @@ const AdminDashboard = () => {
         setStats(statsRes.data);
         setSubjects(statsRes.data.subjects);
       } catch {
-        // silently handle - component renders empty state
+        setError('Failed to load dashboard');
       }
     };
     fetchData();
@@ -63,6 +64,8 @@ const AdminDashboard = () => {
       setFeedbacks(data.data);
     }
   };
+
+  if (error) return <div className="alert alert-error">{error}</div>;
 
   return (
     <div className="admin-dashboard">

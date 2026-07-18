@@ -28,9 +28,10 @@ const AdminAnonymous = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get(`${API}/public/feedbacks`).then(({ data }) => { setFeedbacks(data); setLoading(false); }).catch(() => setLoading(false));
+    axios.get(`${API}/public/feedbacks`).then(({ data }) => { setFeedbacks(data); setLoading(false); }).catch(() => { setError('Failed to load anonymous feedbacks'); setLoading(false); });
   }, []);
 
   const filtered = feedbacks.filter(f =>
@@ -41,13 +42,14 @@ const AdminAnonymous = () => {
 
   if (loading) return <div className="loading">Loading anonymous feedbacks...</div>;
 
+  if (error) return <div className="alert alert-error">{error}</div>;
+
   return (
     <div className="admin-db">
       <div className="db-header">
         <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>← Admin Panel</Button>
         <h2>Anonymous Feedbacks ({feedbacks.length})</h2>
       </div>
-
       <div className="db-search-bar">
         <input
           type="text"

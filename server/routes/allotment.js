@@ -52,12 +52,12 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   if (req.student.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
   try {
-    const { classGroup, message } = req.body;
+    const { classGroup, isOpen, message } = req.body;
     if (!classGroup) {
       return res.status(400).json({ message: 'Class group is required' });
     }
     let allotment = await Allotment.findOne({ classGroup });
-    const opening = allotment ? !allotment.isOpen : true;
+    const opening = isOpen !== undefined ? isOpen : (allotment ? !allotment.isOpen : true);
     let trimmed;
 
     if (opening) {

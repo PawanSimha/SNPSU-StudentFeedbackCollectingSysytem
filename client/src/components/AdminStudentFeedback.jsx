@@ -33,6 +33,7 @@ const AdminStudentFeedback = () => {
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
@@ -43,7 +44,7 @@ const AdminStudentFeedback = () => {
       const unique = [...new Set(feedbacks.map(f => f.subject))];
       setSubjects(unique);
       if (feedbacks.length > 0) setStudent(feedbacks[0].student);
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => setError('Failed to load student feedback')).finally(() => setLoading(false));
   }, [classGroup, studentId, classParam]);
 
   const filterBySubject = async (subject) => {
@@ -56,6 +57,8 @@ const AdminStudentFeedback = () => {
       setFeedbacks(data.data);
     }
   };
+
+  if (error) return <div className="alert alert-error">{error}</div>;
 
   return (
     <div className="admin-student-feedback">

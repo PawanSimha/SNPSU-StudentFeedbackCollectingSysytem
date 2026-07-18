@@ -51,14 +51,15 @@ router.post('/submit', protect, async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid subject' });
     }
 
-    if (typeof comments === 'string' && comments.trim()) {
-      const trimmed = comments.trim();
-      if (trimmed.length < MIN_LEN) {
-        return res.status(400).json({ message: `Feedback must be at least ${MIN_LEN} characters` });
-      }
-      if (trimmed.length > MAX_LEN) {
-        return res.status(400).json({ message: `Feedback must not exceed ${MAX_LEN} characters` });
-      }
+    if (typeof comments !== 'string' || !comments.trim()) {
+      return res.status(400).json({ message: 'Feedback is required' });
+    }
+    const trimmed = comments.trim();
+    if (trimmed.length < MIN_LEN) {
+      return res.status(400).json({ message: `Feedback must be at least ${MIN_LEN} characters` });
+    }
+    if (trimmed.length > MAX_LEN) {
+      return res.status(400).json({ message: `Feedback must not exceed ${MAX_LEN} characters` });
     }
 
     if (req.student.role !== 'admin') {

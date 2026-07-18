@@ -37,6 +37,7 @@ const AdminStudents = () => {
   const [subjectFeedback, setSubjectFeedback] = useState([]);
   const [activeTab, setActiveTab] = useState('given');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const classParam = `class=${encodeURIComponent(decodedClass)}`;
 
@@ -47,7 +48,7 @@ const AdminStudents = () => {
     ]).then(([studentsRes, subjectsRes]) => {
       setStudents(studentsRes.data.data);
       setSubjects(subjectsRes.data);
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => setError('Failed to load students')).finally(() => setLoading(false));
   }, [classGroup, classParam]);
 
   const showSubjectFeedback = async (subject) => {
@@ -87,6 +88,8 @@ const AdminStudents = () => {
     const title = `${decodedClass} - ${selectedSubject} - Feedback`;
     downloadDoc(title, headers, rows, `${safeClass}_${selectedSubject?.replace(/[\s]+/g, '_')}_feedback`);
   };
+
+  if (error) return <div className="alert alert-error">{error}</div>;
 
   return (
     <div className="admin-students">

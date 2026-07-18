@@ -24,7 +24,7 @@ const { SUBJECTS } = require('../config/subjects');
 const router = express.Router();
 
 const publicLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '15') * 60 * 1000,
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES || '15') * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX || '10'),
   message: { message: 'Too many submissions. Please try again later.' },
 });
