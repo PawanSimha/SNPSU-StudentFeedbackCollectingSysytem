@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import CountUp from 'react-countup';
+import CountUp from './ui/CountUp';
 import { Helmet } from 'react-helmet-async';
 import {
   Target, Clock, Shield, ArrowRight, ChevronDown,
