@@ -71,7 +71,7 @@ const Navbar = ({ variant = 'solid' }) => {
     <nav className={navClass} role="navigation" aria-label="Main navigation">
       <div className="navbar__inner">
         <Link to={isLanding ? '/' : (student?.role === 'admin' ? '/admin' : '/dashboard')} className="navbar__brand" aria-label="Home">
-          <img src="/images/navbar-logo.webp" alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="navbar__logo" />
+          <img src={isLanding && !scrolled ? '/images/footer-logo.webp' : '/images/navbar-logo.webp'} alt="SOAS - Sapthagiri NPS University" width="2905" height="712" className="navbar__logo" />
         </Link>
 
         <div className="navbar__right">

@@ -83,6 +83,15 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+.landing-hero__actions .btn-ui--outline {
+  color: white;
+  border-color: rgba(255,255,255,0.5);
+}
+.landing-hero__actions .btn-ui--outline:hover:not(:disabled) {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-color: white;
+}
 .landing-hero__anonymous-btn {
   margin-top: 20px;
   color: rgba(255,255,255,0.8) !important;
@@ -101,9 +110,10 @@
 .landing-hero__cards {
   position: absolute;
   bottom: 48px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   display: flex;
+  justify-content: center;
   gap: 16px;
   z-index: 1;
 }
