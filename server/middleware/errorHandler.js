@@ -15,9 +15,9 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Server error';
+  const message = err.message || "Server error";
 
   if (statusCode === 500) {
     req.log?.error({ err, path: req.path, method: req.method });

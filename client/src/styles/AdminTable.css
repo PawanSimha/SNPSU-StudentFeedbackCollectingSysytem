@@ -107,13 +107,15 @@
   font-size: 0.88rem;
   color: var(--gray-500);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), transform var(--transition);
+  transition:
+    box-shadow var(--transition),
+    transform var(--transition);
   position: relative;
   overflow: hidden;
 }
 
 .db-summary-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -341,7 +343,9 @@
   border: 1.5px solid var(--gray-200);
   font-size: 0.88rem;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), border-color var(--transition);
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition);
 }
 
 .db-allot-row:hover {
@@ -401,7 +405,7 @@
 }
 
 .db-search-bar::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 14px;
   top: 50%;
@@ -487,7 +491,6 @@
   color: var(--gray-700);
   cursor: pointer;
   transition: border-color var(--transition);
-  appearance: auto;
 }
 
 .db-select:focus {

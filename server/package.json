@@ -9,6 +9,7 @@
     "prod:start": "pm2 start ecosystem.config.js",
     "prod:stop": "pm2 stop feedback-server",
     "prod:logs": "pm2 logs feedback-server",
+    "lint": "eslint .",
     "test": "jest --forceExit --detectOpenHandles",
     "seed": "node scripts/seed.js",
     "seed-b": "node scripts/seed-b.js",
@@ -32,6 +33,8 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "eslint": "^9.39.5",
+    "globals": "^17.7.0",
     "jest": "^30.4.2",
     "nodemon": "^3.1.4",
     "supertest": "^7.2.2"
