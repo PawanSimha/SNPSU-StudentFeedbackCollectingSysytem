@@ -94,16 +94,19 @@
 }
 .landing-hero__anonymous-btn {
   margin-top: 20px;
-  color: rgba(255,255,255,0.8) !important;
-  border: 2px solid rgba(255,255,255,0.25) !important;
-  border-radius: var(--radius-md) !important;
-  padding: 10px 32px !important;
+  background: var(--accent) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 12px 36px !important;
   font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 20px rgba(198,158,102,0.35) !important;
 }
 .landing-hero__anonymous-btn:hover {
-  background: rgba(255,255,255,0.12) !important;
-  border-color: rgba(255,255,255,0.5) !important;
-  color: white !important;
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 28px rgba(198,158,102,0.45) !important;
 }
 
 /* Hero stat cards */
