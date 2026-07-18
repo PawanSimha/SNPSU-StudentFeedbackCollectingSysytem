@@ -24,25 +24,6 @@
   margin-bottom: 20px;
 }
 
-.btn-back {
-  background: var(--gray-100);
-  color: var(--primary);
-  border: 1.5px solid var(--gray-200);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: all var(--transition);
-}
-
-.btn-back:hover {
-  background: var(--gray-200);
-  border-color: var(--primary);
-}
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

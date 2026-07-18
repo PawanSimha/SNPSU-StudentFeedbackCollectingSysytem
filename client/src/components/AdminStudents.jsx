@@ -21,6 +21,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { downloadCsv, downloadDoc } from '../utils/download';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const AdminStudents = () => {
@@ -90,7 +91,7 @@ const AdminStudents = () => {
   return (
     <div className="admin-students">
       <div className="dashboard-header">
-        <button className="btn btn-back" onClick={() => navigate('/admin')}>← All Classes</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>← All Classes</Button>
         <div>
           <h2>{decodedClass}</h2>
           <p className="subtitle">{students.length} Students &middot; {subjects.length} Subjects</p>
@@ -101,7 +102,7 @@ const AdminStudents = () => {
         <div className="subjects-section-header">
           <h4>Subjects</h4>
           {selectedSubject && (
-            <button className="btn btn-back" onClick={showStudents}>← All Students</button>
+            <Button variant="ghost" size="sm" onClick={showStudents}>← All Students</Button>
           )}
         </div>
         <div className="subject-chips">
@@ -138,8 +139,8 @@ const AdminStudents = () => {
           )}
 
           <div className="download-actions" style={{ marginBottom: 16 }}>
-            <button className="btn btn-download" onClick={downloadExcel}>Download Excel</button>
-            <button className="btn btn-download" onClick={downloadWord}>Download Word</button>
+            <Button variant="outline" size="sm" onClick={downloadExcel}>Download Excel</Button>
+            <Button variant="outline" size="sm" onClick={downloadWord}>Download Word</Button>
           </div>
 
           <div className="coverage-tabs">

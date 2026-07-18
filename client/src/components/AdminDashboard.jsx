@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const AdminDashboard = () => {
@@ -66,7 +67,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
-        <button className="btn btn-back" onClick={() => navigate('/admin')}>← All Classes</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>← All Classes</Button>
         <h2>{decodedClass}</h2>
       </div>
 

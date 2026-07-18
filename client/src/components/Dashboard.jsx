@@ -20,7 +20,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { ClipboardList, BookOpen, MessageSquare } from 'lucide-react';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const Dashboard = () => {
@@ -68,7 +70,7 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="no-session-card">
-                  <div className="no-session-card__icon">📋</div>
+                  <div className="no-session-card__icon"><ClipboardList size={32} /></div>
                   <h3 className="no-session-card__title">No Active Feedback Session</h3>
                   <p className="no-session-card__desc">
                     Feedback sessions are opened by your administrator after each class or assessment.
@@ -81,14 +83,14 @@ const Dashboard = () => {
             <div className="dashboard-side">
               <div className="info-list">
                 <div className="info-list__item">
-                  <span className="info-list__icon">📚</span>
+                  <span className="info-list__icon"><BookOpen size={20} /></span>
                   <div className="info-list__text">
                     <span className="info-list__value">6</span>
                     <span className="info-list__label">Subjects to Review</span>
                   </div>
                 </div>
                 <div className="info-list__item">
-                  <span className="info-list__icon">💬</span>
+                  <span className="info-list__icon"><MessageSquare size={20} /></span>
                   <div className="info-list__text">
                     <span className="info-list__value">50–300</span>
                     <span className="info-list__label">Characters per Comment</span>
@@ -97,9 +99,9 @@ const Dashboard = () => {
               </div>
 
               {allotment?.open && (
-                <button className="btn btn-start-feedback" onClick={() => navigate('/feedback')}>
+                <Button variant="primary" size="lg" onClick={() => navigate('/feedback')}>
                   {lockedCount > 0 ? 'Continue Feedback →' : 'Give Feedback →'}
-                </button>
+                </Button>
               )}
             </div>
           </div>

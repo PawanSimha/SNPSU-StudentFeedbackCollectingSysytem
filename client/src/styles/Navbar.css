@@ -6,7 +6,6 @@
   right: 0;
   z-index: 1000;
   transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
-  font-family: 'Inter', sans-serif;
 }
 
 .navbar--solid {
@@ -120,7 +119,7 @@
   color: white;
   text-decoration: none;
   padding: 8px 24px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.82rem;
   transition: background 0.2s, transform 0.2s;
@@ -139,7 +138,7 @@
   color: white;
   border: none;
   padding: 7px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 600;
@@ -213,7 +212,7 @@
   color: white;
   text-decoration: none;
   padding: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.88rem;
 }
@@ -227,7 +226,7 @@
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 0.88rem;
   font-weight: 600;

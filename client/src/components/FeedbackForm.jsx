@@ -20,6 +20,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const FeedbackForm = () => {
@@ -194,8 +195,8 @@ const FeedbackForm = () => {
         <div style={{ textAlign: 'center' }}>
           <img src="/images/thank-you-feedback.webp" alt="Thank you for your feedback" style={{ maxWidth: '500px', width: '100%', height: 'auto', marginBottom: '24px' }} />
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-            <button className="btn btn-primary" onClick={() => navigate('/my-feedback')} style={{ width: 'auto', flex: '0 1 auto', padding: '12px 24px' }}>View My Feedback</button>
-            <button className="btn btn-primary" onClick={() => navigate('/dashboard')} style={{ width: 'auto', flex: '0 1 auto', padding: '12px 24px' }}>Go to Dashboard</button>
+            <Button variant="primary" onClick={() => navigate('/my-feedback')}>View My Feedback</Button>
+            <Button variant="primary" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
           </div>
         </div>
       </div>
@@ -205,7 +206,7 @@ const FeedbackForm = () => {
   return (
     <div className="sequential-feedback">
       <div className="sf-header">
-        <button className="btn btn-back" onClick={() => navigate('/dashboard')}>← Dashboard</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>← Dashboard</Button>
         <div className="sf-progress-text">Subject {currentIndex + 1} of {totalSubjects}</div>
       </div>
 
@@ -254,27 +255,27 @@ const FeedbackForm = () => {
         </div>
 
         <div className="sf-nav-actions">
-          <button className="btn btn-prev" onClick={handlePrev} disabled={currentIndex === 0}>
+          <Button variant="outline" size="sm" onClick={handlePrev} disabled={currentIndex === 0}>
             ← Previous
-          </button>
+          </Button>
 
           <div className="sf-lock-group">
-            <button
-              className={`btn ${isLocked ? 'btn-unlock' : 'btn-lock'}`}
+            <Button
+              variant={isLocked ? 'outline' : 'primary'}
               onClick={handleLockToggle}
               disabled={!isLocked && !textValid}
             >
               {isLocked ? 'Unlock' : 'Lock'}
-            </button>
+            </Button>
           </div>
 
-          <button
-            className="btn btn-next"
+          <Button
+            variant="primary" size="sm"
             onClick={isLast ? handleSubmit : handleNext}
             disabled={isLast ? (!isLocked || submitting) : !textValid}
           >
             {isLast ? (submitting ? 'Submitting...' : 'Submit All') : 'Next →'}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -288,10 +289,10 @@ const FeedbackForm = () => {
             </div>
             <p className="popup-note success">You have completed feedback on all {totalSubjects} subjects. Thank you!</p>
             <div className="popup-actions">
-              <button className="btn btn-primary" onClick={confirmSubmit} disabled={submitting}>
+              <Button variant="primary" onClick={confirmSubmit} disabled={submitting}>
                 {submitting ? 'Submitting...' : 'Confirm & Submit'}
-              </button>
-              <button className="btn btn-cancel" onClick={closePopup}>Go Back</button>
+              </Button>
+              <Button variant="ghost" onClick={closePopup}>Go Back</Button>
             </div>
           </div>
         </div>

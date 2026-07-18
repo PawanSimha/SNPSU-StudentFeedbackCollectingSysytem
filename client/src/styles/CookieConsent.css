@@ -29,8 +29,7 @@
   padding: 14px 24px;
   background: #fff;
   border-top: 1px solid var(--gray-200);
-  box-shadow: 0 -4px 24px rgba(26, 35, 126, 0.08);
-  font-family: 'Inter', sans-serif;
+  box-shadow: 0 -4px 24px rgba(0, 16, 64, 0.06);
   font-size: 0.85rem;
   color: var(--gray-600);
   line-height: 1.5;
@@ -66,8 +65,7 @@
 .cookie-consent__btn {
   padding: 8px 20px;
   border: none;
-  border-radius: 999px;
-  font-family: 'Inter', sans-serif;
+  border-radius: var(--radius-md);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -78,13 +76,13 @@
 .cookie-consent__btn--accept {
   background: var(--primary);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(26, 35, 126, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 16, 64, 0.2);
 }
 
 .cookie-consent__btn--accept:hover {
   background: var(--primary-light);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(26, 35, 126, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 16, 64, 0.3);
 }
 
 .cookie-consent__btn--decline {

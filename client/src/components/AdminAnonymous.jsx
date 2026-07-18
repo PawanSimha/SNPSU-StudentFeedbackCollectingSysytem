@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const AdminAnonymous = () => {
@@ -43,7 +44,7 @@ const AdminAnonymous = () => {
   return (
     <div className="admin-db">
       <div className="db-header">
-        <button className="btn btn-back" onClick={() => navigate('/admin')}>← Admin Panel</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>← Admin Panel</Button>
         <h2>Anonymous Feedbacks ({feedbacks.length})</h2>
       </div>
 

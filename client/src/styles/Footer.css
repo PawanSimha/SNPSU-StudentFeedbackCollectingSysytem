@@ -31,7 +31,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(26, 35, 126, 0.4);
+  background: rgba(0, 16, 64, 0.55);
 }
 
 .footer__inner {

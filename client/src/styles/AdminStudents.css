@@ -28,25 +28,6 @@
   font-size: 1.6rem;
 }
 
-.btn-back {
-  background: var(--gray-100);
-  color: var(--primary);
-  border: 1.5px solid var(--gray-200);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: all var(--transition);
-}
-
-.btn-back:hover {
-  background: var(--gray-200);
-  border-color: var(--primary);
-}
-
 /* Student List */
 .admin-students {
   padding: 10px 0;
@@ -133,22 +114,6 @@
 
 .student-card .btn-small {
   flex-shrink: 0;
-}
-
-.btn-download {
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-full);
-  padding: 7px 18px;
-  font-size: 0.8rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background var(--transition);
-}
-
-.btn-download:hover {
-  background: var(--primary-light);
 }
 
 /* Subject chips row */

@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { downloadCsv, downloadDoc } from '../utils/download';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const TABS = [
@@ -71,7 +72,7 @@ const AdminDbOverview = () => {
   return (
     <div className="admin-db">
       <div className="db-header">
-        <button className="btn btn-back" onClick={() => navigate('/admin')}>← Admin Panel</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>← Admin Panel</Button>
         <h2>Database Overview</h2>
       </div>
 
@@ -321,8 +322,8 @@ const AnonymousView = ({ feedbacks }) => {
     <div className="db-table-header-row">
       <p className="db-table-info">{feedbacks.length} anonymous feedback{feedbacks.length !== 1 ? 's' : ''}</p>
       <div className="db-download-actions">
-        <button className="btn btn-download" onClick={downloadExcel}>Download Excel</button>
-        <button className="btn btn-download" onClick={downloadWord}>Download Word</button>
+        <Button variant="outline" size="sm" onClick={downloadExcel}>Download Excel</Button>
+        <Button variant="outline" size="sm" onClick={downloadWord}>Download Word</Button>
       </div>
     </div>
     <div className="db-table-scroll">

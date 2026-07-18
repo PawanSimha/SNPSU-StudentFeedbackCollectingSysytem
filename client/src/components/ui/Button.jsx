@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 const variants = {
   primary: 'btn-ui btn-ui--primary',
   outline: 'btn-ui btn-ui--outline',
@@ -17,16 +15,14 @@ const Button = ({ variant = 'primary', size = 'md', children, loading, disabled,
   const cls = `${variants[variant]} ${sizes[size]} ${loading ? 'btn-ui--loading' : ''} ${className}`.trim();
 
   return (
-    <motion.button
+    <button
       className={cls}
       disabled={disabled || loading}
-      whileHover={!disabled && !loading ? { scale: 1.02 } : {}}
-      whileTap={!disabled && !loading ? { scale: 0.98 } : {}}
       {...props}
     >
       {loading && <span className="btn-ui__spinner" aria-hidden="true" />}
       <span className={loading ? 'btn-ui__text--hidden' : ''}>{children}</span>
-    </motion.button>
+    </button>
   );
 };
 

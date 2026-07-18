@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import Button from './ui/Button';
 import { API } from '../config/api';
 
 const AdminStudentFeedback = () => {
@@ -59,7 +60,7 @@ const AdminStudentFeedback = () => {
   return (
     <div className="admin-student-feedback">
       <div className="dashboard-header">
-        <button className="btn btn-back" onClick={() => navigate(`/admin/${encodeURIComponent(decodedClass)}`)}>← All Students</button>
+        <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/${encodeURIComponent(decodedClass)}`)}>← All Students</Button>
       </div>
 
       {loading ? (

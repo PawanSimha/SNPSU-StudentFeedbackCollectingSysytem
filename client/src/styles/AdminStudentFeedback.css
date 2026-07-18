@@ -15,26 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-/* Back button */
-.btn-back {
-  background: var(--gray-100);
-  color: var(--primary);
-  border: 1.5px solid var(--gray-200);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: all var(--transition);
-}
-
-.btn-back:hover {
-  background: var(--gray-200);
-  border-color: var(--primary);
-}
-
 /* Filter bar (subject filter buttons) */
 .filter-bar {
   display: flex;
@@ -264,25 +244,6 @@
   display: flex;
   gap: 10px;
   flex-shrink: 0;
-}
-
-.btn-download {
-  background: var(--success);
-  color: white;
-  border: none;
-  padding: 9px 20px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.82rem;
-  font-weight: 600;
-  font-family: inherit;
-  transition: background var(--transition), transform var(--transition);
-  white-space: nowrap;
-}
-
-.btn-download:hover {
-  background: var(--success);
-  transform: translateY(-1px);
 }
 
 /* Coverage Bar */

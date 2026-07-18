@@ -275,28 +275,6 @@
   font-size: 0.9rem;
 }
 
-/* ─── CTA button ─── */
-.btn-start-feedback {
-  background: var(--primary);
-  color: white;
-  border: none;
-  width: 100%;
-  padding: 14px 24px;
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  box-shadow: var(--shadow-md);
-}
-
-.btn-start-feedback:hover {
-  background: var(--primary-light);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
   .dashboard-top {

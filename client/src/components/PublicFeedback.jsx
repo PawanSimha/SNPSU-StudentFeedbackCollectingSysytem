@@ -19,6 +19,7 @@ import '../styles/PublicFeedback.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { CheckCircle } from 'lucide-react';
 
 import { API } from '../config/api';
 
@@ -65,7 +66,7 @@ const PublicFeedback = () => {
     <main className="public-feedback public-feedback--dark" role="main">
         <div className="public-feedback__card">
           <div className="public-feedback__success">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <CheckCircle size={48} color="var(--success)" />
             <h1>Thank You!</h1>
             <p>Your anonymous feedback has been submitted successfully.</p>
             <button className="public-feedback__btn" onClick={() => navigate('/')}>Back to Home</button>

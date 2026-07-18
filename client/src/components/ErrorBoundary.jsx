@@ -16,6 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { Component } from 'react';
+import Button from './ui/Button';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class ErrorBoundary extends Component {
           <pre style={{ fontSize: 12, maxWidth: '90vw', overflow: 'auto', textAlign: 'left', background: '#f5f5f5', padding: 12, borderRadius: 8, margin: '12px 0' }}>
             {this.state.error?.message}
           </pre>
-          <button className="btn" onClick={() => window.location.reload()}>Refresh Page</button>
+          <Button variant="primary" onClick={() => window.location.reload()}>Refresh Page</Button>
         </div>
       );
     }

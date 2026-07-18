@@ -19,6 +19,8 @@ import '../styles/Login.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Mail, User, Lock, Eye, EyeOff } from 'lucide-react';
+import Button from './ui/Button';
 
 const Login = () => {
   const { login } = useAuth();
@@ -85,10 +87,7 @@ const Login = () => {
             <div className="login-card__field">
               <label htmlFor="email">Email</label>
               <div className="login-card__input-wrap">
-                <svg className="login-card__input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M2 4L8 8.5L14 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-                </svg>
+                <Mail size={16} className="login-card__input-icon" />
                 <input id="email" type="email" name="email" value={form.email} onChange={handleChange} onBlur={handleBlur} required placeholder="Student@gmail.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} />
               </div>
               {errors.email && <p className="field-error" id="email-error" role="alert">{errors.email}</p>}
@@ -97,10 +96,7 @@ const Login = () => {
             <div className="login-card__field">
               <label htmlFor="usn">USN</label>
               <div className="login-card__input-wrap">
-                <svg className="login-card__input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M2 14.5C2 11.5 4.5 9 8 9C11.5 9 14 11.5 14 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+                <User size={16} className="login-card__input-icon" />
                 <input id="usn" type="text" name="usn" value={form.usn} onChange={handleChange} onBlur={handleBlur} required placeholder="25SUPMCAGL000" aria-invalid={!!errors.usn} aria-describedby={errors.usn ? 'usn-error' : undefined} />
               </div>
               {errors.usn && <p className="field-error" id="usn-error" role="alert">{errors.usn}</p>}
@@ -109,47 +105,23 @@ const Login = () => {
             <div className="login-card__field">
               <label htmlFor="password">Password</label>
               <div className="login-card__input-wrap">
-                <svg className="login-card__input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="2.5" y="6.5" width="11" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M5 6.5V4.5C5 3 6 2 8 2C10 2 11 3 11 4.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="8" cy="10.5" r="1" fill="currentColor"/>
-                </svg>
+                <Lock size={16} className="login-card__input-icon" />
                 <input id="password" type={showPassword ? 'text' : 'password'} name="password" value={form.password} onChange={handleChange} onBlur={handleBlur} required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : undefined} />
                 <button type="button" className="login-card__eye" onClick={() => setShowPassword((p) => !p)} tabIndex={-1} aria-label={showPassword ? 'Hide password' : 'Show password'}>
-                  {showPassword ? (
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M2 9C2 9 4.5 4 9 4C13.5 4 16 9 16 9C16 9 13.5 14 9 14C4.5 14 2 9 2 9Z" stroke="currentColor" strokeWidth="1.4"/>
-                      <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.4"/>
-                      <path d="M13 5L5 13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                    </svg>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M2 9C2 9 4.5 4 9 4C13.5 4 16 9 16 9C16 9 13.5 14 9 14C4.5 14 2 9 2 9Z" stroke="currentColor" strokeWidth="1.4"/>
-                      <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.4"/>
-                    </svg>
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && <p className="field-error" id="password-error" role="alert">{errors.password}</p>}
             </div>
 
-            <button type="submit" className="login-card__submit" disabled={submitting}>
-              {submitting ? (
-                <span className="login-card__submit-loading">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeDasharray="32" strokeDashoffset="8"/>
-                  </svg>
-                  Signing in&hellip;
-                </span>
-              ) : (
-                'Sign In'
-              )}
-            </button>
+            <Button type="submit" loading={submitting} disabled={submitting} size="lg" style={{ width: '100%' }}>
+              Sign In
+            </Button>
           </form>
 
-          <button type="button" className="login-card__back-btn" onClick={() => navigate('/')}>
+          <Button type="button" variant="ghost" onClick={() => navigate('/')} style={{ margin: '24px auto 0', display: 'block' }}>
             ← Back to Home
-          </button>
+          </Button>
         </div>
       </div>
     </main>
