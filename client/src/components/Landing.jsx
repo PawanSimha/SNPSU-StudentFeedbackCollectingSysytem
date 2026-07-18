@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet-async';
 import {
   Target, Clock, Shield, ArrowRight, ChevronDown,
   MessageSquare, BarChart3, ShieldCheck, Users,
-  BookOpen, Award, GraduationCap
+  BookOpen, Award
 } from 'lucide-react';
 import Button from './ui/Button';
 import Navbar from './Navbar';
@@ -176,22 +176,6 @@ const Landing = () => {
           </motion.div>
         </div>
 
-        <motion.div className="landing-hero__cards" {...fadeUp(0.5)}>
-          <div className="hero-stat-card">
-            <ShieldCheck size={20} />
-            <div>
-              <span className="hero-stat-card__num">100%</span>
-              <span className="hero-stat-card__label">Anonymous</span>
-            </div>
-          </div>
-          <div className="hero-stat-card">
-            <GraduationCap size={20} />
-            <div>
-              <span className="hero-stat-card__num">MCA</span>
-              <span className="hero-stat-card__label">Department</span>
-            </div>
-          </div>
-        </motion.div>
       </section>
 
       {/* ── About ── */}

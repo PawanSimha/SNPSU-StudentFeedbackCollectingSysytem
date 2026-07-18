@@ -119,11 +119,18 @@
   color: white;
   text-decoration: none;
   padding: 8px 24px;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-weight: 600;
   font-size: 0.82rem;
   transition: background 0.2s, transform 0.2s;
   white-space: nowrap;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta {
+  background: var(--accent);
+  box-shadow: 0 4px 16px rgba(198,158,102,0.3);
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta:hover {
+  background: var(--accent-hover);
 }
 .navbar__cta:hover {
   background: var(--primary-light);
@@ -212,7 +219,7 @@
   color: white;
   text-decoration: none;
   padding: 10px;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-weight: 600;
   font-size: 0.88rem;
 }
