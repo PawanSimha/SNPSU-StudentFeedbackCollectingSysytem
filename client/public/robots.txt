@@ -1,7 +1,7 @@
-# robots.txt — SOAS Feedback Collector
+# robots.txt - SOAS Feedback Collector
 # https://snpsu-feedback-collector.vercel.app
 #
-# Live-retrieval & search crawlers — ALLOWED
+# Live-retrieval & search crawlers - ALLOWED
 User-agent: Googlebot
 Allow: /
 
@@ -20,7 +20,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-# AI training scrapers — BLOCKED
+# AI training scrapers - BLOCKED
 User-agent: GPTBot
 Disallow: /
 
@@ -39,7 +39,7 @@ Disallow: /
 User-agent: Google-Extended
 Disallow: /
 
-# All other crawlers — default allow for compatibility
+# All other crawlers - default allow for compatibility
 User-agent: *
 Allow: /
 

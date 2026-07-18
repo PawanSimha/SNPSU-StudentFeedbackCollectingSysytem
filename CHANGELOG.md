@@ -1,11 +1,11 @@
 # Changelog
 
 ## Unreleased
-- **Server ESLint** — `server/eslint.config.mjs` flat config added, `globals` + `eslint` devDependencies, `serve:lint` script, root ESLint for lint-staged pipeline, 5 lint warnings fixed.
-- **CSS quality** — 7 `!important` flags removed from `Landing.css` anonymous button; hardcoded `#8B6914` replaced with `var(--accent)` in 4 CSS files; redundant `appearance:auto` and `box-sizing` properties removed.
-- **`.gitattributes`** — LF normalization for all text files.
-- **Docs sync** — AGENTS.md, context.md, PRD.md, README.md, CHANGELOG.md updated for server linting, `.gitattributes`, CSS variable refactors, and env var `RATE_LIMIT_WINDOW_MINUTES`.
-- **Removed star rating system** — all rating fields, validation, UI, and display removed from Feedback model, API, FeedbackForm, admin views, MyFeedback, Dashboard, Landing FAQ, and AuthContext cleanup.
+- **Server ESLint** - `server/eslint.config.mjs` flat config added, `globals` + `eslint` devDependencies, `serve:lint` script, root ESLint for lint-staged pipeline, 5 lint warnings fixed.
+- **CSS quality** - 7 `!important` flags removed from `Landing.css` anonymous button; hardcoded `#8B6914` replaced with `var(--accent)` in 4 CSS files; redundant `appearance:auto` and `box-sizing` properties removed.
+- **`.gitattributes`** - LF normalization for all text files.
+- **Docs sync** - AGENTS.md, context.md, PRD.md, README.md, CHANGELOG.md updated for server linting, `.gitattributes`, CSS variable refactors, and env var `RATE_LIMIT_WINDOW_MINUTES`.
+- **Removed star rating system** - all rating fields, validation, UI, and display removed from Feedback model, API, FeedbackForm, admin views, MyFeedback, Dashboard, Landing FAQ, and AuthContext cleanup.
 - **Security hardening**: CSP script-src `unsafe-inline` removed; `validateOrigin` now requires Origin header; refresh endpoint rate-limited (10/min); protect middleware returns 401 on deleted user.
 - **SEO**: `<title>` shortened to 55 chars; FAQPage JSON-LD added; duplicate `robots` meta merged; `sitemap.xml` now 4 URLs with `lastmod`.
 - **Dependencies**: `prettier` installed (pre-commit fix); unused `vitest`, `jsdom`, `@testing-library/*` removed; lint-staged consolidated to root.
@@ -13,9 +13,9 @@
 - **Missing file**: Created `server/scripts/seed-c.js` (49 C section students).
 - **`.dockerignore` bugfix**: Removed `client/src` and `client/public` exclusions that would break Docker build.
 
-## v1.3 — Phases A–D
+## v1.3 - Phases A–D
 
-### Phase A — Backend Hardening
+### Phase A - Backend Hardening
 - Structured pino logging with pino-http middleware
 - `app.js`/`server.js` split for testability
 - Centralized `errorHandler.js` delegating via `next(error)`
@@ -30,28 +30,28 @@
 - PM2 cluster mode (multi-core)
 - Smoke tests (`server/tests/server.test.js`) with 2 passing tests
 
-### Phase B — Frontend Polish
+### Phase B - Frontend Polish
 - CSS modularized from 1 monolithic file into 16 per-component CSS files
 - 6 admin components lazy-loaded via `React.lazy` + `Suspense`
 - Skip-to-content link for keyboard accessibility
 - Inline form validation (50–300 char comments, 1–5 star rating)
 - `aria-live` regions for dynamic content announcements
 
-### Phase C — DevOps & DX
+### Phase C - DevOps & DX
 - Multi-stage Dockerfile for optimized production builds
 - GitHub Actions CI pipeline
 - Swagger API documentation at `/api/docs`
 - Empty states (no-data messages across all list views)
 - Image lazy loading (`loading="lazy"` on all assets)
 
-### Phase D — Scale & Auth
+### Phase D - Scale & Auth
 - Pagination on admin list endpoints (`/api/admin/feedback`, `/api/admin/students`, `/api/admin/public/feedbacks`)
 - JWT refresh token flow (`POST /api/auth/refresh`)
 - Page-view analytics tracker in `utils/analytics.js`
 - Husky + lint-staged pre-commit hooks
 - `AdminRoute` guard component (non-admin users redirected from `/admin/*` routes)
 
-## v1.2 — Performance & Security
+## v1.2 - Performance & Security
 - MongoDB indexes on all query patterns
 - `.lean()` query optimization (~40% faster)
 - PM2 clustering (multi-core)
@@ -60,7 +60,7 @@
 - Production process management
 - System now handles 200–300 concurrent students on a standard 4-core server
 
-## v1.1 — UX & Reliability
+## v1.1 - UX & Reliability
 - Star rating selector (1–5)
 - Rate limiting on public endpoint
 - Vite API proxy

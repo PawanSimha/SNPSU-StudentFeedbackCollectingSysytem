@@ -15,7 +15,7 @@
   },
   "lint-staged": {
     "client/**/*.{js,jsx}": [
-      "cd client && npx eslint --fix",
+      "node client/node_modules/eslint/bin/eslint.js --fix --config client/eslint.config.js",
       "prettier --write"
     ],
     "server/**/*.js": [

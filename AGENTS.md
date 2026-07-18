@@ -41,7 +41,7 @@ cd server && npm run prod    # PM2 cluster mode
 - **No TypeScript, no PropTypes.** Backend validates at route level (subject whitelist, comment length).
 - **Two feedback channels**: authenticated (JWT + allotment-gated, upsert on {student + subject} compound index) vs public anonymous (rate-limited 10/15min, no `student` field, 100-300 chars always).
 - **Login requires all three**: `email` (lowercased), `usn` (uppercased), `password` - bcrypt compared. Login form uses React Hook Form + Zod for client-side validation (`onBlur` mode).
-- **JWT**: 30d in `sessionStorage`, refresh token 7d in `localStorage` via `tryRefresh()`. No axios 401 interceptor — tokens must be refreshed at app init.
+- **JWT**: 30d in `sessionStorage`, refresh token 7d in `localStorage` via `tryRefresh()`. No axios 401 interceptor; tokens must be refreshed at app init.
 - **Three class groups** (hardcoded string match): `"MCA, 1st Year, 2nd Sem, A sec"` / B sec / C sec. Exact spelling everywhere. No schedule tabs in AdminAllotments (no backend support).
 - **Triple admin guard**: client-side `AdminRoute` redirect → server-side `protect` middleware → explicit `role !== 'admin'` check.
 - **Rate limits**: login 5/15min, public POST 10/15min. Request body capped at 10kb.
