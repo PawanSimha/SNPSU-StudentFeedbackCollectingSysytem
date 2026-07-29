@@ -1,0 +1,282 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* ── Shared Navbar ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
+}
+
+.navbar--solid {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.navbar--solid.navbar--scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.navbar--landing {
+  background: transparent;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__inner {
+  height: 80px;
+  padding: 14px 28px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__logo {
+  height: 52px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link {
+  font-size: 0.95rem;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta {
+  font-size: 0.85rem;
+  padding: 8px 24px;
+}
+.navbar--landing.navbar--scrolled {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.navbar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  transition: height 0.3s ease, padding 0.3s ease;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar__logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  transition: height 0.3s ease;
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar__links li { margin: 0; }
+
+.navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  transition: color 0.2s, font-size 0.3s ease;
+  position: relative;
+  padding: 4px 0;
+  white-space: nowrap;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link {
+  color: rgba(255,255,255,0.85);
+}
+.navbar__link:hover {
+  color: var(--primary);
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__link:hover {
+  color: white;
+}
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.25s;
+  border-radius: 2px;
+}
+.navbar__link:hover::after,
+.navbar__link--active::after {
+  width: 100%;
+}
+.navbar__link--active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__cta {
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  padding: 6px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: background 0.2s, transform 0.2s, padding 0.3s ease, font-size 0.3s ease;
+  white-space: nowrap;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta {
+  background: var(--accent);
+  box-shadow: 0 4px 16px rgba(198,158,102,0.3);
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__cta:hover {
+  background: var(--accent-hover);
+}
+.navbar__cta:hover {
+  background: var(--primary-light);
+  transform: scale(1.04);
+}
+
+.navbar__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 7px 18px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.navbar__logout:hover {
+  background: var(--accent-hover);
+  transform: scale(1.04);
+}
+
+/* Toggle */
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-700);
+  padding: 4px;
+}
+.navbar--landing:not(.navbar--scrolled) .navbar__toggle {
+  color: white;
+}
+
+/* Drawer */
+.navbar__drawer {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  padding: 16px 24px 24px;
+}
+.navbar__drawer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.navbar__drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  transition: background 0.2s, color 0.2s;
+}
+.navbar__drawer-link:hover,
+.navbar__drawer-link--active {
+  background: var(--gray-50);
+  color: var(--primary);
+}
+.navbar__drawer-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-100);
+}
+.navbar__drawer-cta {
+  display: block;
+  text-align: center;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.navbar__drawer-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .navbar__links { display: none; }
+  .navbar__actions { display: none; }
+  .navbar__toggle { display: flex; }
+  .navbar__inner { padding: 10px 16px; }
+  .navbar__logo { height: 32px; }
+}

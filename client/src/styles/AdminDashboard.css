@@ -1,0 +1,143 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* Admin Dashboard */
+.admin-dashboard {
+  padding: 20px 0;
+}
+
+.admin-dashboard h2 {
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.stat-card p {
+  color: var(--gray-500);
+  font-size: 0.85rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  background: white;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all var(--transition);
+  color: var(--gray-600);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.filter-btn:hover:not(.active) {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-table-wrapper table {
+  width: 100%;
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.admin-table-wrapper th,
+.admin-table-wrapper td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.admin-table-wrapper th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.admin-table-wrapper tr:nth-child(even) {
+  background: var(--gray-50);
+}
+
+.admin-table-wrapper tr:hover {
+  background: var(--gray-200);
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px !important;
+  color: var(--gray-400);
+}
+
+.nav-badge {
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-badge {
+  background: var(--accent);
+  color: white;
+}
+

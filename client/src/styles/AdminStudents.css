@@ -1,0 +1,359 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* Dashboard header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+/* Student List */
+.admin-students {
+  padding: 10px 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-family: inherit;
+  margin-bottom: 24px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+}
+.search-input:focus-visible {
+  outline: none;
+}
+
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.student-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.student-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.student-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.student-avatar.large {
+  width: 64px;
+  height: 64px;
+  font-size: 1.5rem;
+}
+
+.student-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-info h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-usn, .student-email {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.student-card .btn-small {
+  flex-shrink: 0;
+}
+
+/* Subject chips row */
+.subjects-section {
+  margin-bottom: 24px;
+}
+
+.subjects-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.subjects-section-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--gray-800);
+}
+
+.subject-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  padding: 8px 18px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--gray-100);
+}
+
+.chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Supporting text */
+.subtitle {
+  color: var(--gray-500);
+  font-size: 1rem;
+  margin: 4px 0 0;
+}
+
+.loading-text {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  padding: 20px 0;
+}
+
+.highlight {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Subject feedback view */
+.subject-feedback-view {
+  margin-top: 8px;
+}
+
+.subject-feedback-view h3 {
+  font-size: 1.15rem;
+  margin: 0 0 16px;
+  color: var(--gray-800);
+}
+
+/* Coverage bar */
+.coverage-bar {
+  margin-bottom: 20px;
+}
+
+.coverage-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+}
+
+.coverage-gave {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.coverage-sep {
+  color: var(--gray-300);
+}
+
+.coverage-not {
+  color: var(--gray-500);
+}
+
+.coverage-total {
+  color: var(--gray-400);
+  font-size: 0.82rem;
+}
+
+.coverage-track {
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.coverage-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+/* Download actions */
+.download-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Coverage tabs */
+.coverage-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--gray-200);
+  padding: 0;
+}
+
+.cov-tab {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+}
+
+.cov-tab:hover {
+  color: var(--primary);
+  background: var(--gray-50);
+}
+
+.cov-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+/* Student list panels */
+.student-list-panel {
+  margin-top: 4px;
+}
+
+.panel-title {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  margin: 0 0 12px;
+}
+
+.no-data {
+  color: var(--gray-400);
+  font-style: italic;
+  padding: 16px 0;
+}
+
+.student-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+.student-list-card {
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.student-list-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.student-list-card .student-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-list-card .student-info h4 {
+  font-size: 0.9rem;
+  margin: 0 0 2px;
+}
+
+.student-list-card .student-info p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+/* Badge */
+.badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.badge-gave {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badge-not {
+  background: var(--gray-100);
+  color: var(--gray-500);
+}
+

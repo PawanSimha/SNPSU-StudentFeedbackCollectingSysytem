@@ -1,0 +1,42 @@
+{
+  "name": "feedback-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "prod": "pm2 start ecosystem.config.js --no-daemon",
+    "prod:start": "pm2 start ecosystem.config.js",
+    "prod:stop": "pm2 stop feedback-server",
+    "prod:logs": "pm2 logs feedback-server",
+    "lint": "eslint .",
+    "test": "jest --forceExit --detectOpenHandles",
+    "seed": "node scripts/seed.js",
+    "seed-b": "node scripts/seed-b.js",
+    "seed-c": "node scripts/seed-c.js",
+    "seed-admin": "node scripts/seed-admin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.0",
+    "pino": "^9.14.0",
+    "pino-http": "^10.5.0",
+    "pm2": "^7.0.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "globals": "^17.7.0",
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.2.2"
+  }
+}

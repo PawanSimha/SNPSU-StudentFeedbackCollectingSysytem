@@ -1,0 +1,335 @@
+/*
+  SOAS Feedback Collector - Anonymous course feedback platform for Sapthagiri NPS University
+  Copyright (C) 2026 Pawan Simha R
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* ── Login Page ── */
+.lg {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--gray-50);
+}
+.lg-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/images/hero-bg.webp') center/cover no-repeat fixed;
+  filter: brightness(0.5) blur(2px);
+  transform: scale(1.05);
+}
+.lg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(13,20,66,0.55) 0%, rgba(26,35,126,0.35) 100%);
+}
+
+/* ── Card ── */
+.lg-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  margin: 20px;
+}
+.lg-card__inner {
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 40px 36px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* ── Header ── */
+.lg-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.lg-header__logo {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  aspect-ratio: 2905 / 712;
+  margin: 0 auto 18px;
+}
+.lg-header__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+.lg-header__desc {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Error ── */
+.lg-error {
+  background: var(--danger-light);
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 0.82rem;
+  color: var(--danger);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Form ── */
+.lg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Field ── */
+.lg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lg-field__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-left: 2px;
+}
+.lg-field__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.lg-field__forgot {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gray-400);
+  cursor: default;
+  padding: 0;
+  opacity: 0.5;
+}
+.lg-field__error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--danger);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Input ── */
+.lg-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  background: white;
+  transition: border-color 0.2s, background 0.2s;
+}
+.lg-input:focus-within {
+  border-color: var(--primary);
+  background: white;
+}
+.lg-input.is-error {
+  border-color: var(--danger);
+}
+.lg-input.is-valid {
+  border-color: var(--success);
+}
+.lg-input__icon {
+  position: absolute;
+  left: 13px;
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.lg-input:focus-within .lg-input__icon {
+  color: var(--primary);
+}
+.lg-input.is-error .lg-input__icon {
+  color: var(--danger);
+}
+.lg-input.is-valid .lg-input__icon {
+  color: var(--success);
+}
+.lg-input__field {
+  width: 100%;
+  padding: 11px 14px 11px 42px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--gray-800);
+  outline: none;
+}
+.lg-input__field:focus-visible {
+  outline: none;
+}
+.lg-input__field::placeholder {
+  color: var(--gray-300);
+}
+.lg-input__field:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: var(--gray-800) !important;
+  border-radius: 10px;
+}
+.lg-input__eye {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.lg-input__eye:focus-visible {
+  outline: none;
+}
+.lg-input__eye:hover {
+  color: var(--gray-600);
+  background: var(--gray-100);
+}
+
+/* ── Submit ── */
+.lg-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 13px 24px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 4px 16px rgba(26,35,126,0.2);
+}
+.lg-submit:hover:not(:disabled) {
+  background: var(--primary-light);
+  box-shadow: 0 6px 24px rgba(26,35,126,0.3);
+  transform: translateY(-1px);
+}
+.lg-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(26,35,126,0.2);
+}
+.lg-submit:focus-visible {
+  outline: 2.5px solid var(--primary);
+  outline-offset: 2px;
+}
+.lg-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.lg-submit__loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.lg-submit__spinner {
+  animation: lgSpin 0.7s linear infinite;
+}
+@keyframes lgSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Security Footer ── */
+.lg-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 0.7rem;
+  color: var(--gray-400);
+  text-align: center;
+  line-height: 1.4;
+}
+.lg-security svg {
+  flex-shrink: 0;
+  color: var(--gray-300);
+}
+
+/* ── Back Button ── */
+.lg-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 20px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.lg-back:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(26,35,126,0.03);
+}
+.lg-back svg {
+  transition: transform 0.2s;
+}
+.lg-back:hover svg {
+  transform: translateX(-3px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .lg-card__inner {
+    padding: 32px 24px 28px;
+  }
+  .lg-header__logo {
+    max-width: 180px;
+  }
+  .lg-header__title {
+    font-size: 1.3rem;
+  }
+}

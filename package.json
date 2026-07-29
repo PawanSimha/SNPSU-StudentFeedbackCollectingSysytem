@@ -1,0 +1,37 @@
+{
+  "name": "mern-feedback-collector",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "server": "cd server && node server.js",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "seed": "cd server && node scripts/seed.js",
+    "seed-b": "cd server && node scripts/seed-b.js",
+    "seed-c": "cd server && node scripts/seed-c.js",
+    "seed-admin": "cd server && node scripts/seed-admin.js",
+    "test": "cd server && npx jest --forceExit --detectOpenHandles tests/",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "client/**/*.{js,jsx}": [
+      "node client/node_modules/eslint/bin/eslint.js --fix --config client/eslint.config.js",
+      "prettier --write"
+    ],
+    "server/**/*.js": [
+      "eslint --fix --config server/eslint.config.mjs",
+      "prettier --write"
+    ],
+    "*.css": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^9.39.5",
+    "globals": "^17.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.9.4"
+  }
+}
