@@ -39,14 +39,14 @@ A full-stack MERN single-page application that enables MCA students at Sapthagir
 | **Frontend Framework** | React | ^19.2.6 | react-dom ^19.2.6 |
 | **Routing** | React Router | ^7.17.0 | Layout routes with `<Outlet />` |
 | **Build Tool** | Vite | ^8.0.12 | @vitejs/plugin-react ^6.0.1 |
-| **HTTP Client** | Axios | ^1.18.0 | Base instance configured per-component |
+| **HTTP Client** | Axios | ^1.18.0 | Centralized `apiClient` instance in `config/api.js` with 10s timeout; global `axios.defaults` synced by AuthContext for direct-import components |
 | **Backend Runtime** | Node.js / Express | ^4.21.0 | cors ^2.8.5, dotenv ^16.4.5 |
 | **Rate Limiting** | express-rate-limit | ^8.5.2 | 10 req / 15 min on public endpoint; 5 req / 15 min on login; 10 req / 1 min on refresh |
 | **Security Headers** | Helmet | ^8.2.0 | X-Frame-Options, X-Content-Type-Options, CSP enforcement |
 | **Response Compression** | compression | ^1.8.1 | gzip on all API responses (~70% smaller payloads) |
 | **Process Manager** | PM2 | ^7.0.1 | Cluster mode: N workers = N CPU cores; auto-restart on crash |
 | **ODM / Database** | Mongoose / MongoDB | ^8.6.0 | 4 collections (students, feedbacks, publicfeedbacks, allotments) |
-| **Authentication** | jsonwebtoken | ^9.0.2 | 30-day expiry, sessionStorage on client; refresh token (7d) in localStorage |
+| **Authentication** | jsonwebtoken | ^9.0.2 | 30-day access token (sessionStorage); 7-day refresh token (localStorage) signed/verified with separate `REFRESH_TOKEN_SECRET` |
 | **Password Hashing** | bcryptjs | ^2.4.3 | Salt rounds: 10 |
 | **Dev Orchestration** | concurrently | ^8.2.2 | Runs server + client in parallel |
 | **Dev Server (server)** | nodemon | ^3.1.4 | Auto-restart on file change |
@@ -87,7 +87,7 @@ Browser (React SPA)          Express REST API            MongoDB
 
 ### 3.3 State Management
 - **Auth state:** React Context (`AuthContext`): single provider wrapping the entire app tree. Stores `student` object, `loading` flag, `login()` and `logout()` functions. Includes `tryRefresh()` flow for expired tokens.
-- **Token persistence:** `sessionStorage` (cleared on tab close). Axios default header `Authorization: Bearer <token>` set on login, cleared on logout. Refresh token in `localStorage`.
+- **Token persistence:** `sessionStorage` (cleared on tab close). AuthContext sets auth header on both `apiClient.defaults.headers.common` and global `axios.defaults.headers.common` via `setAuthHeader()` — this ensures components that import bare `axios` (Dashboard) receive the token too. Refresh token in `localStorage`.
 - **Component-local state:** `useState` / `useEffect` per component for feedback lists, allotments, form data, etc. No global state library (Redux, Zustand, etc.).
 - **localStorage:** Used for feedback lock state (`fb_locked`), feedback drafts (`fb_drafts`), and cookie consent preference (`cookie_consent`). Never for sensitive data.
 
@@ -97,7 +97,7 @@ Browser (React SPA)          Express REST API            MongoDB
 Login flow:
   Client → POST /api/auth/login { email, usn, password }
   Server → bcrypt.compare() → jwt.sign({ id, role }, JWT_SECRET, { expiresIn: '30d' })
-                               jwt.sign({ id, type: 'refresh' }, JWT_SECRET, { expiresIn: '7d' })
+                               jwt.sign({ id, type: 'refresh' }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
   Client → sessionStorage.setItem('token', data.token)
           → localStorage.setItem('refreshToken', data.refreshToken)
           → axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -147,6 +147,7 @@ Guard layers:
 - Base URL: `import.meta.env.VITE_API_URL || 'http://localhost:5000/api'` (configurable via env var).
 - All admin routes cascade: `protect` middleware → admin role check → handler.
 - Pagination: `page`/`limit`/`skip` params on admin list endpoints , returns `{ data, total, page, pages }`.
+- Allotment model: compound index `{ classGroup: 1, isOpen: 1 }` for O(1) status lookups.
 
 ### 3.7 API Route Inventory (20 endpoints)
 
@@ -210,7 +211,7 @@ mern-feedback-collector/
 ├── client/                      React 19 + Vite 8 SPA (frontend)
 │   ├── package.json              Dependencies: react, react-router-dom, axios, vite, vitest
 │   ├── eslint.config.js          ESLint flat config: react-hooks + react-refresh plugins
-│   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000)
+│   ├── vite.config.js            Vite + React plugin + API proxy (/api → :5000) + `@/` path alias → ./src
 │   ├── index.html                SPA shell with SEO/GEO meta, JSON-LD, preloads, canonical URL
 │   ├── public/
 │   │   ├── images/               WebP + ICO assets (9 files: navbar-logo, footer-logo, hero-bg, footer-bg, about, thank-you-feedback, 3d model, favicon)
@@ -221,7 +222,7 @@ mern-feedback-collector/
 │       ├── App.jsx               Route definitions, layout composition, ProtectedRoute, AdminRoute
 │       ├── index.css             Global styles: CSS custom properties, reset, base typography, forms, buttons
 │       ├── config/
-│       │   └── api.js            Centralized API base URL (env-var-aware)
+│   │   └── api.js            Exports `API` (URL string) + `apiClient` (axios instance, 10s timeout, JSON Content-Type)
 │       ├── context/
 │       │   └── AuthContext.jsx    Auth state provider: student, login, logout, loading, refreshToken flow
 │       ├── utils/
@@ -285,7 +286,7 @@ mern-feedback-collector/
 │   │   ├── Student.js            name, email (unique), usn (unique), password, role, classGroup
 │   │   ├── Feedback.js           student ref, subject, comments; compound index { student, subject }
 │   │   ├── PublicFeedback.js     subject, facultyName, comments; index { createdAt: -1 }
-│   │   └── Allotment.js          classGroup (unique), isOpen, message (15-50 chars), allottedBy ref
+│   │   └── Allotment.js          classGroup (unique), isOpen, message (15-50 chars), allottedBy ref; compound index {classGroup, isOpen}
 │   ├── routes/
 │   │   ├── auth.js               POST /login (rate-limited), GET /me, POST /refresh
 │   │   ├── feedback.js           GET /subjects, GET /my, POST /submit (with upsert, allotment check)
@@ -297,10 +298,10 @@ mern-feedback-collector/
 │   ├── tests/
 │   │   └── server.test.js        Smoke tests: health endpoint, 404 handler (Jest+Supertest)
 │   └── scripts/
-│       ├── seed.js               50 students for "MCA, 1st Year, 2nd Sem, A sec", pw: "MCAA@123"
-│       ├── seed-b.js             50 students for "B sec", pw: "MCAB@123"
+│       ├── seed.js               50 students for "MCA, 1st Year, 2nd Sem, A sec", pw: "MCAA@123" (per-user bcrypt hash via Promise.all)
+│       ├── seed-b.js             50 students for "B sec", pw: "MCAB@123" (per-user bcrypt hash)
 │       ├── seed-admin.js         Admin user seeder (env-var-ized credentials)
-│       ├── seed-c.js             49 students for "C sec", pw: "MCAC@123"
+│       ├── seed-c.js             49 students for "C sec", pw: "MCAC@123" (per-user bcrypt hash)
 │       ├── update-roles.js       Bulk role update utility
 │       └── update-classes.js     Bulk class reassignment utility
 ```
@@ -320,7 +321,7 @@ mern-feedback-collector/
 ### 5.1 Style Conventions
 
 **CSS:**
-- Custom properties defined in `:root` (`--primary: #1a237e`, `--gray-500: #6b7280`, `--radius-md: 10px`, etc.): always prefer these over raw hex values.
+- Custom properties defined in `:root` (35+ vars: color palette `--primary`, `--gray-*`, `--color-white`/`black`, spacing scale `--space-*`, type scale `--fs-*`, z-index layers `--z-*`, radii `--radius-*`, shadows `--shadow-*`): always prefer these over raw hex values.
 - BEM-like naming: `.block__element--modifier` (e.g., `.not-found__btn--primary`). Used in ~6 files (CookieConsent, Footer, Landing, NotFound, PublicFeedback, Login).
 - Relative units only (`rem`, `%`, `vh`): never `px` for font sizes or spacing.
 - All animations must respect `@media (prefers-reduced-motion: reduce)`.
@@ -358,7 +359,7 @@ mern-feedback-collector/
 
 - CSP restricts `connect-src` to `'self'` and the production API origin: no arbitrary external fetch.
 - JWT tokens have 30-day expiry; stored in `sessionStorage` (not `localStorage`) so tokens die on tab close.
-- Refresh tokens (7d) stored in `localStorage` for automatic session extension via `tryRefresh()`.
+- Refresh tokens (7d) stored in `localStorage` for automatic session extension via `tryRefresh()`. Signed/verified with separate `REFRESH_TOKEN_SECRET` (falls back to `JWT_SECRET` for backward compat).
 - Public anonymous feedback cannot be linked to any authenticated user: no `student` field on the model.
 - Admin routes use a three-layer guard: `AdminRoute` (client-side) + `protect` middleware (server-side) + explicit `role !== 'admin'` check.
 - Login endpoint rate-limited (5 req/15min) to prevent brute force.
@@ -460,6 +461,7 @@ All four audit phases (A, B, C, D) are fully implemented. The project is product
 | `VITE_API_URL` | `http://localhost:5000/api` | Set via Vercel Environment Variables |
 | `MONGO_URI` | `mongodb://localhost:27017/feedback-collector` | Set via hosting platform |
 | `JWT_SECRET` | (from `server/.env`) | Set via hosting platform |
+| `REFRESH_TOKEN_SECRET` | (from `server/.env`) | Set via hosting platform |
 | `CORS_ORIGIN` | `http://localhost:5173` | Set via hosting platform |
 | `JWT_EXPIRES_IN` | `30d` | Set via hosting platform |
 | `LOGIN_RATE_LIMIT_MAX` | `5` | Set via hosting platform |

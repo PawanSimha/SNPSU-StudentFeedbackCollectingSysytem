@@ -87,7 +87,7 @@ Administrators open/close feedback windows per class, track participation covera
 - **Pino structured logging** - JSON stdout, level configurable via `LOG_LEVEL`
 - **Centralized error handler** with request-scoped logging
 - **Swagger API docs** at `/api/docs`
-- **JWT refresh token flow** for extended sessions without re-login
+- **JWT refresh token flow** for extended sessions without re-login (separate `REFRESH_TOKEN_SECRET` signing key)
 
 ---
 
@@ -118,7 +118,7 @@ Browser                          Express API                      MongoDB
 |---|---|---|
 | **Frontend** | React | ^19.2.6 |
 | | React Router | ^7.17.0 |
-| | Vite (build tool + dev proxy) | ^8.0.16 |
+| | Vite (build tool + dev proxy + `@/` alias) | ^8.0.16 |
 | | Axios (HTTP client) | ^1.18.0 |
 | | Framer Motion (animations) | ^12.42.2 |
 | | React Hook Form + Zod (form validation) | ^7.81.0 / ^4.4.3 |
@@ -130,6 +130,7 @@ Browser                          Express API                      MongoDB
 | | react-loading-skeleton (skeleton UI) | ^3.5.0 |
 | | @tanstack/react-query (data fetching) | ^5.101.2 |
 | | Lucide React (icons) | ^1.25.0 |
+| | Vite `@/` path alias | `resolve.alias` → `./src` |
 | **Backend** | Node.js / Express | ^4.21.0 |
 | | Mongoose (ODM) | ^8.6.0 |
 | | jsonwebtoken (auth + refresh tokens) | ^9.0.2 |
@@ -180,7 +181,7 @@ mern-feedback-collector/
 │       └── components/            # 19 React components + ui/ subfolder
 │
 ├── server/                        # Express 4.21 REST API
-│   ├── .env.example               # Documented env vars (14 vars)
+│   ├── .env.example               # Documented env vars (15 vars, including REFRESH_TOKEN_SECRET)
 │   ├── eslint.config.mjs          # ESLint flat config (Node.js CommonJS)
 │   ├── ecosystem.config.js        # PM2 cluster config
 │   ├── app.js                     # Express app factory
@@ -215,6 +216,7 @@ Create `server/.env` (use `server/.env.example`):
 ```env
 MONGO_URI=mongodb://localhost:27017/feedback-collector
 JWT_SECRET=your_secret_here
+REFRESH_TOKEN_SECRET=your_refresh_secret_here
 PORT=5000
 ```
 

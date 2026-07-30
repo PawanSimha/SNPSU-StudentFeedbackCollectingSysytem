@@ -119,7 +119,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **Security Headers** | Helmet 8: CSP, X-Frame-Options, X-Content-Type-Options; `connect-src` includes `CORS_ORIGIN` | `server/app.js` |
 | **Response Compression** | compression 1.8 gzip (~70% smaller payloads) | `server/app.js` |
 | **Process Manager** | PM2 cluster mode: N workers = N CPU cores; `max_memory_restart: 500M`; logs to `./logs/err.log` and `./logs/out.log` | `server/ecosystem.config.js` |
-| **Database Indexes** | Compound unique index `{ student, subject }` + `{ subject: 1 }` + `{ createdAt: -1 }` on Feedback; `{ createdAt: -1 }` on PublicFeedback | `server/models/Feedback.js`, `server/models/PublicFeedback.js` |
+| **Database Indexes** | Compound unique index `{ student, subject }` + `{ subject: 1 }` + `{ createdAt: -1 }` on Feedback; `{ createdAt: -1 }` on PublicFeedback; compound index `{ classGroup: 1, isOpen: 1 }` on Allotment | `server/models/Feedback.js`, `server/models/PublicFeedback.js`, `server/models/Allotment.js` |
 | **Query Optimization** | `.lean()` on all read-only queries | All route files |
 | **CORS** | Restricted via `CORS_ORIGIN` env var (default: `http://localhost:5173`) | `server/app.js` |
 | **Auth Guard** | `ProtectedRoute` + `AdminRoute` (client); `protect` middleware (verify JWT, attach `req.student`) + explicit role check (server) | `client/src/App.jsx`, `server/middleware/auth.js` |
@@ -130,7 +130,7 @@ This system solves all five pain points through JWT-authenticated feedback with 
 | **SEO / GEO** | JSON-LD (WebApplication schema), Open Graph, Twitter Card, canonical URL, author meta | `client/index.html` |
 | **ErrorBoundary** | Global React error boundary wrapping `<Routes>`; class component (required for `getDerivedStateFromError`) | `client/src/components/ErrorBoundary.jsx` |
 | **LocalStorage Keys** | `fb_locked` (lock state), `fb_drafts` (comment drafts), `cookie_consent`, `analytics_events`, `refreshToken` | `client/src/components/FeedbackForm.jsx`, `client/src/components/CookieConsent.jsx`, `client/src/utils/analytics.js`, `client/src/context/AuthContext.jsx` |
-| **Environment Variables** | 14 configurable vars: `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MINUTES`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
+| **Environment Variables** | 15 configurable vars: `NODE_ENV`, `MONGO_URI`, `JWT_SECRET`, `REFRESH_TOKEN_SECRET`, `PORT`, `CORS_ORIGIN`, `JWT_EXPIRES_IN`, `RATE_LIMIT_WINDOW_MINUTES`, `RATE_LIMIT_MAX`, `LOGIN_RATE_LIMIT_MAX`, `LOG_LEVEL`, `ADMIN_USN`, `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `server/.env.example` |
 | **Animation Libraries** | Framer Motion (entrance/exit animations, `AnimatePresence`), CountUp (animated stat numbers), Sonner (toast notifications), Recharts (PieChart, BarChart for admin analytics) | `client/package.json` |
 | **Form Validation (Client)** | React Hook Form + Zod (`@hookform/resolvers`); `onBlur` mode with per-field dirty/error/valid visual states | `client/src/components/Login.jsx` |
 
