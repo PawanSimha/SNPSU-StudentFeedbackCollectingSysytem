@@ -27,6 +27,8 @@ const router = express.Router();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: parseInt(process.env.LOGIN_RATE_LIMIT_MAX || "5"),
+  // Only failed logins should fill the bucket; successful logins are not abuse.
+  skipSuccessfulRequests: true,
   message: { message: "Too many login attempts. Please try again later." },
 });
 
@@ -83,6 +85,8 @@ router.post("/login", loginLimiter, async (req, res, next) => {
 const refreshLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
+  // Multi-tab apps refresh on every init; only failed refreshes should count.
+  skipSuccessfulRequests: true,
   message: { message: "Too many refresh attempts. Please try again later." },
 });
 
